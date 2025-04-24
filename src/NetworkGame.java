@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,6 +10,7 @@ public class NetworkGame extends JFrame {
         private JPanel mainPanelContainer;
         private MenuPanel menuPanel;
         private LevelSelectionPanel levelSelectionPanel;
+        private SettingsPanel settingsPanel;
 
         public NetworkGame() {
                 setTitle("Network Operator Simulator");
@@ -24,6 +26,9 @@ public class NetworkGame extends JFrame {
                 levelSelectionPanel = new LevelSelectionPanel(this);
                 mainPanelContainer.add(levelSelectionPanel, "LevelSelection");
 
+                settingsPanel = new SettingsPanel(this);
+                mainPanelContainer.add(settingsPanel, "SettingsMenu");
+
                 setContentPane(mainPanelContainer);
                 pack();
                 setLocationRelativeTo(null);
@@ -38,6 +43,10 @@ public class NetworkGame extends JFrame {
                 cardLayout.show(mainPanelContainer, "LevelSelection");
         }
 
+        public void showSettings() {
+                cardLayout.show(mainPanelContainer, "SettingsMenu");
+        }
+
         public void startGame() {
                 System.out.println("Start Game pressed");
         }
@@ -49,4 +58,5 @@ public class NetworkGame extends JFrame {
         public Object getGameState() {
                 return null;
         }
+
 }
