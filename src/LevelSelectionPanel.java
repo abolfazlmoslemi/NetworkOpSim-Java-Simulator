@@ -16,7 +16,11 @@ public class LevelSelectionPanel extends JPanel {
             final int level = i;
             lvlButton.addActionListener(e -> {
                 System.out.println("Selected Level " + level);
-                game.getGameState().setCurrentSelectedLevel(level);
+                try {
+                    game.getGameState().wait(level);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
                 game.showLevelSelection();
             });
             add(lvlButton);

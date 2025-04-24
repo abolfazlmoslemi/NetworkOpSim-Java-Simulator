@@ -45,4 +45,8 @@ public class NetworkGame extends JFrame {
         public static void main(String[] args) {
                 SwingUtilities.invokeLater(NetworkGame::new);
         }
+
+        public Object getGameState() {
+                return null;
+        }
 }
