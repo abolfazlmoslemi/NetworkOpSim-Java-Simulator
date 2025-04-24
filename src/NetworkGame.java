@@ -5,22 +5,24 @@ public class NetworkGame extends JFrame {
         public static final int WINDOW_WIDTH  = 1200;
         public static final int WINDOW_HEIGHT = 800;
 
-        private MenuPanel menuPanel;
         private CardLayout cardLayout;
         private JPanel mainPanelContainer;
+        private MenuPanel menuPanel;
+        private LevelSelectionPanel levelSelectionPanel;
 
         public NetworkGame() {
                 setTitle("Network Operator Simulator");
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 setResizable(false);
 
-                // راه‌اندازی کارت‌لِی‌آوت
                 cardLayout = new CardLayout();
                 mainPanelContainer = new JPanel(cardLayout);
 
-                // افزودن منوی اصلی
                 menuPanel = new MenuPanel(this);
                 mainPanelContainer.add(menuPanel, "MainMenu");
+
+                levelSelectionPanel = new LevelSelectionPanel(this);
+                mainPanelContainer.add(levelSelectionPanel, "LevelSelection");
 
                 setContentPane(mainPanelContainer);
                 pack();
@@ -28,9 +30,15 @@ public class NetworkGame extends JFrame {
                 setVisible(true);
         }
 
-        /** فراخوانی شروع بازی از منو */
+        public void showMenu() {
+                cardLayout.show(mainPanelContainer, "MainMenu");
+        }
+
+        public void showLevelSelection() {
+                cardLayout.show(mainPanelContainer, "LevelSelection");
+        }
+
         public void startGame() {
-                // TODO: در کامیت‌های بعدی به GamePanel سوئیچ شود
                 System.out.println("Start Game pressed");
         }
 
