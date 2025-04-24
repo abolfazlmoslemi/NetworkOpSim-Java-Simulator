@@ -40,8 +40,8 @@ public class MenuPanel extends JPanel {
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addMouseListener(new MouseAdapter() {
             final Color orig = btn.getBackground();
-            public void mouseEntered(MouseEvent e)  { btn.setBackground(orig.brighter()); }
-            public void mouseExited(MouseEvent e)   { btn.setBackground(orig); }
+            @Override public void mouseEntered(MouseEvent e)  { btn.setBackground(orig.brighter()); }
+            @Override public void mouseExited(MouseEvent e)   { btn.setBackground(orig); }
         });
         return btn;
     }
