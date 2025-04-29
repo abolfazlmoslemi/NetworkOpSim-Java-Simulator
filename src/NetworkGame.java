@@ -5,12 +5,18 @@ public class NetworkGame extends JFrame {
         public static final int WINDOW_WIDTH  = 1200;
         public static final int WINDOW_HEIGHT = 800;
 
-        private CardLayout cardLayout;
-        private JPanel mainPanelContainer;
-        private MenuPanel menuPanel;
-        private LevelSelectionPanel levelSelectionPanel;
-        private SettingsPanel settingsPanel;
-        private StorePanel storeDialog;
+        private final CardLayout cardLayout;
+        private final JPanel mainPanelContainer;
+
+        // پنل‌های قبلی
+        private final MenuPanel menuPanel;
+        private final LevelSelectionPanel levelSelectionPanel;
+        private final SettingsPanel settingsPanel;
+        private final StorePanel storeDialog;
+
+        // اضافه‌شده در کامیت ۶
+        private final GameState gameState;
+        private final GamePanel gamePanel;
 
         public NetworkGame() {
                 setTitle("Network Operator Simulator");
@@ -20,17 +26,21 @@ public class NetworkGame extends JFrame {
                 cardLayout = new CardLayout();
                 mainPanelContainer = new JPanel(cardLayout);
 
-                menuPanel = new MenuPanel(this);
-                mainPanelContainer.add(menuPanel, "MainMenu");
-
+                // پنل‌های فازهای 1–5
+                menuPanel           = new MenuPanel(this);
                 levelSelectionPanel = new LevelSelectionPanel(this);
+                settingsPanel       = new SettingsPanel(this);
+                storeDialog         = new StorePanel(this);
+
+                mainPanelContainer.add(menuPanel,           "MainMenu");
                 mainPanelContainer.add(levelSelectionPanel, "LevelSelection");
+                mainPanelContainer.add(settingsPanel,       "SettingsMenu");
+                mainPanelContainer.add(storeDialog,         "Store");
 
-                settingsPanel = new SettingsPanel(this);
-                mainPanelContainer.add(settingsPanel, "SettingsMenu");
-
-                storeDialog = new StorePanel(this);
-                mainPanelContainer.add(storeDialog, "Store");
+                // پیاده‌سازی کامیت ۶: GameState و GamePanel
+                gameState = new GameState();
+                gamePanel = new GamePanel(this);
+                mainPanelContainer.add(gamePanel, "GamePanel");
 
                 setContentPane(mainPanelContainer);
                 pack();
@@ -55,14 +65,15 @@ public class NetworkGame extends JFrame {
         }
 
         public void startGame() {
-                System.out.println("Start Game pressed");
+                cardLayout.show(mainPanelContainer, "GamePanel");
+                gamePanel.initializeLevel(gameState.getCurrentSelectedLevel());
+        }
+
+        public GameState getGameState() {
+                return gameState;
         }
 
         public static void main(String[] args) {
                 SwingUtilities.invokeLater(NetworkGame::new);
-        }
-
-        public Object getGameState() {
-        return null;
         }
 }
