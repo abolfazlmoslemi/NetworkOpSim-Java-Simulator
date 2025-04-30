@@ -1,37 +1,359 @@
-import java.util.Queue;
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
-
-public class System {
+import java.util.Queue;
+import java.util.Objects;
+import java.util.Random; 
+public class System { 
+    public static class PredictedPacketInfo {
+        public final int futurePacketId;
+        public final NetworkEnums.PacketShape shape;
+        public final long generationTimeMs;
+        public final Port sourcePort;
+        public PredictedPacketInfo(int futurePacketId, NetworkEnums.PacketShape shape, long generationTimeMs, Port sourcePort) {
+            this.futurePacketId = futurePacketId;
+            this.shape = Objects.requireNonNull(shape, "Predicted packet shape cannot be null");
+            this.generationTimeMs = generationTimeMs;
+            this.sourcePort = Objects.requireNonNull(sourcePort, "Predicted source port cannot be null");
+        }
+    }
+    public static final int SYSTEM_WIDTH = 80;
+    public static final int SYSTEM_HEIGHT = 60;
+    private static final int QUEUE_CAPACITY = 5;
+    private static final int INDICATOR_FLASH_MS = 250;
     private static int nextId = 0;
+    private static final Random random = new Random();
     private final int id;
+    private int x, y;
     private final boolean isReferenceSystem;
-    private final Queue<Packet> packetQueue = new LinkedList<>();
-
-    public System(boolean isReferenceSystem) {
+    private boolean indicatorOn = false;
+    private final List<Port> inputPorts = Collections.synchronizedList(new ArrayList<>());
+    private final List<Port> outputPorts = Collections.synchronizedList(new ArrayList<>());
+    private final Queue<Packet> packetQueue = new LinkedList<>(); 
+    private int packetsToGenerate = 0;
+    private int packetsGenerated = 0;
+    private int generationFrequencyMillis = 2000;
+    private long lastGenerationTime = -1;
+    private boolean firstGenerationDone = false;
+    private final javax.swing.Timer indicatorTimer;
+    public System(int x, int y, boolean isReference) {
         this.id = nextId++;
-        this.isReferenceSystem = isReferenceSystem;
+        this.x = x;
+        this.y = y;
+        this.isReferenceSystem = isReference;
+        this.indicatorTimer = new javax.swing.Timer(INDICATOR_FLASH_MS, e -> indicatorOn = false);
+        this.indicatorTimer.setRepeats(false);
     }
-
-    public int getId() {
-        return id;
+    public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) {
+        Port newPort;
+        if (type == NetworkEnums.PortType.INPUT) {
+            synchronized(inputPorts) {
+                newPort = new Port(this, type, shape, inputPorts.size());
+                inputPorts.add(newPort);
+            }
+        } else { 
+            synchronized(outputPorts) {
+                newPort = new Port(this, type, shape, outputPorts.size());
+                outputPorts.add(newPort);
+            }
+        }
+        updateAllPortPositions();
     }
-
-    public void receivePacket(Packet packet, GamePanel panel) {
-        if (isReferenceSystem) {
-            panel.packetSuccessfullyDelivered(packet);
-        } else {
-            if (packetQueue.size() < 5) {
-                packetQueue.offer(packet);
-            } else {
-                panel.packetLost(packet);
+    public void updateAllPortPositions() {
+        int totalInput;
+        int totalOutput;
+        synchronized (inputPorts) { totalInput = inputPorts.size(); }
+        synchronized (outputPorts) { totalOutput = outputPorts.size(); }
+        synchronized (inputPorts) {
+            for (int i = 0; i < totalInput; i++) {
+                Port p = inputPorts.get(i);
+                if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput);
+            }
+        }
+        synchronized (outputPorts) {
+            for (int i = 0; i < totalOutput; i++) {
+                Port p = outputPorts.get(i);
+                if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput);
             }
         }
     }
-
-    public void processQueue(GamePanel panel) {
-        if (!packetQueue.isEmpty()) {
-            Packet next = packetQueue.peek();
-            
+    public Port getPortAt(Point p) {
+        synchronized (outputPorts) {
+            for (Port port : outputPorts) {
+                if (port != null && port.contains(p)) return port;
+            }
         }
+        synchronized (inputPorts) {
+            for (Port port : inputPorts) {
+                if (port != null && port.contains(p)) return port;
+            }
+        }
+        return null;
+    }
+    public void receivePacket(Packet packet, GamePanel gamePanel) {
+        if (packet == null || gamePanel == null) return;
+        flashIndicator();
+        packet.setCurrentSystem(this);
+        gamePanel.addRoutingCoins(packet);
+        if (isReferenceSystem && !hasOutputPorts()) {
+            boolean shapeMatch = false;
+            NetworkEnums.PortShape requiredPortShape = Port.getShapeEnum(packet.getShape());
+            if (requiredPortShape != null) {
+                synchronized(inputPorts) {
+                    for (Port p : inputPorts) {
+                        if (p != null && (p.getShape() == requiredPortShape || p.getShape() == NetworkEnums.PortShape.ANY)) {
+                            shapeMatch = true;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                java.lang.System.err.println("Sink " + id + ": Could not determine required port shape for Packet " + packet.getId() + " shape (" + packet.getShape() + ")");
+            }
+            if (shapeMatch) {
+                gamePanel.packetSuccessfullyDelivered(packet);
+            } else {
+                gamePanel.packetLost(packet);
+            }
+        }
+        else {
+            processOrQueuePacket(packet, gamePanel);
+        }
+    }
+    private void processOrQueuePacket(Packet packet, GamePanel gamePanel) {
+        Port outputPort = findAvailableOutputPort(packet, gamePanel);
+        if (outputPort != null) {
+            Wire outputWire = gamePanel.findWireFromPort(outputPort);
+            if (outputWire != null) {
+                packet.setWire(outputWire);
+            } else {
+                java.lang.System.err.println("CRITICAL ERROR: System " + id + ": Output port "
+                        + outputPort + " reported available but GamePanel found no wire! Pkt "
+                        + packet.getId() + " LOST.");
+                gamePanel.packetLost(packet);
+            }
+        } else {
+            if (packetQueue.size() < QUEUE_CAPACITY) {
+                packetQueue.offer(packet);
+            } else {
+                gamePanel.packetLost(packet);
+            }
+        }
+    }
+    public void processQueue(GamePanel gamePanel) {
+        if (!isReferenceSystem && !packetQueue.isEmpty()) {
+            Packet packet = packetQueue.peek();
+            if (packet == null) {
+                java.lang.System.err.println("Warning: Null packet found in System " + id + " queue. Removing.");
+                packetQueue.poll();
+                return;
+            }
+            if (packet.isMarkedForRemoval()){
+                packetQueue.poll();
+                java.lang.System.out.println("System " + id + " discarded marked Pkt "
+                        + packet.getId() + " from queue.");
+                return;
+            }
+            Port outputPort = findAvailableOutputPort(packet, gamePanel);
+            if (outputPort != null) {
+                Wire outputWire = gamePanel.findWireFromPort(outputPort);
+                if (outputWire != null) {
+                    packetQueue.poll();
+                    packet.setWire(outputWire);
+                    flashIndicator();
+                } else {
+                    java.lang.System.err.println("CRITICAL ERROR: System " + id
+                            + ": Queue processing found available port " + outputPort + " but GamePanel has no wire!");
+                }
+            }
+        }
+    }
+    private Port findAvailableOutputPort(Packet packet, GamePanel gamePanel) {
+        if (packet == null || gamePanel == null) return null;
+        List<Port> compatibleEmptyPorts = new ArrayList<>();
+        List<Port> anyEmptyPorts = new ArrayList<>();
+        NetworkEnums.PortShape requiredPortShape = Port.getShapeEnum(packet.getShape());
+        if (requiredPortShape == null) {
+            java.lang.System.err.println("System " + id + ": Cannot find output port for packet " + packet.getId() + ", unknown target PortShape for PacketShape " + packet.getShape());
+            return null;
+        }
+        synchronized(outputPorts) {
+            for (Port port : outputPorts) {
+                if (port != null && port.isConnected()) {
+                    Wire wire = gamePanel.findWireFromPort(port);
+                    if (wire != null && !gamePanel.isWireOccupied(wire)) {
+                        if (port.getShape() == requiredPortShape) compatibleEmptyPorts.add(port);
+                        else if (port.getShape() == NetworkEnums.PortShape.ANY) anyEmptyPorts.add(port);
+                    }
+                }
+            }
+        }
+        if (!compatibleEmptyPorts.isEmpty()) { Collections.shuffle(compatibleEmptyPorts, random); return compatibleEmptyPorts.get(0); }
+        if (!anyEmptyPorts.isEmpty()) { Collections.shuffle(anyEmptyPorts, random); return anyEmptyPorts.get(0); }
+        return null;
+    }
+    public void configureGenerator(int totalPackets, int frequencyMs) {
+        if (isReferenceSystem && hasOutputPorts()) {
+            this.packetsToGenerate = Math.max(0, totalPackets);
+            this.generationFrequencyMillis = Math.max(200, frequencyMs);
+            this.packetsGenerated = 0;
+            this.lastGenerationTime = -1;
+            this.firstGenerationDone = false;
+            java.lang.System.out.println("SOURCE System " + id + " configured: Generate "
+                    + this.packetsToGenerate + " packets, frequency=" + this.generationFrequencyMillis + "ms");
+        } else {
+            java.lang.System.err.println("Warning: Cannot configure generator for " +
+                    (isReferenceSystem ? "Sink" : "non-reference") + " System " + id);
+            this.packetsToGenerate = 0;
+        }
+    }
+    public void attemptPacketGeneration(GamePanel gamePanel, long currentTimeMillis) {
+        if (!isReferenceSystem || !hasOutputPorts() || packetsGenerated >= packetsToGenerate || packetsToGenerate <= 0) {
+            return;
+        }
+        if (!firstGenerationDone) {
+            if (lastGenerationTime == -1) lastGenerationTime = currentTimeMillis;
+            if (currentTimeMillis - lastGenerationTime < generationFrequencyMillis) return;
+            firstGenerationDone = true;
+        } else {
+            if (currentTimeMillis - lastGenerationTime < generationFrequencyMillis) return;
+        }
+        List<Port> availablePorts = new ArrayList<>();
+        synchronized(outputPorts) {
+            for (Port port : outputPorts) {
+                if (port != null && port.isConnected()) {
+                    Wire wire = gamePanel.findWireFromPort(port);
+                    if (wire != null && !gamePanel.isWireOccupied(wire)) availablePorts.add(port);
+                }
+            }
+        }
+        if (!availablePorts.isEmpty()) {
+            lastGenerationTime = currentTimeMillis;
+            Collections.shuffle(availablePorts, random);
+            Port chosenPort = availablePorts.get(0);
+            Wire outputWire = gamePanel.findWireFromPort(chosenPort);
+            NetworkEnums.PacketShape shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
+            if (shapeToGenerate != null && outputWire != null) {
+                Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY());
+                newPacket.setWire(outputWire);
+                gamePanel.addPacket(newPacket);
+                packetsGenerated++;
+                flashIndicator();
+            } else {
+                java.lang.System.err.println("System " + id + " generation failed: Cannot map port shape "
+                        + chosenPort.getShape() + " or wire missing after check.");
+            }
+        }
+    }
+    public List<PredictedPacketInfo> predictGeneratedPackets(long upToTimeMs) {
+        List<PredictedPacketInfo> predicted = new ArrayList<>();
+        if (!isReferenceSystem || !hasOutputPorts() || packetsToGenerate <= 0 || generationFrequencyMillis <= 0) {
+            return predicted;
+        }
+        long currentGenTime = generationFrequencyMillis; 
+        int predictedCount = 0;
+        while (predictedCount < packetsToGenerate && currentGenTime <= upToTimeMs) {
+            List<Port> connectedPorts = new ArrayList<>();
+            synchronized(outputPorts) {
+                for (Port p : outputPorts) {
+                    if (p != null && p.isConnected()) connectedPorts.add(p);
+                }
+            }
+            if (connectedPorts.isEmpty()) break;
+            Collections.shuffle(connectedPorts, random);
+            Port chosenPort = connectedPorts.get(0);
+            NetworkEnums.PacketShape shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
+            if (shapeToGenerate != null) {
+                predicted.add(new PredictedPacketInfo(predictedCount, shapeToGenerate, currentGenTime, chosenPort));
+            } else {
+                java.lang.System.err.println("Prediction Error: System " + id + " couldn't determine packet shape for predicted generation from port " + chosenPort.getShape());
+            }
+            predictedCount++;
+            currentGenTime += generationFrequencyMillis;
+        }
+        return predicted;
+    }
+    public void draw(Graphics2D g2d) {
+        Color bodyColor = isReferenceSystem ? new Color(90, 90, 90) : new Color(60, 80, 130);
+        g2d.setColor(bodyColor);
+        g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.setStroke(new BasicStroke(1));
+        g2d.drawRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+        int indicatorSize = 8;
+        int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
+        int indicatorY = y - indicatorSize - 3;
+        g2d.setColor(indicatorOn ? Color.GREEN.brighter() : new Color(0, 100, 0));
+        g2d.fillOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.drawOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
+        synchronized(inputPorts) { for (Port p : inputPorts) if(p!=null) p.draw(g2d); }
+        synchronized(outputPorts) { for (Port p : outputPorts) if(p!=null) p.draw(g2d); }
+        if (!isReferenceSystem && !packetQueue.isEmpty()) {
+            g2d.setColor(Color.ORANGE);
+            g2d.setFont(new Font("Arial", Font.BOLD, 11));
+            String queueText = "Q:" + packetQueue.size();
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(queueText);
+            int textX = x + SYSTEM_WIDTH - textWidth - 5;
+            int textY = y + SYSTEM_HEIGHT - 5;
+            g2d.drawString(queueText, textX, textY);
+        }
+    }
+    private void flashIndicator() {
+        indicatorOn = true;
+        indicatorTimer.restart();
+    }
+    public static NetworkEnums.PacketShape getPacketShapeFromPortShapeStatic(NetworkEnums.PortShape portShape) {
+        if (portShape == null) return null;
+        switch (portShape) {
+            case SQUARE:   return NetworkEnums.PacketShape.SQUARE;
+            case TRIANGLE: return NetworkEnums.PacketShape.TRIANGLE;
+            case ANY:
+                NetworkEnums.PacketShape[] validShapes = { NetworkEnums.PacketShape.SQUARE, NetworkEnums.PacketShape.TRIANGLE };
+                return validShapes[random.nextInt(validShapes.length)];
+            default:
+                java.lang.System.err.println("Warning: Unknown PortShape encountered in getPacketShapeFromPortShapeStatic: " + portShape);
+                return null;
+        }
+    }
+    public int getId() { return id; }
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public List<Port> getInputPorts() { synchronized(inputPorts){ return Collections.unmodifiableList(new ArrayList<>(inputPorts)); } }
+    public List<Port> getOutputPorts() { synchronized(outputPorts){ return Collections.unmodifiableList(new ArrayList<>(outputPorts)); } }
+    public boolean isReferenceSystem() { return isReferenceSystem; }
+    public boolean hasOutputPorts() { synchronized(outputPorts){ return !outputPorts.isEmpty(); } }
+    public boolean hasInputPorts() { synchronized(inputPorts){ return !inputPorts.isEmpty(); } }
+    public Point getPosition() { return new Point(x + SYSTEM_WIDTH / 2, y + SYSTEM_HEIGHT / 2); }
+    public int getPacketsGeneratedCount() { return packetsGenerated; }
+    public int getTotalPacketsToGenerate() { return packetsToGenerate; }
+    public int getQueueSize() { return packetQueue.size(); }
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        updateAllPortPositions();
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        System system = (System) o; 
+        return id == system.id;
+    }
+    @Override
+    public int hashCode() { return Objects.hash(id); }
+    @Override
+    public String toString() {
+        String typeStr = isReferenceSystem ? (hasOutputPorts() ? "Source" : "Sink") : "Node";
+        return "System{id=" + id + 
+                ", type=" + typeStr +
+                ", pos=(" + x + "," + y + ")" +
+                ", Q=" + packetQueue.size() + "/" + QUEUE_CAPACITY +
+                ", Gen=" + packetsGenerated + "/" + packetsToGenerate +
+                '}';
     }
 }

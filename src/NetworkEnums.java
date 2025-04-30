@@ -1,19 +1,12 @@
 public class NetworkEnums {
     private NetworkEnums() {}
-
     public enum PortType {
-        INPUT,
-        OUTPUT
+        INPUT, OUTPUT
     }
-
     public enum PortShape {
-        SQUARE,
-        TRIANGLE,
-        ANY
+        SQUARE, TRIANGLE, ANY 
     }
-
     public enum PacketShape {
-        SQUARE,
-        TRIANGLE
+        SQUARE, TRIANGLE 
     }
 }
