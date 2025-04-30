@@ -1,30 +1,31 @@
-
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Dimension;
-import java.util.List;
+import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class GamePanel extends JPanel {
     private static final int GAME_TICK_MS = 16;
 
     private final NetworkGame game;
-    private final GameState gameState;
-    private final Timer gameLoopTimer;
+    private final GameState  gameState;
+    private final Timer      gameLoopTimer;
 
     private final List<System> systems = new ArrayList<>();
-    private final List<Wire> wires = new ArrayList<>();
+    private final List<Wire>   wires   = new ArrayList<>();
 
-    private boolean gameRunning = false;
-    private boolean gamePaused = false;
+    private boolean gameRunning       = false;
+    private boolean gamePaused        = false;
     private boolean simulationStarted = false;
-    private boolean levelComplete = false;
-    private boolean gameOver = false;
+    private boolean levelComplete     = false;
+    private boolean gameOver          = false;
 
     public GamePanel(NetworkGame game) {
-        this.game = Objects.requireNonNull(game);
+        this.game      = Objects.requireNonNull(game);
         this.gameState = Objects.requireNonNull(game.getGameState());
+
         setPreferredSize(new Dimension(NetworkGame.WINDOW_WIDTH, NetworkGame.WINDOW_HEIGHT));
         gameLoopTimer = new Timer(GAME_TICK_MS, e -> gameTick());
         gameLoopTimer.setRepeats(true);
@@ -34,18 +35,23 @@ public class GamePanel extends JPanel {
         stopSimulation();
         gameState.resetForLevel();
         simulationStarted = false;
-        levelComplete = false;
-        gameOver = false;
+        levelComplete     = false;
+        gameOver          = false;
+
+        LevelLoader.LevelLayout layout = LevelLoader.loadLevel(level);
         systems.clear();
+        systems.addAll(layout.systems);
         wires.clear();
+        wires.addAll(layout.wires);
+
         repaint();
     }
 
     public void attemptStartSimulation() {
         if (simulationStarted || gameOver || levelComplete) return;
         simulationStarted = true;
-        gameRunning = true;
-        gamePaused = false;
+        gameRunning       = true;
+        gamePaused        = false;
         gameLoopTimer.start();
     }
 
@@ -61,7 +67,7 @@ public class GamePanel extends JPanel {
         if (gameLoopTimer.isRunning()) {
             gameLoopTimer.stop();
             gameRunning = false;
-            gamePaused = false;
+            gamePaused  = false;
         }
     }
 
@@ -72,5 +78,15 @@ public class GamePanel extends JPanel {
     public void packetSuccessfullyDelivered(Packet packet) {
         gameState.recordPacketGeneration(packet);
         gameState.addCoins(packet.getSize());
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // rendering logic...
+    }
+
+    private boolean validateNetwork() {
+        return GraphUtils.isNetworkConnected(systems, wires);
     }
 }

@@ -37,4 +37,7 @@ public class Port {
                 ", position=" + position +
                 '}';
     }
+
+    public System getParentSystem() {
+    return null;}
 }
