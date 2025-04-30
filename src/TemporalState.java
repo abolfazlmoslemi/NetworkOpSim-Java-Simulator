@@ -10,7 +10,7 @@ public class TemporalState {
     }
 
     public void restoreState(GamePanel panel) {
-        System.err.println("TemporalState.restoreState() not implemented");
+        java.lang.System.err.println("TemporalState.restoreState() not implemented");
     }
 
     @Override

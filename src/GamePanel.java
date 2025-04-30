@@ -1,5 +1,9 @@
-import javax.swing.*;
-import java.awt.*;
+
+import javax.swing.JPanel;
+import javax.swing.Timer;
+import java.awt.Dimension;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class GamePanel extends JPanel {
@@ -9,19 +13,19 @@ public class GamePanel extends JPanel {
     private final GameState gameState;
     private final Timer gameLoopTimer;
 
-    private boolean gameRunning       = false;
-    private boolean gamePaused        = false;
+    private final List<System> systems = new ArrayList<>();
+    private final List<Wire> wires = new ArrayList<>();
+
+    private boolean gameRunning = false;
+    private boolean gamePaused = false;
     private boolean simulationStarted = false;
-    private boolean levelComplete     = false;
-    private boolean gameOver          = false;
+    private boolean levelComplete = false;
+    private boolean gameOver = false;
 
     public GamePanel(NetworkGame game) {
-        this.game      = Objects.requireNonNull(game);
+        this.game = Objects.requireNonNull(game);
         this.gameState = Objects.requireNonNull(game.getGameState());
-
         setPreferredSize(new Dimension(NetworkGame.WINDOW_WIDTH, NetworkGame.WINDOW_HEIGHT));
-        setBackground(Color.BLACK);
-
         gameLoopTimer = new Timer(GAME_TICK_MS, e -> gameTick());
         gameLoopTimer.setRepeats(true);
     }
@@ -30,24 +34,26 @@ public class GamePanel extends JPanel {
         stopSimulation();
         gameState.resetForLevel();
         simulationStarted = false;
-        levelComplete     = false;
-        gameOver          = false;
+        levelComplete = false;
+        gameOver = false;
+        systems.clear();
+        wires.clear();
         repaint();
-        System.out.println("Level " + level + " initialized.");
     }
 
     public void attemptStartSimulation() {
         if (simulationStarted || gameOver || levelComplete) return;
         simulationStarted = true;
-        gameRunning       = true;
-        gamePaused        = false;
+        gameRunning = true;
+        gamePaused = false;
         gameLoopTimer.start();
-        System.out.println("Simulation started.");
     }
 
     private void gameTick() {
         if (!gameRunning || gamePaused || gameOver || levelComplete) return;
-        // TODO: منطق به‌روزرسانی پکت‌ها و سیستم‌ها
+        for (System s : systems) {
+            s.processQueue(this);
+        }
         repaint();
     }
 
@@ -55,8 +61,16 @@ public class GamePanel extends JPanel {
         if (gameLoopTimer.isRunning()) {
             gameLoopTimer.stop();
             gameRunning = false;
-            gamePaused  = false;
-            System.out.println("Simulation stopped.");
+            gamePaused = false;
         }
+    }
+
+    public void packetLost(Packet packet) {
+        gameState.increasePacketLoss(packet);
+    }
+
+    public void packetSuccessfullyDelivered(Packet packet) {
+        gameState.recordPacketGeneration(packet);
+        gameState.addCoins(packet.getSize());
     }
 }
