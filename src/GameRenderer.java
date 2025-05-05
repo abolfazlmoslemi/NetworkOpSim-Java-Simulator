@@ -40,8 +40,6 @@ public class GameRenderer {
     private static final int GRID_SIZE = 25;
     private static final int TIME_SCRUB_HEIGHT = 30;
     private static final int TIME_SCRUB_PADDING = 10;
-
-    
     private static final Color HUD_LEVEL_COLOR = Color.LIGHT_GRAY;
     private static final Color HUD_COINS_COLOR = Color.YELLOW;
     private static final Color HUD_WIRE_COLOR = Color.CYAN;
@@ -52,7 +50,6 @@ public class GameRenderer {
     private static final Color HUD_LOSS_OK_COLOR = Color.GREEN.darker();
     private static final Color HUD_LOSS_WARN_COLOR = Color.ORANGE;
     private static final Color HUD_LOSS_DANGER_COLOR = Color.RED;
-
     public GameRenderer(GamePanel gamePanel, GameState gameState) {
         this.gamePanel = gamePanel;
         this.gameState = gameState;
@@ -72,11 +69,9 @@ public class GameRenderer {
                     if (s != null) s.draw(g2d);
                 }
             }
-
             if (gamePanel.isWireDrawingMode() && gamePanel.getSelectedOutputPort() != null && gamePanel.getMouseDragPos() != null) {
                 drawWiringLine(g2d, gamePanel.getSelectedOutputPort(), gamePanel.getMouseDragPos());
             }
-
             if (gamePanel.isSimulationStarted()) {
                 synchronized(gamePanel.getPackets()) {
                     for (Packet p : gamePanel.getPackets()) {
@@ -93,13 +88,11 @@ public class GameRenderer {
                 }
                 drawTimeScrubberUI(g2d);
             }
-
             if (gamePanel.isShowHUD()) {
                 drawHUD(g2d);
             } else {
                 drawHudToggleHint(g2d);
             }
-
             if (gamePanel.isGamePaused()) {
                 drawPauseOverlay(g2d);
             }
@@ -137,54 +130,38 @@ public class GameRenderer {
         g2d.drawLine(startPort.getX(), startPort.getY(), dragPos.x, dragPos.y);
         g2d.setStroke(oldStroke);
     }
-
-    
     private void drawHUD(Graphics2D g2d) {
         int hudX = 15;
         int startY = 30;
         int lineHeightBold = 20; 
         int lineHeightPlain = 18; 
         int hudWidth = 230;
-
         List<String> lines = new ArrayList<>();
         List<Color> lineColors = new ArrayList<>();
         List<Font> lineFonts = new ArrayList<>();
         List<Integer> lineHeights = new ArrayList<>(); 
-
-        
         lines.add("LEVEL: " + gamePanel.getCurrentLevel());
         lineColors.add(HUD_LEVEL_COLOR);
         lineFonts.add(HUD_FONT_BOLD);
         lineHeights.add(lineHeightBold);
-
-        
         lines.add("COINS: " + gameState.getCoins());
         lineColors.add(HUD_COINS_COLOR);
         lineFonts.add(HUD_FONT_BOLD);
         lineHeights.add(lineHeightBold);
-
-        
         lines.add("WIRE LEFT: " + gameState.getRemainingWireLength());
         lineColors.add(HUD_WIRE_COLOR);
         lineFonts.add(HUD_FONT_BOLD);
         lineHeights.add(lineHeightBold);
-
-        
         int generatedCount = gameState.getTotalPacketsGeneratedCount();
         int lostCount = gameState.getTotalPacketsLostCount();
-
         lines.add("Generated: " + generatedCount);
         lineColors.add(HUD_COUNT_COLOR);
         lineFonts.add(HUD_COUNT_FONT);
         lineHeights.add(lineHeightPlain);
-
         lines.add("Lost: " + lostCount);
         lineColors.add(HUD_COUNT_COLOR); 
         lineFonts.add(HUD_COUNT_FONT);
         lineHeights.add(lineHeightPlain);
-        
-
-        
         double lossPercent = gameState.getPacketLossPercentage();
         Color lossColor;
         if (!gamePanel.isSimulationStarted()) {
@@ -200,8 +177,6 @@ public class GameRenderer {
         lineColors.add(lossColor);
         lineFonts.add(HUD_FONT_BOLD); 
         lineHeights.add(lineHeightBold);
-
-        
         if (gamePanel.isSimulationStarted()) {
             long simTimeMs = gamePanel.getSimulationTimeElapsedMs();
             lines.add(String.format("TIME: %.2f s", simTimeMs / 1000.0));
@@ -209,8 +184,6 @@ public class GameRenderer {
             lineFonts.add(HUD_FONT_BOLD);
             lineHeights.add(lineHeightBold);
         }
-
-        
         String powerupText = "";
         if (gamePanel.isSimulationStarted() && (gamePanel.isAtarActive() || gamePanel.isAiryamanActive())) {
             powerupText = "ACTIVE:";
@@ -221,8 +194,6 @@ public class GameRenderer {
             lineFonts.add(HUD_FONT_BOLD);
             lineHeights.add(lineHeightBold);
         }
-
-        
         String hintText = "";
         if (!gamePanel.isGameOver() && !gamePanel.isLevelComplete()) {
             if (!gamePanel.isSimulationStarted()) {
@@ -240,19 +211,13 @@ public class GameRenderer {
                 lineHeights.add(lineHeightPlain); 
             }
         }
-
-        
         int totalHeightAccumulated = 0;
         for (int height : lineHeights) {
             totalHeightAccumulated += height;
         }
         int hudHeight = 20 + totalHeightAccumulated; 
-
-        
         g2d.setColor(HUD_BACKGROUND_COLOR);
         g2d.fillRoundRect(hudX - 10, startY - 20, hudWidth, hudHeight, 15, 15);
-
-        
         int currentY = startY;
         for (int i = 0; i < lines.size(); i++) {
             g2d.setColor(lineColors.get(i));
@@ -261,7 +226,6 @@ public class GameRenderer {
             currentY += lineHeights.get(i); 
         }
     }
-
     private void drawHudToggleHint(Graphics2D g2d) {
         g2d.setColor(Color.DARK_GRAY);
         g2d.setFont(HUD_TOGGLE_FONT);
