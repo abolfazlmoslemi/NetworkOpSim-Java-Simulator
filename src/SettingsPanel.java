@@ -9,10 +9,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 public class SettingsPanel extends JPanel {
-    private final NetworkGame game; 
+    private final NetworkGame game;
     private JSlider volumeSlider;
     private JCheckBox muteCheckbox;
-    private JLabel volumeValueLabel; 
+    private JLabel volumeValueLabel;
     private static final Color BACKGROUND_COLOR_START = new Color(30, 30, 40);
     private static final Color BACKGROUND_COLOR_END = new Color(45, 45, 55);
     private static final Color TEXT_COLOR = Color.WHITE;
@@ -20,55 +20,59 @@ public class SettingsPanel extends JPanel {
     private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 36);
     private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 18);
     private static final Font CHECKBOX_FONT = new Font("Arial", Font.PLAIN, 16);
-    private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 18);
-    private static final Color BUTTON_BG_COLOR = new Color(100, 100, 110); 
+    private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 18); 
+    private static final Font KEYBIND_BUTTON_FONT = new Font("Arial", Font.BOLD, 16); 
+    private static final Color BUTTON_BG_COLOR = new Color(100, 100, 110);
     private static final Color BUTTON_BORDER_COLOR = new Color(70, 70, 80);
     public SettingsPanel(NetworkGame game) {
         this.game = Objects.requireNonNull(game, "NetworkGame instance cannot be null");
-        setLayout(new GridBagLayout()); 
+        setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(NetworkGame.WINDOW_WIDTH, NetworkGame.WINDOW_HEIGHT));
         JPanel settingsContent = new JPanel();
         settingsContent.setLayout(new BoxLayout(settingsContent, BoxLayout.Y_AXIS));
-        settingsContent.setOpaque(false); 
-        settingsContent.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50)); 
+        settingsContent.setOpaque(false);
+        settingsContent.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         settingsContent.add(createTitleLabel("Settings"));
-        settingsContent.add(Box.createVerticalStrut(40)); 
+        settingsContent.add(Box.createVerticalStrut(40));
         JPanel volumePanel = createVolumeControlPanel();
         settingsContent.add(volumePanel);
-        settingsContent.add(Box.createVerticalStrut(15)); 
+        settingsContent.add(Box.createVerticalStrut(15));
         JPanel mutePanel = createMuteControlPanel();
         settingsContent.add(mutePanel);
+        settingsContent.add(Box.createVerticalStrut(30)); 
+        JPanel keyBindingButtonPanel = createKeyBindingButtonPanel();
+        settingsContent.add(keyBindingButtonPanel);
         settingsContent.add(Box.createVerticalStrut(60)); 
         JPanel backButtonPanel = createBackButtonPanel();
         settingsContent.add(backButtonPanel);
-        settingsContent.add(Box.createVerticalGlue()); 
-        add(settingsContent); 
+        settingsContent.add(Box.createVerticalGlue());
+        add(settingsContent);
         updateUIFromGameState();
     }
     private JLabel createTitleLabel(String text) {
         JLabel titleLabel = new JLabel(text, SwingConstants.CENTER);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT); 
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         return titleLabel;
     }
     private JPanel createVolumeControlPanel() {
-        JPanel volumePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5)); 
-        volumePanel.setOpaque(false); 
-        volumePanel.setAlignmentX(Component.CENTER_ALIGNMENT); 
+        JPanel volumePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+        volumePanel.setOpaque(false);
+        volumePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel volumeLabel = new JLabel("Master Volume:");
         styleLabel(volumeLabel);
         volumeSlider = new JSlider(0, 100, (int) (game.getMasterVolume() * 100));
-        volumeSlider.setPreferredSize(new Dimension(350, 40)); 
-        volumeSlider.setOpaque(false); 
+        volumeSlider.setPreferredSize(new Dimension(350, 40));
+        volumeSlider.setOpaque(false);
         volumeSlider.setMajorTickSpacing(20);
         volumeSlider.setMinorTickSpacing(5);
         volumeSlider.setPaintTicks(true);
-        volumeSlider.addChangeListener(new VolumeSliderListener()); 
+        volumeSlider.addChangeListener(new VolumeSliderListener());
         volumeValueLabel = new JLabel(String.valueOf(volumeSlider.getValue()));
-        styleLabel(volumeValueLabel); 
-        volumeValueLabel.setForeground(VALUE_TEXT_COLOR); 
-        volumeValueLabel.setPreferredSize(new Dimension(40, 30)); 
+        styleLabel(volumeValueLabel);
+        volumeValueLabel.setForeground(VALUE_TEXT_COLOR);
+        volumeValueLabel.setPreferredSize(new Dimension(40, 30));
         volumePanel.add(volumeLabel);
         volumePanel.add(volumeSlider);
         volumePanel.add(volumeValueLabel);
@@ -81,13 +85,24 @@ public class SettingsPanel extends JPanel {
         muteCheckbox = new JCheckBox(" Mute All Audio");
         muteCheckbox.setFont(CHECKBOX_FONT);
         muteCheckbox.setForeground(TEXT_COLOR);
-        muteCheckbox.setOpaque(false); 
-        muteCheckbox.setSelected(game.isMuted()); 
+        muteCheckbox.setOpaque(false);
+        muteCheckbox.setSelected(game.isMuted());
         muteCheckbox.setFocusPainted(false);
-        muteCheckbox.setIconTextGap(10); 
-        muteCheckbox.addActionListener(new MuteCheckboxListener()); 
+        muteCheckbox.setIconTextGap(10);
+        muteCheckbox.addActionListener(new MuteCheckboxListener());
         mutePanel.add(muteCheckbox);
         return mutePanel;
+    }
+    private JPanel createKeyBindingButtonPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton keyBindingButton = new JButton("Configure Key Bindings");
+        keyBindingButton.setFont(KEYBIND_BUTTON_FONT); 
+        styleStandardButton(keyBindingButton, BUTTON_BG_COLOR, BUTTON_BORDER_COLOR); 
+        keyBindingButton.addActionListener(e -> game.showKeyBindingDialog());
+        panel.add(keyBindingButton);
+        return panel;
     }
     private JPanel createBackButtonPanel() {
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -96,7 +111,7 @@ public class SettingsPanel extends JPanel {
         JButton backButton = new JButton("Back to Menu");
         backButton.setFont(BUTTON_FONT);
         styleStandardButton(backButton, BUTTON_BG_COLOR, BUTTON_BORDER_COLOR);
-        backButton.addActionListener(e -> game.returnToMenu()); 
+        backButton.addActionListener(e -> game.returnToMenu());
         backButtonPanel.add(backButton);
         return backButtonPanel;
     }
@@ -109,7 +124,7 @@ public class SettingsPanel extends JPanel {
         button.setBackground(bgColor);
         button.setFocusPainted(false);
         Border line = BorderFactory.createLineBorder(borderColor, 2);
-        Border empty = BorderFactory.createEmptyBorder(10, 20, 10, 20); 
+        Border empty = BorderFactory.createEmptyBorder(10, 20, 10, 20);
         button.setBorder(BorderFactory.createCompoundBorder(line, empty));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addMouseListener(new MouseAdapter() {
@@ -130,14 +145,11 @@ public class SettingsPanel extends JPanel {
         if (volumeSlider.getValue() != sliderValue) {
             volumeSlider.setValue(sliderValue);
         }
-        volumeValueLabel.setText(String.valueOf(sliderValue)); 
+        volumeValueLabel.setText(String.valueOf(sliderValue));
         if (muteCheckbox.isSelected() != game.isMuted()) {
             muteCheckbox.setSelected(game.isMuted());
         }
-        updateVolumeSliderState(); 
-    }
-    private void updateMuteCheckboxState() {
-        muteCheckbox.setSelected(game.isMuted());
+        updateVolumeSliderState();
     }
     private void updateVolumeSliderState() {
         volumeSlider.setEnabled(!game.isMuted());
@@ -149,15 +161,15 @@ public class SettingsPanel extends JPanel {
                 int sliderValue = volumeSlider.getValue();
                 float newVolume = sliderValue / 100.0f;
                 float currentVolume = game.getMasterVolume();
-                if (Math.abs(newVolume - currentVolume) > 0.001) {
-                    game.setMasterVolume(newVolume); 
-                    volumeValueLabel.setText(String.valueOf(sliderValue)); 
-                    if (game.isMuted() && newVolume > 0) {
+                if (Math.abs(newVolume - currentVolume) > 0.001) { 
+                    game.setMasterVolume(newVolume);
+                    volumeValueLabel.setText(String.valueOf(sliderValue));
+                    if (game.isMuted() && newVolume > 0) { 
                         java.lang.System.out.println("Volume slider moved while muted - unmuting.");
                         game.toggleMute(); 
                     }
                 }
-            } else {
+            } else { 
                 volumeValueLabel.setText(String.valueOf(volumeSlider.getValue()));
             }
         }
@@ -166,7 +178,7 @@ public class SettingsPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             game.toggleMute();
-            updateVolumeSliderState();
+            updateVolumeSliderState(); 
         }
     }
     @Override

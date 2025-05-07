@@ -9,11 +9,12 @@ import java.util.List;
 public class GameRenderer {
     private final GamePanel gamePanel;
     private final GameState gameState;
-    private static final Stroke WIRING_LINE_STROKE = new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-            10.0f, new float[]{7f, 4f}, 0.0f);
+    private final KeyBindings keyBindings; 
+    private static final Stroke WIRING_LINE_STROKE = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+            10.0f, new float[]{9f, 5f}, 0.0f);
     private static final Font HUD_FONT_BOLD = new Font("Consolas", Font.BOLD, 14);
     private static final Font HUD_FONT_PLAIN = new Font("Consolas", Font.PLAIN, 11);
-    private static final Font HUD_COUNT_FONT = new Font("Consolas", Font.PLAIN, 12); 
+    private static final Font HUD_COUNT_FONT = new Font("Consolas", Font.PLAIN, 12);
     private static final Font HUD_TOGGLE_FONT = new Font("Consolas", Font.PLAIN, 10);
     private static final Font PAUSE_OVERLAY_FONT_LARGE = new Font("Arial", Font.BOLD, 60);
     private static final Font PAUSE_OVERLAY_FONT_SMALL = new Font("Arial", Font.PLAIN, 18);
@@ -44,7 +45,7 @@ public class GameRenderer {
     private static final Color HUD_COINS_COLOR = Color.YELLOW;
     private static final Color HUD_WIRE_COLOR = Color.CYAN;
     private static final Color HUD_TIME_COLOR = Color.WHITE;
-    private static final Color HUD_COUNT_COLOR = Color.LIGHT_GRAY; 
+    private static final Color HUD_COUNT_COLOR = Color.LIGHT_GRAY;
     private static final Color HUD_POWERUP_COLOR = Color.ORANGE;
     private static final Color HUD_HINT_COLOR = Color.GRAY;
     private static final Color HUD_LOSS_OK_COLOR = Color.GREEN.darker();
@@ -53,6 +54,7 @@ public class GameRenderer {
     public GameRenderer(GamePanel gamePanel, GameState gameState) {
         this.gamePanel = gamePanel;
         this.gameState = gameState;
+        this.keyBindings = gamePanel.getGame().getKeyBindings(); 
     }
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
@@ -70,11 +72,12 @@ public class GameRenderer {
                 }
             }
             if (gamePanel.isWireDrawingMode() && gamePanel.getSelectedOutputPort() != null && gamePanel.getMouseDragPos() != null) {
-                drawWiringLine(g2d, gamePanel.getSelectedOutputPort(), gamePanel.getMouseDragPos());
+                drawWiringLine(g2d);
             }
             if (gamePanel.isSimulationStarted()) {
                 synchronized(gamePanel.getPackets()) {
-                    for (Packet p : gamePanel.getPackets()) {
+                    List<Packet> packetsSnapshot = new ArrayList<>(gamePanel.getPackets());
+                    for (Packet p : packetsSnapshot) {
                         if (p != null && !p.isMarkedForRemoval() && p.getCurrentSystem() == null) {
                             p.draw(g2d);
                         }
@@ -82,7 +85,8 @@ public class GameRenderer {
                 }
             } else {
                 synchronized (gamePanel.getPredictedPacketStates()) {
-                    for (PacketSnapshot snapshot : gamePanel.getPredictedPacketStates()) {
+                    List<PacketSnapshot> predictionSnapshot = new ArrayList<>(gamePanel.getPredictedPacketStates());
+                    for (PacketSnapshot snapshot : predictionSnapshot) {
                         drawPredictedPacket(g2d, snapshot);
                     }
                 }
@@ -93,8 +97,12 @@ public class GameRenderer {
             } else {
                 drawHudToggleHint(g2d);
             }
+            String pauseInstruction = "";
             if (gamePanel.isGamePaused()) {
-                drawPauseOverlay(g2d);
+                pauseInstruction = String.format("%s: Resume | %s: Menu",
+                        keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.PAUSE_RESUME_GAME)),
+                        keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.ESCAPE_MENU_CANCEL)));
+                drawPauseOverlay(g2d, pauseInstruction);
             }
             else if (gamePanel.isGameOver()) {
                 drawEndGameOverlay(g2d, "GAME OVER", GAME_OVER_COLOR);
@@ -122,9 +130,12 @@ public class GameRenderer {
             g2d.drawLine(0, y, width, y);
         }
     }
-    private void drawWiringLine(Graphics2D g2d, Port startPort, Point dragPos) {
+    private void drawWiringLine(Graphics2D g2d) {
+        Port startPort = gamePanel.getSelectedOutputPort();
+        Point dragPos = gamePanel.getMouseDragPos();
+        Color wiringColor = gamePanel.getCurrentWiringColor();
         if (startPort == null || startPort.getPosition() == null || dragPos == null) return;
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(wiringColor);
         Stroke oldStroke = g2d.getStroke();
         g2d.setStroke(WIRING_LINE_STROKE);
         g2d.drawLine(startPort.getX(), startPort.getY(), dragPos.x, dragPos.y);
@@ -133,13 +144,13 @@ public class GameRenderer {
     private void drawHUD(Graphics2D g2d) {
         int hudX = 15;
         int startY = 30;
-        int lineHeightBold = 20; 
-        int lineHeightPlain = 18; 
-        int hudWidth = 230;
+        int lineHeightBold = 20;
+        int lineHeightPlain = 18;
+        int hudWidth = 250; 
         List<String> lines = new ArrayList<>();
         List<Color> lineColors = new ArrayList<>();
         List<Font> lineFonts = new ArrayList<>();
-        List<Integer> lineHeights = new ArrayList<>(); 
+        List<Integer> lineHeights = new ArrayList<>();
         lines.add("LEVEL: " + gamePanel.getCurrentLevel());
         lineColors.add(HUD_LEVEL_COLOR);
         lineFonts.add(HUD_FONT_BOLD);
@@ -159,7 +170,7 @@ public class GameRenderer {
         lineFonts.add(HUD_COUNT_FONT);
         lineHeights.add(lineHeightPlain);
         lines.add("Lost: " + lostCount);
-        lineColors.add(HUD_COUNT_COLOR); 
+        lineColors.add(HUD_COUNT_COLOR);
         lineFonts.add(HUD_COUNT_FONT);
         lineHeights.add(lineHeightPlain);
         double lossPercent = gameState.getPacketLossPercentage();
@@ -175,7 +186,7 @@ public class GameRenderer {
         }
         lines.add(String.format("LOSS (Units): %.1f%% (%d U)", lossPercent, gameState.getTotalPacketLossUnits()));
         lineColors.add(lossColor);
-        lineFonts.add(HUD_FONT_BOLD); 
+        lineFonts.add(HUD_FONT_BOLD);
         lineHeights.add(lineHeightBold);
         if (gamePanel.isSimulationStarted()) {
             long simTimeMs = gamePanel.getSimulationTimeElapsedMs();
@@ -195,27 +206,35 @@ public class GameRenderer {
             lineHeights.add(lineHeightBold);
         }
         String hintText = "";
+        String keyToggleHUD = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.TOGGLE_HUD));
+        String keyEsc = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.ESCAPE_MENU_CANCEL));
         if (!gamePanel.isGameOver() && !gamePanel.isLevelComplete()) {
             if (!gamePanel.isSimulationStarted()) {
-                hintText = "Arrows: Scrub Time | ENTER: Start";
+                String keyScrubLeft = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.DECREMENT_VIEWED_TIME));
+                String keyScrubRight = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.INCREMENT_VIEWED_TIME));
+                String keyStartSim = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.START_SIMULATION_SCRUB_MODE));
+                hintText = String.format("%s/%s: Scrub | %s: Start", keyScrubLeft, keyScrubRight, keyStartSim);
             } else if (gamePanel.isGameRunning() && !gamePanel.isGamePaused()) {
-                hintText = "P: Pause | S: Store | ESC: Menu";
+                String keyPause = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.PAUSE_RESUME_GAME));
+                String keyStore = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.OPEN_STORE));
+                hintText = String.format("%s: Pause | %s: Store | %s: Menu", keyPause, keyStore, keyEsc);
             } else if (gamePanel.isGamePaused()) {
-                hintText = "P: Resume | ESC: Menu";
             }
             if (!hintText.isEmpty()) {
-                hintText += " | H: HUD";
-                lines.add(hintText);
-                lineColors.add(HUD_HINT_COLOR);
-                lineFonts.add(HUD_FONT_PLAIN);
-                lineHeights.add(lineHeightPlain); 
+                hintText += " | " + keyToggleHUD + ": HUD";
+            } else { 
+                hintText = keyToggleHUD + ": HUD";
             }
+            lines.add(hintText);
+            lineColors.add(HUD_HINT_COLOR);
+            lineFonts.add(HUD_FONT_PLAIN);
+            lineHeights.add(lineHeightPlain);
         }
         int totalHeightAccumulated = 0;
         for (int height : lineHeights) {
             totalHeightAccumulated += height;
         }
-        int hudHeight = 20 + totalHeightAccumulated; 
+        int hudHeight = 20 + totalHeightAccumulated;
         g2d.setColor(HUD_BACKGROUND_COLOR);
         g2d.fillRoundRect(hudX - 10, startY - 20, hudWidth, hudHeight, 15, 15);
         int currentY = startY;
@@ -223,18 +242,19 @@ public class GameRenderer {
             g2d.setColor(lineColors.get(i));
             g2d.setFont(lineFonts.get(i));
             g2d.drawString(lines.get(i), hudX, currentY);
-            currentY += lineHeights.get(i); 
+            currentY += lineHeights.get(i);
         }
     }
     private void drawHudToggleHint(Graphics2D g2d) {
         g2d.setColor(Color.DARK_GRAY);
         g2d.setFont(HUD_TOGGLE_FONT);
-        String text = "H: Toggle HUD";
+        String keyToggleHUD = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.TOGGLE_HUD));
+        String text = keyToggleHUD + ": Toggle HUD";
         FontMetrics fm = g2d.getFontMetrics();
         int y = gamePanel.getHeight() - fm.getDescent() - 5;
         g2d.drawString(text, 10, y);
     }
-    private void drawPauseOverlay(Graphics2D g2d) {
+    private void drawPauseOverlay(Graphics2D g2d, String instructionText) {
         Composite originalComposite = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
         g2d.setColor(Color.BLACK);
@@ -250,16 +270,15 @@ public class GameRenderer {
         g2d.drawString(text, x + 3, y + 3);
         g2d.setColor(Color.YELLOW);
         g2d.drawString(text, x, y);
-        String instruction = "P: Resume | ESC: Menu";
         g2d.setFont(PAUSE_OVERLAY_FONT_SMALL);
         fm = g2d.getFontMetrics();
-        int instructionWidth = fm.stringWidth(instruction);
+        int instructionWidth = fm.stringWidth(instructionText);
         int ix = (gamePanel.getWidth() - instructionWidth) / 2;
         int iy = y + fm.getAscent() + 10;
         g2d.setColor(Color.BLACK);
-        g2d.drawString(instruction, ix + 1, iy + 1);
+        g2d.drawString(instructionText, ix + 1, iy + 1);
         g2d.setColor(Color.LIGHT_GRAY);
-        g2d.drawString(instruction, ix, iy);
+        g2d.drawString(instructionText, ix, iy);
     }
     private void drawEndGameOverlay(Graphics2D g2d, String message, Color color) {
         Composite originalComposite = g2d.getComposite();

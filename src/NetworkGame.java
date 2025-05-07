@@ -1,54 +1,57 @@
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter; 
-import java.awt.event.WindowEvent;   
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 public class NetworkGame extends JFrame {
     public static final int WINDOW_WIDTH = 1200;
-    public static final int WINDOW_HEIGHT = 800; 
+    public static final int WINDOW_HEIGHT = 800;
     private GamePanel gamePanel;
     private MenuPanel menuPanel;
     private SettingsPanel settingsPanel;
     private LevelSelectionPanel levelSelectionPanel;
-    private StorePanel storeDialog; 
+    private StorePanel storeDialog;
     private GameState gameState;
-    private int currentLevel = 1; 
+    private KeyBindings keyBindings; 
+    private KeyBindingPanel keyBindingDialog; 
+    private int currentLevel = 1;
     private float masterVolume = 0.7f;
     private boolean isMuted = false;
     private Clip backgroundMusic;
     private CardLayout cardLayout;
-    private JPanel mainPanelContainer; 
+    private JPanel mainPanelContainer;
     public NetworkGame() {
         setTitle("Network Operator Simulator");
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                handleExitRequest(); 
+                handleExitRequest();
             }
         });
         gameState = new GameState();
-        currentLevel = gameState.getCurrentSelectedLevel(); 
+        keyBindings = new KeyBindings(); 
+        currentLevel = gameState.getCurrentSelectedLevel();
         cardLayout = new CardLayout();
         mainPanelContainer = new JPanel(cardLayout);
         menuPanel = new MenuPanel(this);
-        gamePanel = new GamePanel(this);
-        settingsPanel = new SettingsPanel(this);
-        levelSelectionPanel = new LevelSelectionPanel(this);
+        gamePanel = new GamePanel(this); 
+        settingsPanel = new SettingsPanel(this); 
+        levelSelectionPanel = new LevelSelectionPanel(this); 
         mainPanelContainer.add(menuPanel, "MainMenu");
         mainPanelContainer.add(levelSelectionPanel, "LevelSelection");
         mainPanelContainer.add(gamePanel, "GamePanel");
         mainPanelContainer.add(settingsPanel, "SettingsMenu");
-        setContentPane(mainPanelContainer); 
-        initSounds(); 
-        pack(); 
-        setLocationRelativeTo(null); 
-        setVisible(true); 
-        menuPanel.requestFocusInWindow(); 
+        setContentPane(mainPanelContainer);
+        initSounds();
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+        menuPanel.requestFocusInWindow();
     }
     private void handleExitRequest() {
         int choice = JOptionPane.showConfirmDialog(this,
@@ -57,7 +60,7 @@ public class NetworkGame extends JFrame {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
-            shutdownGame(); 
+            shutdownGame();
         }
     }
     private void initSounds() {
@@ -77,7 +80,7 @@ public class NetworkGame extends JFrame {
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             java.lang.System.err.println("Error loading or playing background music: " + e.getMessage());
             e.printStackTrace(); backgroundMusic = null;
-        } catch (Exception e) { 
+        } catch (Exception e) {
             java.lang.System.err.println("Unexpected error initializing sounds: " + e.getMessage());
             e.printStackTrace(); backgroundMusic = null;
         }
@@ -86,21 +89,21 @@ public class NetworkGame extends JFrame {
         if (clip == null || !clip.isOpen()) return;
         try {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume = Math.max(0.0f, Math.min(1.0f, volume)); 
+            volume = Math.max(0.0f, Math.min(1.0f, volume));
             float minDb = gainControl.getMinimum();
-            float maxDb = gainControl.getMaximum(); 
+            float maxDb = gainControl.getMaximum();
             float targetDb = minDb + ((maxDb - minDb) * volume);
-            targetDb = Math.max(minDb, Math.min(targetDb, maxDb)); 
+            targetDb = Math.max(minDb, Math.min(targetDb, maxDb));
             gainControl.setValue(targetDb);
-        } catch (IllegalArgumentException e) { 
+        } catch (IllegalArgumentException e) {
             java.lang.System.err.println("Warning: Could not set volume for clip. MASTER_GAIN control might not be supported. " + e.getMessage());
-        } catch (Exception e) { 
+        } catch (Exception e) {
             java.lang.System.err.println("Warning: An unexpected error occurred setting volume for clip. " + e.getMessage());
         }
     }
     public void playSoundEffect(String soundName) {
-        if (isMuted) return; 
-        new Thread(() -> { 
+        if (isMuted) return;
+        new Thread(() -> {
             Clip clip = null; AudioInputStream audioStream = null;
             try {
                 File soundFile = new File("assets/sounds/" + soundName + ".wav");
@@ -112,20 +115,20 @@ public class NetworkGame extends JFrame {
                 clip = AudioSystem.getClip();
                 final Clip finalClip = clip;
                 final AudioInputStream finalAudioStream = audioStream;
-                clip.addLineListener(event -> { 
+                clip.addLineListener(event -> {
                     if (event.getType() == LineEvent.Type.STOP) {
                         if (finalClip != null && finalClip.isOpen()) finalClip.close();
                         if (finalAudioStream != null) try { finalAudioStream.close(); } catch (IOException ioe) {}
                     }
                 });
                 clip.open(audioStream);
-                setVolume(clip, masterVolume); 
-                clip.start(); 
+                setVolume(clip, masterVolume);
+                clip.start();
             } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
                 java.lang.System.err.println("Error playing SFX '" + soundName + "': " + e.getMessage());
                 if (clip != null && clip.isOpen()) clip.close();
                 if (audioStream != null) try { audioStream.close(); } catch (IOException ioe) {}
-            } catch (Exception e) { 
+            } catch (Exception e) {
                 java.lang.System.err.println("Unexpected error playing SFX '" + soundName + "': " + e.getMessage());
                 if (clip != null && clip.isOpen()) clip.close();
                 if (audioStream != null) try { audioStream.close(); } catch (IOException ioe) {}
@@ -135,9 +138,9 @@ public class NetworkGame extends JFrame {
     public float getMasterVolume() { return masterVolume; }
     public void setMasterVolume(float volume) {
         this.masterVolume = Math.max(0.0f, Math.min(1.0f, volume));
-        setVolume(backgroundMusic, this.masterVolume); 
+        setVolume(backgroundMusic, this.masterVolume);
         java.lang.System.out.println("Master Volume set to: " + String.format("%.2f", this.masterVolume));
-        if (settingsPanel != null && settingsPanel.isShowing()) { 
+        if (settingsPanel != null && settingsPanel.isShowing()) {
             settingsPanel.updateUIFromGameState();
         }
     }
@@ -148,7 +151,7 @@ public class NetworkGame extends JFrame {
             if (isMuted && backgroundMusic.isRunning()) backgroundMusic.stop();
             else if (!isMuted && !backgroundMusic.isRunning()) {
                 setVolume(backgroundMusic, masterVolume);
-                backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY); 
+                backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
             }
         }
         java.lang.System.out.println("Audio Globally " + (isMuted ? "Muted" : "Unmuted"));
@@ -160,26 +163,26 @@ public class NetworkGame extends JFrame {
         java.lang.System.out.println("Navigating to GamePanel - Level " + currentLevel);
         if (gamePanel == null) { java.lang.System.err.println("ERROR: GamePanel is null!"); return; }
         cardLayout.show(mainPanelContainer, "GamePanel");
-        gamePanel.initializeLevel(currentLevel); 
-        SwingUtilities.invokeLater(gamePanel::requestFocusInWindow); 
+        gamePanel.initializeLevel(currentLevel);
+        SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
     }
     public void showSettings() {
         java.lang.System.out.println("Navigating to SettingsMenu");
         if (settingsPanel == null) return;
         cardLayout.show(mainPanelContainer, "SettingsMenu");
-        settingsPanel.updateUIFromGameState();
+        settingsPanel.updateUIFromGameState(); 
         SwingUtilities.invokeLater(settingsPanel::requestFocusInWindow);
     }
     public void showLevelSelection() {
         java.lang.System.out.println("Navigating to LevelSelection");
         if (levelSelectionPanel == null) return;
-        levelSelectionPanel.updateLevelButtons(); 
+        levelSelectionPanel.updateLevelButtons();
         cardLayout.show(mainPanelContainer, "LevelSelection");
         SwingUtilities.invokeLater(levelSelectionPanel::requestFocusInWindow);
     }
     public void returnToMenu() {
         java.lang.System.out.println("Navigating to MainMenu");
-        Component currentComponent = mainPanelContainer.getComponent(0); 
+        Component currentComponent = mainPanelContainer.getComponent(0);
         boolean gamePanelWasVisible = false;
         for (Component comp : mainPanelContainer.getComponents()) {
             if (comp.isVisible() && comp == gamePanel) {
@@ -193,7 +196,7 @@ public class NetworkGame extends JFrame {
         }
         if (menuPanel == null) return;
         cardLayout.show(mainPanelContainer, "MainMenu");
-        menuPanel.updateStartButtonLevel(currentLevel); 
+        menuPanel.updateStartButtonLevel(currentLevel);
         SwingUtilities.invokeLater(menuPanel::requestFocusInWindow);
     }
     public void showStore() {
@@ -204,7 +207,7 @@ public class NetworkGame extends JFrame {
         java.lang.System.out.println("Attempting to show Store Dialog...");
         if (storeDialog == null) {
             try {
-                storeDialog = new StorePanel(this, gamePanel); 
+                storeDialog = new StorePanel(this, gamePanel);
                 java.lang.System.out.println("StorePanel dialog instance created.");
             } catch (Exception e) {
                 java.lang.System.err.println("FATAL ERROR creating StorePanel dialog: " + e.getMessage());
@@ -217,8 +220,8 @@ public class NetworkGame extends JFrame {
         try {
             storeDialog.updateCoins(gameState.getCoins());
             java.lang.System.out.println("Store coins updated: " + gameState.getCoins());
-            storeDialog.setLocationRelativeTo(this); 
-            storeDialog.setVisible(true); 
+            storeDialog.setLocationRelativeTo(this);
+            storeDialog.setVisible(true);
             java.lang.System.out.println("Store dialog closed.");
             if (gamePanel.isShowing()) {
                 SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
@@ -233,6 +236,16 @@ public class NetworkGame extends JFrame {
             }
         }
     }
+    public void showKeyBindingDialog() {
+        java.lang.System.out.println("Showing KeyBindingDialog");
+        KeyBindingPanel dialog = new KeyBindingPanel(this, this.keyBindings);
+        dialog.setVisible(true); 
+        if (settingsPanel != null && settingsPanel.isShowing()) {
+            SwingUtilities.invokeLater(settingsPanel::requestFocusInWindow);
+        } else if (menuPanel != null && menuPanel.isShowing()) {
+            SwingUtilities.invokeLater(menuPanel::requestFocusInWindow);
+        }
+    }
     public int getCurrentLevel() { return currentLevel; }
     public void setLevel(int level) {
         if (level >= 1 && level <= gameState.getMaxLevels()) {
@@ -245,10 +258,14 @@ public class NetworkGame extends JFrame {
         }
     }
     public GameState getGameState() { return gameState; }
+    public KeyBindings getKeyBindings() { return keyBindings; } 
     public void shutdownGame() {
-        java.lang.System.out.println("Shutdown requested..."); 
+        java.lang.System.out.println("Shutdown requested...");
         if (gamePanel != null && (gamePanel.isGameRunning() || gamePanel.isGamePaused())) {
             gamePanel.stopSimulation();
+        }
+        if (keyBindings != null) { 
+            keyBindings.saveBindingsToFile();
         }
         if (backgroundMusic != null) {
             if (backgroundMusic.isRunning()) {
@@ -256,16 +273,16 @@ public class NetworkGame extends JFrame {
             }
             if (backgroundMusic.isOpen()) {
                 backgroundMusic.close();
-                java.lang.System.out.println("Background music clip closed."); 
+                java.lang.System.out.println("Background music clip closed.");
             }
         }
         if (storeDialog != null) {
             storeDialog.dispose();
-            java.lang.System.out.println("Store dialog disposed."); 
+            java.lang.System.out.println("Store dialog disposed.");
         }
-        java.lang.System.out.println("Exiting application."); 
-        dispose(); 
-        java.lang.System.exit(0); 
+        java.lang.System.out.println("Exiting application.");
+        dispose();
+        java.lang.System.exit(0);
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
