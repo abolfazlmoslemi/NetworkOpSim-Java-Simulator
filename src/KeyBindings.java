@@ -1,14 +1,18 @@
+// FILE: KeyBindings.java
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.util.Collections; 
+import java.util.Collections; // Import for unmodifiableMap
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Comparator; 
-import java.util.LinkedHashSet; 
+import java.util.Comparator; // For sorting
+import java.util.LinkedHashSet; // For maintaining insertion order if sorted
 import java.util.stream.Collectors;
+
 public class KeyBindings {
+
+    // Enum for game actions that can have a key binding
     public enum GameAction {
         TOGGLE_HUD("Toggle HUD", KeyEvent.VK_H),
         PAUSE_RESUME_GAME("Pause/Resume Game", KeyEvent.VK_P),
@@ -17,34 +21,44 @@ public class KeyBindings {
         DECREMENT_VIEWED_TIME("Scrub Time Left (Pre-Sim)", KeyEvent.VK_LEFT),
         INCREMENT_VIEWED_TIME("Scrub Time Right (Pre-Sim)", KeyEvent.VK_RIGHT),
         ESCAPE_MENU_CANCEL("Escape / Main Menu / Cancel Wiring", KeyEvent.VK_ESCAPE);
+        // Add more actions as needed
+
         private final String description;
         private final int defaultKeyCode;
+
         GameAction(String description, int defaultKeyCode) {
             this.description = description;
             this.defaultKeyCode = defaultKeyCode;
         }
+
         public String getDescription() {
             return description;
         }
+
         public int getDefaultKeyCode() {
             return defaultKeyCode;
         }
     }
+
     private final Map<GameAction, Integer> currentBindings;
     private final String configFile = "keybindings.properties";
+
     public KeyBindings() {
         currentBindings = new HashMap<>();
         loadDefaultBindings();
         loadBindingsFromFile();
     }
+
     private void loadDefaultBindings() {
         for (GameAction action : GameAction.values()) {
             currentBindings.put(action, action.getDefaultKeyCode());
         }
     }
+
     public int getKeyCode(GameAction action) {
         return currentBindings.getOrDefault(action, -1);
     }
+
     public GameAction getActionForKey(int keyCode) {
         for (Map.Entry<GameAction, Integer> entry : currentBindings.entrySet()) {
             if (entry.getValue() == keyCode) {
@@ -53,26 +67,33 @@ public class KeyBindings {
         }
         return null;
     }
+
     public boolean setKeyCode(GameAction action, int newKeyCode) {
         for (Map.Entry<GameAction, Integer> entry : currentBindings.entrySet()) {
             if (entry.getValue() == newKeyCode && entry.getKey() != action) {
-                return false; 
+                return false; // Key is already in use by another action
             }
         }
         currentBindings.put(action, newKeyCode);
         return true;
     }
+
     public Set<GameAction> getAllActions() {
+        // Return a set sorted by description for consistent display order in UI
         return currentBindings.keySet().stream()
                 .sorted(Comparator.comparing(GameAction::getDescription))
-                .collect(Collectors.toCollection(LinkedHashSet::new)); 
+                .collect(Collectors.toCollection(LinkedHashSet::new)); // Use LinkedHashSet to maintain sorted order
     }
+
     public String getKeyText(int keyCode) {
         return KeyEvent.getKeyText(keyCode);
     }
+
     public Map<GameAction, Integer> getAllBindings() {
         return Collections.unmodifiableMap(new HashMap<>(currentBindings));
     }
+
+
     public void saveBindingsToFile() {
         Properties properties = new Properties();
         for (Map.Entry<GameAction, Integer> entry : currentBindings.entrySet()) {
@@ -85,6 +106,7 @@ public class KeyBindings {
             java.lang.System.err.println("Error saving key bindings: " + io.getMessage());
         }
     }
+
     public void loadBindingsFromFile() {
         Properties properties = new Properties();
         File file = new File(configFile);

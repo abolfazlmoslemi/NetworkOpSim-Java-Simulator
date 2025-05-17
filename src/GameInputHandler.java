@@ -1,28 +1,31 @@
+// FILE: GameInputHandler.java
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList; // Not used
+// import java.util.List; // Not used
 import java.util.Objects;
-import java.awt.geom.Line2D;
+// import java.awt.geom.Line2D; // Not used
+
 public class GameInputHandler implements KeyListener, MouseListener, MouseMotionListener {
     private final GamePanel gamePanel;
     private final NetworkGame game;
-    private final KeyBindings keyBindings; 
+    private final KeyBindings keyBindings;
+
     public GameInputHandler(GamePanel gamePanel, NetworkGame game) {
         this.gamePanel = Objects.requireNonNull(gamePanel, "GamePanel cannot be null");
         this.game = Objects.requireNonNull(game, "NetworkGame cannot be null");
-        this.keyBindings = Objects.requireNonNull(game.getKeyBindings(), "KeyBindings cannot be null"); 
+        this.keyBindings = Objects.requireNonNull(game.getKeyBindings(), "KeyBindings cannot be null");
     }
     @Override public void keyTyped(KeyEvent e) {  }
     @Override public void keyReleased(KeyEvent e) {  }
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        KeyBindings.GameAction action = keyBindings.getActionForKey(keyCode); 
+        KeyBindings.GameAction action = keyBindings.getActionForKey(keyCode);
         if (action == KeyBindings.GameAction.ESCAPE_MENU_CANCEL) {
-            handleEscapeKey(); 
-            return; 
+            handleEscapeKey();
+            return;
         }
         if (action == KeyBindings.GameAction.TOGGLE_HUD) {
             gamePanel.toggleHUD();
@@ -46,14 +49,13 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             else if (action == KeyBindings.GameAction.PAUSE_RESUME_GAME || action == KeyBindings.GameAction.OPEN_STORE) {
                 e.consume();
             }
-        } else { 
+        } else {
             if (action == KeyBindings.GameAction.PAUSE_RESUME_GAME) {
                 gamePanel.pauseGame(!gamePanel.isGamePaused());
                 e.consume();
             } else if (action == KeyBindings.GameAction.OPEN_STORE) {
-                if (gamePanel.isSimulationStarted()) { 
+                if (gamePanel.isSimulationStarted()) {
                     if (!gamePanel.isGamePaused()) {
-                        java.lang.System.out.println("Store key pressed while running. Pausing game...");
                         gamePanel.pauseGame(true);
                     }
                     SwingUtilities.invokeLater(() -> game.showStore());
@@ -67,9 +69,8 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             }
         }
     }
-    private void handleEscapeKey() { 
+    private void handleEscapeKey() {
         if (gamePanel.isWireDrawingMode()) {
-            java.lang.System.out.println("Wire drawing cancelled (Escape key).");
             gamePanel.cancelWiring();
             gamePanel.requestFocusInWindow();
         } else if (gamePanel.isSimulationStarted() && !gamePanel.isGameOver() && !gamePanel.isLevelComplete()) {
@@ -100,7 +101,6 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
     @Override
     public void mouseExited(MouseEvent e) {
         if (gamePanel.isWireDrawingMode()) {
-            java.lang.System.out.println("Wire drawing cancelled (mouse exited panel).");
             gamePanel.cancelWiring();
         }
     }
@@ -111,6 +111,7 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         }
         Point pressPoint = e.getPoint();
         gamePanel.requestFocusInWindow();
+
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (!gamePanel.isSimulationStarted() && !gamePanel.isWireDrawingMode()) {
                 Port clickedPort = gamePanel.findPortAt(pressPoint);
@@ -125,7 +126,6 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         }
         else if (SwingUtilities.isRightMouseButton(e)) {
             if (gamePanel.isWireDrawingMode()) {
-                java.lang.System.out.println("Wire drawing cancelled (right-click).");
                 gamePanel.cancelWiring();
             }
             else if (!gamePanel.isSimulationStarted()) {
@@ -135,8 +135,7 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
                 }
             }
             else if (gamePanel.isSimulationStarted()){
-                java.lang.System.out.println("Cannot delete wire while simulation running.");
-                game.playSoundEffect("error");
+                if(!game.isMuted()) game.playSoundEffect("error");
             }
         }
     }
@@ -152,6 +151,7 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
                 boolean connectionMade = false;
                 Port startPort = gamePanel.getSelectedOutputPort();
                 Color finalWireColor = gamePanel.getCurrentWiringColor();
+
                 if (startPort != null && releasePort != null &&
                         !Objects.equals(releasePort.getParentSystem(), startPort.getParentSystem()) &&
                         releasePort.getType() == NetworkEnums.PortType.INPUT &&
@@ -159,17 +159,17 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
                         finalWireColor.equals(GamePanel.VALID_WIRING_COLOR_TARGET) ) {
                     connectionMade = gamePanel.attemptWireCreation(startPort, releasePort);
                 }
+
                 if (!connectionMade && releasePort != null) {
                     if (finalWireColor.equals(GamePanel.INVALID_WIRING_COLOR) ||
                             (finalWireColor.equals(GamePanel.DEFAULT_WIRING_COLOR) &&
                                     (Objects.equals(releasePort.getParentSystem(), startPort.getParentSystem()) ||
                                             releasePort.getType() != NetworkEnums.PortType.INPUT ||
                                             releasePort.isConnected())) ) {
-                        game.playSoundEffect("wire_fail");
+                        if (!game.isMuted()) game.playSoundEffect("error"); // Use "error" for failed wire attempts
                     }
                 } else if (!connectionMade && releasePort == null) {
-                    if (finalWireColor.equals(GamePanel.INVALID_WIRING_COLOR)) {
-                    }
+                    // No sound for releasing in empty space, or use error if desired.
                 }
             }
             gamePanel.cancelWiring();
@@ -184,9 +184,9 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             Point currentDragPos = e.getPoint();
             gamePanel.updateDragPos(currentDragPos);
             gamePanel.updateWiringPreview(currentDragPos);
-            gamePanel.repaint();
         }
     }
+
     @Override
     public void mouseMoved(MouseEvent e) {
         if (gamePanel.isWireDrawingMode()
@@ -198,11 +198,14 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             gamePanel.setToolTipText(null);
             return;
         }
+
         Point currentPoint = e.getPoint();
         Port portUnderMouse = gamePanel.findPortAt(currentPoint);
         Wire wireUnderMouse = gamePanel.findWireAt(currentPoint);
+
         Cursor currentCursor = Cursor.getDefaultCursor();
         String tooltipText = null;
+
         if (portUnderMouse != null) {
             tooltipText = generatePortTooltip(portUnderMouse);
             if (!gamePanel.isSimulationStarted()) {
@@ -222,11 +225,13 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         gamePanel.setCursor(currentCursor);
         gamePanel.setToolTipText(tooltipText);
     }
+
     private String generatePortTooltip(Port port) {
         if (port == null) return null;
         System portParent = port.getParentSystem();
         String tooltip = "Port: " + port.getShape() + " (" + port.getType() + ")";
         if (portParent != null) tooltip += " on Sys " + portParent.getId();
+
         if (!gamePanel.isSimulationStarted()) {
             tooltip += port.isConnected() ? ", Connected" : ", Available";
             if (!port.isConnected()) {
@@ -235,7 +240,7 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
                         " (Connect wire here)";
             }
         } else {
-            tooltip += port.isConnected() ? ", Connected" : ", Available";
+            tooltip += port.isConnected() ? ", Connected" : ", Available (Sim Running)";
         }
         return tooltip;
     }

@@ -1,3 +1,4 @@
+// FILE: SettingsPanel.java
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -7,81 +8,128 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Hashtable; // For JSlider labels
 import java.util.Objects;
+
 public class SettingsPanel extends JPanel {
     private final NetworkGame game;
     private JSlider volumeSlider;
     private JCheckBox muteCheckbox;
-    private JLabel volumeValueLabel;
+    private JLabel volumeValueLabel; // To display percentage
+
     private static final Color BACKGROUND_COLOR_START = new Color(30, 30, 40);
     private static final Color BACKGROUND_COLOR_END = new Color(45, 45, 55);
     private static final Color TEXT_COLOR = Color.WHITE;
-    private static final Color VALUE_TEXT_COLOR = Color.CYAN;
+    private static final Color VALUE_TEXT_COLOR = Color.CYAN; // Color for the percentage display
     private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 36);
     private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 18);
     private static final Font CHECKBOX_FONT = new Font("Arial", Font.PLAIN, 16);
-    private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 18); 
-    private static final Font KEYBIND_BUTTON_FONT = new Font("Arial", Font.BOLD, 16); 
+    private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 18);
+    private static final Font KEYBIND_BUTTON_FONT = new Font("Arial", Font.BOLD, 16);
     private static final Color BUTTON_BG_COLOR = new Color(100, 100, 110);
     private static final Color BUTTON_BORDER_COLOR = new Color(70, 70, 80);
+
+    // To prevent multiple sound events during slider drag
+    private boolean isProgrammaticallyChangingSlider = false;
+
+
     public SettingsPanel(NetworkGame game) {
         this.game = Objects.requireNonNull(game, "NetworkGame instance cannot be null");
-        setLayout(new GridBagLayout());
+        setLayout(new GridBagLayout()); // Use GridBagLayout for centering content vertically
         setPreferredSize(new Dimension(NetworkGame.WINDOW_WIDTH, NetworkGame.WINDOW_HEIGHT));
+
+        // Content panel that will be centered
         JPanel settingsContent = new JPanel();
         settingsContent.setLayout(new BoxLayout(settingsContent, BoxLayout.Y_AXIS));
-        settingsContent.setOpaque(false);
-        settingsContent.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        settingsContent.setOpaque(false); // Make content panel transparent
+        settingsContent.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50)); // Padding
+
         settingsContent.add(createTitleLabel("Settings"));
-        settingsContent.add(Box.createVerticalStrut(40));
+        settingsContent.add(Box.createVerticalStrut(40)); // Spacer
+
         JPanel volumePanel = createVolumeControlPanel();
         settingsContent.add(volumePanel);
         settingsContent.add(Box.createVerticalStrut(15));
+
         JPanel mutePanel = createMuteControlPanel();
         settingsContent.add(mutePanel);
-        settingsContent.add(Box.createVerticalStrut(30)); 
+        settingsContent.add(Box.createVerticalStrut(30));
+
         JPanel keyBindingButtonPanel = createKeyBindingButtonPanel();
         settingsContent.add(keyBindingButtonPanel);
-        settingsContent.add(Box.createVerticalStrut(60)); 
+
+        settingsContent.add(Box.createVerticalGlue()); // Pushes content to the top
+
         JPanel backButtonPanel = createBackButtonPanel();
         settingsContent.add(backButtonPanel);
-        settingsContent.add(Box.createVerticalGlue());
-        add(settingsContent);
-        updateUIFromGameState();
+        settingsContent.add(Box.createVerticalStrut(20)); // Spacer at bottom
+
+        // Add settingsContent to the main panel (which uses GridBagLayout)
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0; // Allow vertical expansion
+        gbc.anchor = GridBagConstraints.CENTER; // Center the content panel
+        add(settingsContent, gbc);
+
+        updateUIFromGameState(); // Initial UI state
     }
+
     private JLabel createTitleLabel(String text) {
         JLabel titleLabel = new JLabel(text, SwingConstants.CENTER);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center horizontally within BoxLayout
         return titleLabel;
     }
+
     private JPanel createVolumeControlPanel() {
         JPanel volumePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
         volumePanel.setOpaque(false);
-        volumePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        volumePanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center horizontally
+
         JLabel volumeLabel = new JLabel("Master Volume:");
         styleLabel(volumeLabel);
+
         volumeSlider = new JSlider(0, 100, (int) (game.getMasterVolume() * 100));
-        volumeSlider.setPreferredSize(new Dimension(350, 40));
-        volumeSlider.setOpaque(false);
-        volumeSlider.setMajorTickSpacing(20);
+        volumeSlider.setPreferredSize(new Dimension(350, 50)); // Increased height for ticks/labels
+        volumeSlider.setOpaque(false); // Make slider track transparent
+        volumeSlider.setMajorTickSpacing(25);
         volumeSlider.setMinorTickSpacing(5);
         volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintLabels(true); // Show numeric labels
+        volumeSlider.setForeground(TEXT_COLOR); // Color for ticks and labels
+
+        // Custom labels for JSlider
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+        labelTable.put(0, new JLabel("0%"));
+        labelTable.put(50, new JLabel("50%"));
+        labelTable.put(100, new JLabel("100%"));
+        for (JLabel label : labelTable.values()) {
+            label.setForeground(TEXT_COLOR);
+            label.setFont(LABEL_FONT.deriveFont(12f));
+        }
+        volumeSlider.setLabelTable(labelTable);
+
         volumeSlider.addChangeListener(new VolumeSliderListener());
-        volumeValueLabel = new JLabel(String.valueOf(volumeSlider.getValue()));
+
+        volumeValueLabel = new JLabel(String.format("%d%%", volumeSlider.getValue())); // Show with %
         styleLabel(volumeValueLabel);
         volumeValueLabel.setForeground(VALUE_TEXT_COLOR);
-        volumeValueLabel.setPreferredSize(new Dimension(40, 30));
+        volumeValueLabel.setPreferredSize(new Dimension(50, 30)); // Wider for "100%"
+
         volumePanel.add(volumeLabel);
         volumePanel.add(volumeSlider);
         volumePanel.add(volumeValueLabel);
         return volumePanel;
     }
+
     private JPanel createMuteControlPanel() {
         JPanel mutePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         mutePanel.setOpaque(false);
         mutePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         muteCheckbox = new JCheckBox(" Mute All Audio");
         muteCheckbox.setFont(CHECKBOX_FONT);
         muteCheckbox.setForeground(TEXT_COLOR);
@@ -90,6 +138,7 @@ public class SettingsPanel extends JPanel {
         muteCheckbox.setFocusPainted(false);
         muteCheckbox.setIconTextGap(10);
         muteCheckbox.addActionListener(new MuteCheckboxListener());
+
         mutePanel.add(muteCheckbox);
         return mutePanel;
     }
@@ -98,12 +147,14 @@ public class SettingsPanel extends JPanel {
         panel.setOpaque(false);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JButton keyBindingButton = new JButton("Configure Key Bindings");
-        keyBindingButton.setFont(KEYBIND_BUTTON_FONT); 
-        styleStandardButton(keyBindingButton, BUTTON_BG_COLOR, BUTTON_BORDER_COLOR); 
+        keyBindingButton.setFont(KEYBIND_BUTTON_FONT);
+        styleStandardButton(keyBindingButton, BUTTON_BG_COLOR, BUTTON_BORDER_COLOR);
         keyBindingButton.addActionListener(e -> game.showKeyBindingDialog());
         panel.add(keyBindingButton);
         return panel;
     }
+
+
     private JPanel createBackButtonPanel() {
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         backButtonPanel.setOpaque(false);
@@ -115,10 +166,12 @@ public class SettingsPanel extends JPanel {
         backButtonPanel.add(backButton);
         return backButtonPanel;
     }
+
     private void styleLabel(JLabel label) {
         label.setForeground(TEXT_COLOR);
         label.setFont(LABEL_FONT);
     }
+
     private void styleStandardButton(JButton button, Color bgColor, Color borderColor) {
         button.setForeground(TEXT_COLOR);
         button.setBackground(bgColor);
@@ -127,60 +180,82 @@ public class SettingsPanel extends JPanel {
         Border empty = BorderFactory.createEmptyBorder(10, 20, 10, 20);
         button.setBorder(BorderFactory.createCompoundBorder(line, empty));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         button.addMouseListener(new MouseAdapter() {
             final Color originalColor = button.getBackground();
-            final Color hoverColor = originalColor.brighter();
+            // Slightly brighter hover for better feedback
+            final Color hoverColor = bgColor.brighter();
+
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 if(button.isEnabled()) button.setBackground(hoverColor);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 if(button.isEnabled()) button.setBackground(originalColor);
             }
         });
     }
+
     public void updateUIFromGameState() {
+        isProgrammaticallyChangingSlider = true; // Prevent listener from firing due to this change
+
         int sliderValue = (int) (game.getMasterVolume() * 100);
         if (volumeSlider.getValue() != sliderValue) {
             volumeSlider.setValue(sliderValue);
         }
-        volumeValueLabel.setText(String.valueOf(sliderValue));
+        volumeValueLabel.setText(String.format("%d%%", sliderValue));
+
         if (muteCheckbox.isSelected() != game.isMuted()) {
             muteCheckbox.setSelected(game.isMuted());
         }
-        updateVolumeSliderState();
+        updateVolumeSliderState(); // Enable/disable slider based on mute state
+
+        isProgrammaticallyChangingSlider = false;
     }
+
     private void updateVolumeSliderState() {
         volumeSlider.setEnabled(!game.isMuted());
+        // Change opacity or color of slider when disabled for better visual feedback
+        if (game.isMuted()) {
+            volumeSlider.setForeground(Color.DARK_GRAY); // Example: Dim ticks/labels
+            // You might need to customize L&F for slider track/thumb when disabled
+        } else {
+            volumeSlider.setForeground(TEXT_COLOR);
+        }
     }
+
     private class VolumeSliderListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (!volumeSlider.getValueIsAdjusting()) {
-                int sliderValue = volumeSlider.getValue();
+            if (isProgrammaticallyChangingSlider) return; // Ignore programmatic changes
+
+            int sliderValue = volumeSlider.getValue();
+            volumeValueLabel.setText(String.format("%d%%", sliderValue)); // Update label as slider moves
+
+            if (!volumeSlider.getValueIsAdjusting()) { // Apply change when user releases slider
                 float newVolume = sliderValue / 100.0f;
-                float currentVolume = game.getMasterVolume();
-                if (Math.abs(newVolume - currentVolume) > 0.001) { 
-                    game.setMasterVolume(newVolume);
-                    volumeValueLabel.setText(String.valueOf(sliderValue));
-                    if (game.isMuted() && newVolume > 0) { 
-                        java.lang.System.out.println("Volume slider moved while muted - unmuting.");
-                        game.toggleMute(); 
-                    }
+                game.setMasterVolume(newVolume);
+
+                // If volume is set > 0 while muted, unmute
+                if (game.isMuted() && newVolume > 0) {
+                    muteCheckbox.setSelected(false); // Visually update checkbox
+                    game.toggleMute(); // This will also call updateVolumeSliderState
                 }
-            } else { 
-                volumeValueLabel.setText(String.valueOf(volumeSlider.getValue()));
             }
         }
     }
+
     private class MuteCheckboxListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            game.toggleMute();
-            updateVolumeSliderState(); 
+            game.toggleMute(); // This already updates volume in NetworkGame
+            updateVolumeSliderState(); // Reflect mute state on slider enabled status
         }
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

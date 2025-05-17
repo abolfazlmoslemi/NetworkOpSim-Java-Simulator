@@ -1,3 +1,4 @@
+// FILE: GameRenderer.java
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -6,10 +7,11 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 public class GameRenderer {
     private final GamePanel gamePanel;
     private final GameState gameState;
-    private final KeyBindings keyBindings; 
+    private final KeyBindings keyBindings;
     private static final Stroke WIRING_LINE_STROKE = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
             10.0f, new float[]{9f, 5f}, 0.0f);
     private static final Font HUD_FONT_BOLD = new Font("Consolas", Font.BOLD, 14);
@@ -22,6 +24,7 @@ public class GameRenderer {
     private static final Font END_GAME_OVERLAY_FONT_SMALL = new Font("Arial", Font.PLAIN, 16);
     private static final Font TIME_SCRUB_FONT = new Font("Consolas", Font.BOLD, 14);
     private static final Font PREDICTION_STATUS_FONT = new Font("Arial", Font.BOLD, 9);
+    private static final Font TEMP_MESSAGE_FONT = new Font("Arial", Font.BOLD, 16);
     private static final Color GRID_COLOR = new Color(40, 40, 50);
     private static final Color HUD_BACKGROUND_COLOR = new Color(20, 20, 30, 210);
     private static final Color GAME_OVER_COLOR = Color.RED.darker();
@@ -51,11 +54,13 @@ public class GameRenderer {
     private static final Color HUD_LOSS_OK_COLOR = Color.GREEN.darker();
     private static final Color HUD_LOSS_WARN_COLOR = Color.ORANGE;
     private static final Color HUD_LOSS_DANGER_COLOR = Color.RED;
+
     public GameRenderer(GamePanel gamePanel, GameState gameState) {
         this.gamePanel = gamePanel;
         this.gameState = gameState;
-        this.keyBindings = gamePanel.getGame().getKeyBindings(); 
+        this.keyBindings = gamePanel.getGame().getKeyBindings();
     }
+
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         try {
@@ -84,19 +89,25 @@ public class GameRenderer {
                     }
                 }
             } else {
-                synchronized (gamePanel.getPredictedPacketStates()) {
-                    List<PacketSnapshot> predictionSnapshot = new ArrayList<>(gamePanel.getPredictedPacketStates());
-                    for (PacketSnapshot snapshot : predictionSnapshot) {
-                        drawPredictedPacket(g2d, snapshot);
+                if (gamePanel.isNetworkValidatedForPrediction()) {
+                    synchronized (gamePanel.getPredictedPacketStates()) {
+                        List<PacketSnapshot> predictionSnapshot = new ArrayList<>(gamePanel.getPredictedPacketStates());
+                        for (PacketSnapshot snapshot : predictionSnapshot) {
+                            drawPredictedPacket(g2d, snapshot);
+                        }
                     }
                 }
                 drawTimeScrubberUI(g2d);
             }
+
             if (gamePanel.isShowHUD()) {
                 drawHUD(g2d);
             } else {
                 drawHudToggleHint(g2d);
             }
+
+            drawTemporaryMessage(g2d);
+
             String pauseInstruction = "";
             if (gamePanel.isGamePaused()) {
                 pauseInstruction = String.format("%s: Resume | %s: Menu",
@@ -113,12 +124,14 @@ public class GameRenderer {
             g2d.dispose();
         }
     }
+
     private void setupHighQualityRendering(Graphics2D g2d) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
     }
+
     private void drawGrid(Graphics2D g2d) {
         g2d.setColor(GRID_COLOR);
         int width = gamePanel.getWidth();
@@ -130,6 +143,7 @@ public class GameRenderer {
             g2d.drawLine(0, y, width, y);
         }
     }
+
     private void drawWiringLine(Graphics2D g2d) {
         Port startPort = gamePanel.getSelectedOutputPort();
         Point dragPos = gamePanel.getMouseDragPos();
@@ -141,12 +155,13 @@ public class GameRenderer {
         g2d.drawLine(startPort.getX(), startPort.getY(), dragPos.x, dragPos.y);
         g2d.setStroke(oldStroke);
     }
+
     private void drawHUD(Graphics2D g2d) {
         int hudX = 15;
         int startY = 30;
         int lineHeightBold = 20;
         int lineHeightPlain = 18;
-        int hudWidth = 250; 
+        int hudWidth = 250;
         List<String> lines = new ArrayList<>();
         List<Color> lineColors = new ArrayList<>();
         List<Font> lineFonts = new ArrayList<>();
@@ -222,7 +237,7 @@ public class GameRenderer {
             }
             if (!hintText.isEmpty()) {
                 hintText += " | " + keyToggleHUD + ": HUD";
-            } else { 
+            } else {
                 hintText = keyToggleHUD + ": HUD";
             }
             lines.add(hintText);
@@ -245,6 +260,7 @@ public class GameRenderer {
             currentY += lineHeights.get(i);
         }
     }
+
     private void drawHudToggleHint(Graphics2D g2d) {
         g2d.setColor(Color.DARK_GRAY);
         g2d.setFont(HUD_TOGGLE_FONT);
@@ -254,6 +270,7 @@ public class GameRenderer {
         int y = gamePanel.getHeight() - fm.getDescent() - 5;
         g2d.drawString(text, 10, y);
     }
+
     private void drawPauseOverlay(Graphics2D g2d, String instructionText) {
         Composite originalComposite = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
@@ -280,6 +297,7 @@ public class GameRenderer {
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.drawString(instructionText, ix, iy);
     }
+
     private void drawEndGameOverlay(Graphics2D g2d, String message, Color color) {
         Composite originalComposite = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
@@ -304,6 +322,7 @@ public class GameRenderer {
         int sy = y + fm.getAscent() + 15;
         g2d.drawString(subText, sx, sy);
     }
+
     private void drawTimeScrubberUI(Graphics2D g2d) {
         int panelWidth = gamePanel.getWidth();
         int panelHeight = gamePanel.getHeight();
@@ -334,6 +353,7 @@ public class GameRenderer {
         int textY = scrubY + fm.getAscent() + (TIME_SCRUB_HEIGHT - fm.getHeight()) / 2;
         g2d.drawString(timeString, textX, textY);
     }
+
     private void drawPredictedPacket(Graphics2D g2d, PacketSnapshot snapshot) {
         if (snapshot.getStatus() == PredictedPacketStatus.NOT_YET_GENERATED || snapshot.getPosition() == null) {
             return;
@@ -377,13 +397,13 @@ public class GameRenderer {
                     break;
                 case TRIANGLE:
                     path = new Path2D.Double();
-                    path.moveTo(position.x, y);
-                    path.lineTo(x + drawSize, y + drawSize);
-                    path.lineTo(x, y + drawSize);
+                    path.moveTo(position.x, y); // Top point
+                    path.lineTo(x + drawSize, y + drawSize); // Bottom-right
+                    path.lineTo(x, y + drawSize); // Bottom-left
                     path.closePath();
                     g2d.fill(path);
                     break;
-                default:
+                default: // Should be Circle or other, draw oval as fallback
                     g2d.fillOval(x, y, drawSize, drawSize);
                     break;
             }
@@ -394,6 +414,7 @@ public class GameRenderer {
                 case TRIANGLE: if (path != null) g2d.draw(path); break;
                 default: g2d.drawOval(x, y, drawSize, drawSize); break;
             }
+
             if (statusIndicator != null) {
                 g2d.setColor(PREDICTION_INDICATOR_COLOR);
                 g2d.setFont(PREDICTION_STATUS_FONT);
@@ -409,7 +430,46 @@ public class GameRenderer {
                 g2d.drawLine(x + drawSize, y, x, y + drawSize);
             }
         } finally {
-            g2d.setStroke(new BasicStroke(1));
+            g2d.setStroke(new BasicStroke(1)); // Reset stroke
+            // g2d.setTransform(oldTransform); // Not needed if not transforming for prediction
+        }
+    }
+
+    private void drawTemporaryMessage(Graphics2D g2d) {
+        NetworkGame.TemporaryMessage msg = gamePanel.getGame().getTemporaryMessage();
+        if (msg != null) {
+            String text = msg.message;
+            Color color = msg.color;
+            long displayUntil = msg.displayUntilTimestamp;
+            float alphaFactor = 1.0f;
+
+            long currentTime = java.lang.System.currentTimeMillis();
+            long timeLeft = displayUntil - currentTime;
+            long fadeDuration = 500; // Start fading 500ms before disappearing
+
+            if (timeLeft <= 0) {
+                gamePanel.getGame().clearTemporaryMessage(); // Message expired
+                return;
+            } else if (timeLeft < fadeDuration) {
+                alphaFactor = (float)timeLeft / fadeDuration;
+                alphaFactor = Math.max(0.0f, Math.min(1.0f, alphaFactor)); // Clamp
+            }
+
+            g2d.setFont(TEMP_MESSAGE_FONT);
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(text);
+            int textHeight = fm.getHeight();
+            int panelWidth = gamePanel.getWidth();
+
+            int x = (panelWidth - textWidth) / 2;
+            int y = 30 + fm.getAscent();
+
+            Color bgColor = new Color(0, 0, 0, (int)(150 * alphaFactor));
+            g2d.setColor(bgColor);
+            g2d.fillRoundRect(x - 10, y - textHeight + fm.getDescent() - 5, textWidth + 20, textHeight + 5, 10, 10);
+
+            g2d.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), (int)(255 * alphaFactor)));
+            g2d.drawString(text, x, y);
         }
     }
 }

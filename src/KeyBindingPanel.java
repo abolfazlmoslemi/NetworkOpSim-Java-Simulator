@@ -1,12 +1,14 @@
+// FILE: KeyBindingPanel.java
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder; 
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
 public class KeyBindingPanel extends JDialog {
     private final NetworkGame game;
     private final KeyBindings keyBindings;
@@ -14,32 +16,33 @@ public class KeyBindingPanel extends JDialog {
     private KeyBindings.GameAction actionToChange = null;
     private JLabel waitingForKeyLabel;
     private JButton cancelButtonListening;
-    private static final Color DIALOG_BG_COLOR_START = new Color(35, 40, 50); 
+    private static final Color DIALOG_BG_COLOR_START = new Color(35, 40, 50);
     private static final Color DIALOG_BG_COLOR_END = new Color(50, 55, 65);
-    private static final Color PANEL_ITEM_BG_COLOR = new Color(60, 65, 75); 
-    private static final Color TEXT_COLOR = new Color(220, 220, 220); 
-    private static final Color ACTION_TEXT_COLOR = new Color(190, 210, 230); 
-    private static final Color KEY_TEXT_COLOR = Color.ORANGE; 
+    private static final Color PANEL_ITEM_BG_COLOR = new Color(60, 65, 75);
+    private static final Color TEXT_COLOR = new Color(220, 220, 220);
+    private static final Color ACTION_TEXT_COLOR = new Color(190, 210, 230);
+    private static final Color KEY_TEXT_COLOR = Color.ORANGE;
     private static final Color BUTTON_BG_COLOR = new Color(75, 85, 100);
     private static final Color BUTTON_BORDER_COLOR = new Color(50, 55, 65);
     private static final Color BUTTON_HOVER_BG_COLOR = new Color(95, 105, 120);
-    private static final Font TITLE_FONT = new Font("Segoe UI Semibold", Font.BOLD, 26); 
-    private static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 16); 
-    private static final Font KEY_FONT = new Font("Consolas", Font.BOLD, 16); 
+    private static final Font TITLE_FONT = new Font("Segoe UI Semibold", Font.BOLD, 26);
+    private static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 16);
+    private static final Font KEY_FONT = new Font("Consolas", Font.BOLD, 16);
     private static final Font BUTTON_FONT_SMALL = new Font("Segoe UI Semibold", Font.BOLD, 14);
     private static final Font WAITING_FONT = new Font("Segoe UI", Font.BOLD, 17);
     private static final Color SEPARATOR_COLOR = new Color(70, 75, 85);
+
     public KeyBindingPanel(NetworkGame owner, KeyBindings keyBindings) {
         super(owner, "Configure Key Bindings", true);
         this.game = Objects.requireNonNull(owner);
         this.keyBindings = Objects.requireNonNull(keyBindings);
-        setLayout(new BorderLayout(15, 15)); 
-        setPreferredSize(new Dimension(600, 650)); 
-        ((JPanel)getContentPane()).setBorder(new EmptyBorder(20, 25, 20, 25)); 
+        setLayout(new BorderLayout(15, 15));
+        setPreferredSize(new Dimension(600, 650));
+        ((JPanel)getContentPane()).setBorder(new EmptyBorder(20, 25, 20, 25));
         JLabel titleLabel = new JLabel("Key Bindings", SwingConstants.CENTER);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
-        titleLabel.setBorder(new EmptyBorder(0,0,15,0)); 
+        titleLabel.setBorder(new EmptyBorder(0,0,15,0));
         add(titleLabel, BorderLayout.NORTH);
         JPanel bindingsContainerPanel = new JPanel(new GridBagLayout());
         bindingsContainerPanel.setOpaque(false);
@@ -47,15 +50,15 @@ public class KeyBindingPanel extends JDialog {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(4, 2, 4, 2); 
+        gbc.insets = new Insets(4, 2, 4, 2);
         int row = 0;
         for (KeyBindings.GameAction action : keyBindings.getAllActions()) {
-            JPanel itemPanel = new JPanel(new BorderLayout(15, 0)); 
-            itemPanel.setOpaque(true); 
+            JPanel itemPanel = new JPanel(new BorderLayout(15, 0));
+            itemPanel.setOpaque(true);
             itemPanel.setBackground(PANEL_ITEM_BG_COLOR);
             itemPanel.setBorder(BorderFactory.createCompoundBorder(
-                    new MatteBorder(0, 0, 1, 0, SEPARATOR_COLOR), 
-                    new EmptyBorder(8, 12, 8, 12) 
+                    new MatteBorder(0, 0, 1, 0, SEPARATOR_COLOR),
+                    new EmptyBorder(8, 12, 8, 12)
             ));
             JLabel actionLabel = new JLabel(action.getDescription() + ":");
             actionLabel.setFont(LABEL_FONT);
@@ -63,11 +66,11 @@ public class KeyBindingPanel extends JDialog {
             JButton keyButton = new JButton(keyBindings.getKeyText(keyBindings.getKeyCode(action)));
             keyButton.setFont(KEY_FONT);
             keyButton.setForeground(KEY_TEXT_COLOR);
-            styleActionButton(keyButton, new Dimension(130, 35)); 
+            styleActionButton(keyButton, new Dimension(130, 35));
             keyButton.addActionListener(e -> startListeningFor(action, keyButton));
             actionButtons.put(action, keyButton);
-            itemPanel.add(actionLabel, BorderLayout.CENTER); 
-            itemPanel.add(keyButton, BorderLayout.EAST);   
+            itemPanel.add(actionLabel, BorderLayout.CENTER);
+            itemPanel.add(keyButton, BorderLayout.EAST);
             bindingsContainerPanel.add(itemPanel, gbc, row++);
         }
         gbc.weighty = 1;
@@ -75,7 +78,7 @@ public class KeyBindingPanel extends JDialog {
         JScrollPane scrollPane = new JScrollPane(bindingsContainerPanel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(BorderFactory.createLineBorder(SEPARATOR_COLOR.darker(), 1)); 
+        scrollPane.setBorder(BorderFactory.createLineBorder(SEPARATOR_COLOR.darker(), 1));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0,12));
@@ -87,23 +90,23 @@ public class KeyBindingPanel extends JDialog {
         waitingForKeyLabel.setFont(LABEL_FONT);
         waitingForKeyLabel.setForeground(TEXT_COLOR);
         cancelButtonListening = new JButton("Cancel Change (Esc)");
-        styleUtilityButton(cancelButtonListening, new Color(120, 70, 70)); 
+        styleUtilityButton(cancelButtonListening, new Color(120, 70, 70));
         cancelButtonListening.setVisible(false);
         cancelButtonListening.addActionListener(e -> cancelKeyChange());
         waitingPanel.add(waitingForKeyLabel);
         waitingPanel.add(cancelButtonListening);
-        JPanel bottomButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10)); 
+        JPanel bottomButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         bottomButtonPanel.setOpaque(false);
-        bottomButtonPanel.setBorder(new EmptyBorder(10,0,0,0)); 
+        bottomButtonPanel.setBorder(new EmptyBorder(10,0,0,0));
         JButton saveButton = new JButton("Save & Close");
-        styleUtilityButton(saveButton, new Color(70, 120, 70)); 
+        styleUtilityButton(saveButton, new Color(70, 120, 70));
         saveButton.addActionListener(e -> {
             keyBindings.saveBindingsToFile();
-            game.playSoundEffect("ui_confirm");
+            // game.playSoundEffect("ui_confirm"); // REMOVED
             dispose();
         });
         JButton defaultsButton = new JButton("Reset to Defaults");
-        styleUtilityButton(defaultsButton, new Color(110, 110, 70)); 
+        styleUtilityButton(defaultsButton, new Color(110, 110, 70));
         defaultsButton.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Are you sure you want to reset all key bindings to their defaults?",
@@ -112,14 +115,14 @@ public class KeyBindingPanel extends JDialog {
                 keyBindings.resetToDefaults();
                 updateAllKeyButtonLabels();
                 keyBindings.saveBindingsToFile();
-                game.playSoundEffect("ui_confirm");
+                // game.playSoundEffect("ui_confirm"); // REMOVED
             }
         });
         JButton closeButton = new JButton("Close Without Saving");
-        styleUtilityButton(closeButton, new Color(100,100,110)); 
+        styleUtilityButton(closeButton, new Color(100,100,110));
         closeButton.addActionListener(e -> {
-            keyBindings.loadBindingsFromFile();
-            game.playSoundEffect("ui_cancel");
+            keyBindings.loadBindingsFromFile(); // Reload original bindings
+            // game.playSoundEffect("ui_cancel"); // REMOVED
             dispose();
         });
         bottomButtonPanel.add(saveButton);
@@ -128,7 +131,7 @@ public class KeyBindingPanel extends JDialog {
         JPanel southOuterPanel = new JPanel(new BorderLayout());
         southOuterPanel.setOpaque(false);
         southOuterPanel.add(waitingPanel, BorderLayout.NORTH);
-        southOuterPanel.add(bottomButtonPanel, BorderLayout.CENTER); 
+        southOuterPanel.add(bottomButtonPanel, BorderLayout.CENTER);
         add(southOuterPanel, BorderLayout.SOUTH);
         pack();
         setLocationRelativeTo(owner);
@@ -145,7 +148,7 @@ public class KeyBindingPanel extends JDialog {
                     tryAssignKey(newKeyCode);
                     e.consume();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    keyBindings.loadBindingsFromFile(); 
+                    keyBindings.loadBindingsFromFile();
                     dispose();
                 }
             }
@@ -161,8 +164,8 @@ public class KeyBindingPanel extends JDialog {
                 if (actionToChange != null) {
                     cancelKeyChange();
                 }
-                keyBindings.loadBindingsFromFile();
-                game.playSoundEffect("ui_cancel");
+                keyBindings.loadBindingsFromFile(); // Ensure bindings are reverted if panel closed without saving
+                // game.playSoundEffect("ui_cancel"); // REMOVED
             }
         });
     }
@@ -188,7 +191,7 @@ public class KeyBindingPanel extends JDialog {
         button.setBackground(bgColor);
         button.setFocusPainted(false);
         Border line = BorderFactory.createLineBorder(bgColor.darker(), 1);
-        Border empty = BorderFactory.createEmptyBorder(10, 18, 10, 18); 
+        Border empty = BorderFactory.createEmptyBorder(10, 18, 10, 18);
         button.setBorder(BorderFactory.createCompoundBorder(line, empty));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addMouseListener(new MouseAdapter() {
@@ -203,12 +206,12 @@ public class KeyBindingPanel extends JDialog {
             if (previousButton != null) {
                 previousButton.setText(keyBindings.getKeyText(keyBindings.getKeyCode(actionToChange)));
                 previousButton.setEnabled(true);
-                previousButton.setBackground(BUTTON_BG_COLOR); 
+                previousButton.setBackground(BUTTON_BG_COLOR);
             }
         }
         actionToChange = action;
         button.setText("PRESS KEY");
-        button.setBackground(Color.DARK_GRAY.brighter()); 
+        button.setBackground(Color.DARK_GRAY.brighter());
         button.setEnabled(false);
         waitingForKeyLabel.setText("Waiting for key for: \"" + action.getDescription() + "\"");
         waitingForKeyLabel.setFont(WAITING_FONT);
@@ -232,14 +235,14 @@ public class KeyBindingPanel extends JDialog {
                             conflictingAction.getDescription() + ".\nPlease choose a different key.",
                     "Key Conflict", JOptionPane.ERROR_MESSAGE);
             currentButton.setText(keyBindings.getKeyText(keyBindings.getKeyCode(actionToChange)));
-            game.playSoundEffect("error"); 
+            if(!game.isMuted()) game.playSoundEffect("error"); // Keep error sound for key conflict
         } else {
             keyBindings.setKeyCode(actionToChange, newKeyCode);
             currentButton.setText(keyBindings.getKeyText(newKeyCode));
-            game.playSoundEffect("ui_keypress");
+            // game.playSoundEffect("ui_keypress"); // REMOVED
         }
         currentButton.setEnabled(true);
-        currentButton.setBackground(BUTTON_BG_COLOR); 
+        currentButton.setBackground(BUTTON_BG_COLOR);
         actionToChange = null;
         waitingForKeyLabel.setText("Click an action's key to change it.");
         waitingForKeyLabel.setFont(LABEL_FONT);
@@ -252,14 +255,14 @@ public class KeyBindingPanel extends JDialog {
             if (button != null) {
                 button.setText(keyBindings.getKeyText(keyBindings.getKeyCode(actionToChange)));
                 button.setEnabled(true);
-                button.setBackground(BUTTON_BG_COLOR); 
+                button.setBackground(BUTTON_BG_COLOR);
             }
             actionToChange = null;
             waitingForKeyLabel.setText("Click an action's key to change it.");
             waitingForKeyLabel.setFont(LABEL_FONT);
             waitingForKeyLabel.setForeground(TEXT_COLOR);
             cancelButtonListening.setVisible(false);
-            game.playSoundEffect("ui_cancel");
+            // game.playSoundEffect("ui_cancel"); // REMOVED
         }
     }
     private void updateAllKeyButtonLabels() {
