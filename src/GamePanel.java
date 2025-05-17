@@ -1,3 +1,5 @@
+// ===== File: GamePanel.java =====
+
 // === GamePanel.java ===
 // FILE: GamePanel.java
 import javax.swing.*;
@@ -77,7 +79,6 @@ public class GamePanel extends JPanel {
     private final Timer gameLoopTimer;
     private volatile long viewedTimeMs = 0;
     private final List<PacketSnapshot> predictedPacketStates = Collections.synchronizedList(new ArrayList<>());
-    // private static final Random predictionRandom = new Random(); // REMOVED - Will create one with seed
 
     private final List<System> systems = Collections.synchronizedList(new ArrayList<>());
     private final List<Wire> wires = Collections.synchronizedList(new ArrayList<>());
@@ -100,8 +101,8 @@ public class GamePanel extends JPanel {
     private volatile long maxPredictionTimeForScrubbingMs = 0;
 
     private final Set<Pair<Integer,Integer>> activelyCollidingPairs = new HashSet<>();
-    private boolean networkValidatedForPrediction = false;
-    private static final long PREDICTION_SEED = 12345L; // Seed for consistent predictions
+    private volatile boolean networkValidatedForPrediction = false; // Master flag for network validity
+    private static final long PREDICTION_SEED = 12345L;
 
     public GamePanel(NetworkGame game) {
         this.game = Objects.requireNonNull(game, "NetworkGame instance cannot be null");
@@ -130,6 +131,7 @@ public class GamePanel extends JPanel {
         stopSimulation();
         gameState.resetForLevel();
         this.currentLevel = level;
+        this.networkValidatedForPrediction = false; // Reset validation state for the new level
 
         if (this.currentLevel == 1) {
             this.currentLevelTimeLimitMs = LEVEL_1_TIME_LIMIT_MS;
@@ -142,8 +144,7 @@ public class GamePanel extends JPanel {
         this.maxPredictionTimeForScrubbingMs = this.currentLevelTimeLimitMs;
         java.lang.System.out.println("Level " + this.currentLevel + " time limit: " + (this.currentLevelTimeLimitMs / 1000) + "s. Scrubbing limit: " + (this.maxPredictionTimeForScrubbingMs / 1000) + "s.");
 
-        // Reset Random instance in System class for simulation consistency
-        System.resetGlobalRandomSeed(PREDICTION_SEED); // Assuming you add this static method to System
+        System.resetGlobalRandomSeed(PREDICTION_SEED);
 
         totalPacketsSuccessfullyDelivered = 0;
         levelComplete = false;
@@ -169,9 +170,19 @@ public class GamePanel extends JPanel {
         synchronized (systems) { systems.clear(); systems.addAll(layout.systems); }
         synchronized (wires) { wires.clear(); wires.addAll(layout.wires); }
         this.currentLevel = layout.levelNumber;
+
+        // Perform initial validation silently (without showing "Network Ready" message)
+        String initialErrorMessage = getNetworkValidationErrorMessage();
+        this.networkValidatedForPrediction = (initialErrorMessage == null);
+        if (this.networkValidatedForPrediction) {
+            java.lang.System.out.println("Level " + this.currentLevel + " loaded. Initial state: VALID for prediction.");
+        } else {
+            java.lang.System.out.println("Level " + this.currentLevel + " loaded. Initial state: INVALID for prediction. Reason: " + (initialErrorMessage != null ? initialErrorMessage : "Unknown"));
+        }
+        updatePrediction(); // Update prediction display based on initial state
+
         showHUD = true;
         hudTimer.restart();
-        validateAndSetPredictionFlag();
         repaint();
         java.lang.System.out.println("Level " + this.currentLevel + " initialized. In Time Scrubbing mode.");
         java.lang.System.out.println("Use Left/Right Arrows to scrub time, Enter to start simulation.");
@@ -197,23 +208,27 @@ public class GamePanel extends JPanel {
         }
         if (simulationStarted || gameOver || levelComplete) return;
 
+        // Get current validation state for starting simulation
         String validationMessage = getNetworkValidationErrorMessage();
-        if (validationMessage != null) {
+        if (validationMessage != null) { // If network is NOT valid
             if (!game.isMuted()) game.playSoundEffect("error");
             JOptionPane.showMessageDialog(this,
                     "Network Validation Failed:\n" + validationMessage,
                     "Network Not Ready", JOptionPane.WARNING_MESSAGE);
-            networkValidatedForPrediction = false;
-            updatePrediction();
+            // Ensure our flag and predictions are up-to-date if dialog shown
+            if (this.networkValidatedForPrediction) { // If flag thought it was valid, correct it
+                this.networkValidatedForPrediction = false;
+                updatePrediction(); // Clear predictions
+            }
             return;
         }
+        // If we reach here, network IS valid for simulation start.
+        this.networkValidatedForPrediction = true; // Ensure flag is true
 
         java.lang.System.out.println("Network validated. Starting ACTUAL simulation...");
-        // Ensure System's random generator is reset for the actual simulation run
-        // This makes the actual simulation use the same random sequence as a full prediction from T=0
         System.resetGlobalRandomSeed(PREDICTION_SEED);
 
-        networkValidatedForPrediction = false;
+        // networkValidatedForPrediction is already true from above
         simulationStarted = true;
         gameRunning = true;
         gamePaused = false;
@@ -240,21 +255,33 @@ public class GamePanel extends JPanel {
         return null;
     }
 
+    /**
+     * Validates the network and updates the prediction state.
+     * Shows a "Network is fully connected" message if the network transitions
+     * from an invalid to a valid state due to user action.
+     * @return true if the network is currently valid for prediction, false otherwise.
+     */
     private boolean validateAndSetPredictionFlag() {
+        boolean oldState = this.networkValidatedForPrediction;
         String errorMessage = getNetworkValidationErrorMessage();
-        if (errorMessage == null) {
-            if (!networkValidatedForPrediction) {
-                game.showTemporaryMessage("Network is fully connected and ready!", new Color(0,150,0), 2500);
-                java.lang.System.out.println("Validation Pass: Network configuration is valid for prediction.");
-            }
-            networkValidatedForPrediction = true;
-        } else {
-            networkValidatedForPrediction = false;
-            java.lang.System.out.println("Validation Fail for prediction: " + errorMessage);
+        boolean newStateIsValid = (errorMessage == null);
+
+        this.networkValidatedForPrediction = newStateIsValid; // Update master state
+
+        if (newStateIsValid && !oldState) { // If it *became* valid
+            game.showTemporaryMessage("Network is fully connected and ready!", new Color(0,150,0), 2500);
+            java.lang.System.out.println("VALIDATION (Flag Setter): Network became VALID for prediction.");
+        } else if (!newStateIsValid && oldState) { // If it *became* invalid
+            java.lang.System.out.println("VALIDATION (Flag Setter): Network became INVALID. Reason: " + (errorMessage != null ? errorMessage : "Unknown"));
+        } else if (!newStateIsValid) { // If it's still invalid
+            java.lang.System.out.println("VALIDATION (Flag Setter): Network remains INVALID. Reason: " + (errorMessage != null ? errorMessage : "Unknown"));
         }
-        updatePrediction(); // This will now use a seeded random for prediction
-        return networkValidatedForPrediction;
+        // If newStateIsValid && oldState (still valid), no message.
+
+        updatePrediction(); // Update visuals based on the new validation status
+        return this.networkValidatedForPrediction;
     }
+
 
     public void stopSimulation() {
         if (gameRunning || gameLoopTimer.isRunning()) {
@@ -265,8 +292,14 @@ public class GamePanel extends JPanel {
         if(gameLoopTimer.isRunning()) gameLoopTimer.stop();
         if(atarTimer.isRunning()) { deactivateAtar(); atarTimer.stop(); }
         if(airyamanTimer.isRunning()) { deactivateAiryaman(); airyamanTimer.stop(); }
-        if (!simulationStarted) { // If we were in pre-sim mode
-            validateAndSetPredictionFlag(); // Re-validate and potentially show prediction
+
+        if (!simulationStarted) { // If we were in pre-sim mode (time scrubbing)
+            // When simulation stops AND it was never started (i.e., user exits pre-sim mode),
+            // re-evaluate the current network state for prediction display.
+            // No "Network Ready" message here, as it's not a direct user wiring action.
+            String currentError = getNetworkValidationErrorMessage();
+            this.networkValidatedForPrediction = (currentError == null);
+            updatePrediction();
         }
         repaint();
     }
@@ -613,27 +646,22 @@ public class GamePanel extends JPanel {
         String menuOption = "Main Menu";
         int nextLevelNumber = currentLevel + 1;
         boolean nextLevelExists = nextLevelNumber <= gameState.getMaxLevels();
-        boolean nextLevelUnlocked = nextLevelExists && gameState.isLevelUnlocked(currentLevel);
+        boolean nextLevelUnlocked = nextLevelExists && gameState.isLevelUnlocked(currentLevel); // Check if *current* level completion unlocks next
         if (success) {
-            if (nextLevelUnlocked) {
+            if (nextLevelUnlocked) { // This should be true if success and next level exists
                 nextLevelOption = "Next Level (" + nextLevelNumber + ")";
                 optionsList.add(nextLevelOption);
-                optionsList.add(retryOption);
-                optionsList.add(menuOption);
-            } else if (!nextLevelExists) {
+            } else if (!nextLevelExists) { // currentLevel was the max level
                 message.append("\n\nAll levels completed!");
-                optionsList.add(retryOption);
-                optionsList.add(menuOption);
-            } else {
-                optionsList.add(retryOption);
-                optionsList.add(menuOption);
             }
-        } else {
+            optionsList.add(retryOption);
+            optionsList.add(menuOption);
+        } else { // Failed
             optionsList.add(retryOption);
             optionsList.add(menuOption);
         }
         Object[] options = optionsList.toArray();
-        if (options.length == 0) options = new Object[]{menuOption};
+        if (options.length == 0) options = new Object[]{menuOption}; // Fallback
         int choice = JOptionPane.showOptionDialog(this.game,
                 message.toString(), title, JOptionPane.DEFAULT_OPTION,
                 success ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE, null, options, options[0]);
@@ -646,11 +674,12 @@ public class GamePanel extends JPanel {
         if (selectedOption.equals(menuOption)) {
             game.returnToMenu();
         } else if (selectedOption.equals(retryOption)) {
+            game.setLevel(currentLevel); // Ensure current level is re-selected
             game.startGame();
         } else if (nextLevelOption != null && selectedOption.equals(nextLevelOption)) {
             game.setLevel(nextLevelNumber);
             game.startGame();
-        } else {
+        } else { // Should not happen if options are correctly managed
             game.returnToMenu();
         }
     }
@@ -721,6 +750,7 @@ public class GamePanel extends JPanel {
     public void updateWiringPreview(Point currentMousePos) {
         if (!wireDrawingMode || selectedOutputPort == null || selectedOutputPort.getPosition() == null) {
             this.currentWiringColor = DEFAULT_WIRING_COLOR;
+            repaint(); // repaint to clear any previous wiring line color
             return;
         }
         Point startPos = selectedOutputPort.getPosition();
@@ -758,11 +788,12 @@ public class GamePanel extends JPanel {
                 endPort.getType() != NetworkEnums.PortType.INPUT ||
                 startPort.isConnected() || endPort.isConnected() ||
                 Objects.equals(startPort.getParentSystem(), endPort.getParentSystem())) {
+            java.lang.System.err.println("Wire creation failed: Logical preconditions not met (type, connection, same parent).");
             return false;
         }
         int wireLength = (int) Math.round(startPort.getPosition().distance(endPort.getPosition()));
         if (wireLength <= 0) {
-            java.lang.System.err.println("Wire creation failed: Zero length.");
+            java.lang.System.err.println("Wire creation failed: Zero or negative length.");
             return false;
         }
         if (gameState.useWire(wireLength)) {
@@ -773,13 +804,14 @@ public class GamePanel extends JPanel {
                 }
                 java.lang.System.out.println("Wire created: " + newWire.getId() + " Len: " + wireLength + ". Rem: " + gameState.getRemainingWireLength());
                 if (!game.isMuted()) game.playSoundEffect("wire_connect");
-                validateAndSetPredictionFlag();
+                validateAndSetPredictionFlag(); // Validate and update prediction (may show "Network Ready")
                 return true;
             } catch (IllegalArgumentException | IllegalStateException e) {
                 java.lang.System.err.println("Wire creation failed in constructor: " + e.getMessage());
-                gameState.returnWire(wireLength);
+                gameState.returnWire(wireLength); // Return wire if constructor fails
                 JOptionPane.showMessageDialog(this.game, "Cannot create wire:\n" + e.getMessage(), "Wiring Error", JOptionPane.WARNING_MESSAGE);
                 if (!game.isMuted()) game.playSoundEffect("error");
+                validateAndSetPredictionFlag(); // Re-validate even on failure as port states might be involved
                 return false;
             }
         } else {
@@ -816,11 +848,12 @@ public class GamePanel extends JPanel {
         if (removed) {
             int returnedLength = (int) Math.round(wireToDelete.getLength());
             gameState.returnWire(returnedLength);
-            wireToDelete.destroy();
+            wireToDelete.destroy(); // This disconnects ports
             java.lang.System.out.println("Wire " + wireToDelete.getId() + " deleted. Ret: " + returnedLength + ". Rem: " + gameState.getRemainingWireLength());
-            validateAndSetPredictionFlag();
+            if (!game.isMuted()) game.playSoundEffect("wire_disconnect"); // Sound for successful deletion
+            validateAndSetPredictionFlag(); // Re-validate network state
         } else {
-            java.lang.System.err.println("Warn: Failed to remove wire " + wireToDelete.getId());
+            java.lang.System.err.println("Warn: Failed to remove wire " + wireToDelete.getId() + " (not found in list).");
         }
     }
 
@@ -868,7 +901,7 @@ public class GamePanel extends JPanel {
     public Wire findWireFromPort(Port outputPort) {
         if (outputPort == null || outputPort.getType() != NetworkEnums.PortType.OUTPUT) return null;
         synchronized (wires) {
-            List<Wire> wiresSnapshot = new ArrayList<>(wires);
+            List<Wire> wiresSnapshot = new ArrayList<>(wires); // Create a snapshot for iteration
             for (Wire w : wiresSnapshot) {
                 if (w != null && Objects.equals(w.getStartPort(), outputPort)) return w;
             }
@@ -877,16 +910,16 @@ public class GamePanel extends JPanel {
     }
 
     public boolean isWireOccupied(Wire wire) {
-        if (wire == null || !simulationStarted) return false;
+        if (wire == null || !simulationStarted) return false; // Can't be occupied if sim not started or wire is null
         synchronized (packets) {
-            List<Packet> currentPackets = new ArrayList<>(packets);
+            List<Packet> currentPackets = new ArrayList<>(packets); // Snapshot
             for (Packet p : currentPackets) {
                 if (p != null && !p.isMarkedForRemoval() && Objects.equals(p.getCurrentWire(), wire)) {
-                    return true;
+                    return true; // Found a packet on this wire
                 }
             }
         }
-        return false;
+        return false; // No packets found on this wire
     }
 
     public void toggleHUD() {
@@ -898,75 +931,76 @@ public class GamePanel extends JPanel {
 
     public void incrementViewedTime() {
         if (!simulationStarted) {
-            String validationMessage = getNetworkValidationErrorMessage();
-            if (validationMessage != null) {
+            // Check if network is currently valid based on the flag
+            if (!this.networkValidatedForPrediction) {
+                String validationMessage = getNetworkValidationErrorMessage(); // Get a fresh message for dialog
                 if(!game.isMuted()) game.playSoundEffect("error");
                 JOptionPane.showMessageDialog(this,
-                        "Cannot scrub time:\n" + validationMessage,
+                        "Cannot scrub time:\n" + (validationMessage != null ? validationMessage : "Network is not fully connected."),
                         "Network Not Ready for Scrubbing", JOptionPane.WARNING_MESSAGE);
-                networkValidatedForPrediction = false;
-                updatePrediction();
-                return;
+                return; // Do not proceed with scrubbing
             }
-            if (!networkValidatedForPrediction) {
-                game.showTemporaryMessage("Network is fully connected and ready!", new Color(0,150,0), 2500);
-            }
-            networkValidatedForPrediction = true;
+            // If we are here, networkValidatedForPrediction is true.
             viewedTimeMs = Math.min(maxPredictionTimeForScrubbingMs, viewedTimeMs + TIME_SCRUB_INCREMENT_MS);
-            updatePrediction();
+            updatePrediction(); // This updates prediction display based on new time
         }
     }
 
     public void decrementViewedTime() {
         if (!simulationStarted) {
-            String validationMessage = getNetworkValidationErrorMessage();
-            if (validationMessage != null) {
+            // Check if network is currently valid based on the flag
+            if (!this.networkValidatedForPrediction) {
+                String validationMessage = getNetworkValidationErrorMessage(); // Get a fresh message for dialog
                 if(!game.isMuted()) game.playSoundEffect("error");
                 JOptionPane.showMessageDialog(this,
-                        "Cannot scrub time:\n" + validationMessage,
+                        "Cannot scrub time:\n" + (validationMessage != null ? validationMessage : "Network is not fully connected."),
                         "Network Not Ready for Scrubbing", JOptionPane.WARNING_MESSAGE);
-                networkValidatedForPrediction = false;
-                updatePrediction();
-                return;
+                return; // Do not proceed with scrubbing
             }
-            if (!networkValidatedForPrediction) {
-                game.showTemporaryMessage("Network is fully connected and ready!", new Color(0,150,0), 2500);
-            }
-            networkValidatedForPrediction = true;
+            // If we are here, networkValidatedForPrediction is true.
             viewedTimeMs = Math.max(0, viewedTimeMs - TIME_SCRUB_INCREMENT_MS);
-            updatePrediction();
+            updatePrediction(); // This updates prediction display based on new time
         }
     }
 
+
+    /**
+     * Updates the prediction display. This should be called whenever the
+     * viewedTimeMs changes or the network structure (potentially affecting validation) changes.
+     */
     private void updatePrediction() {
         if (simulationStarted) {
             synchronized(predictedPacketStates) {
                 if (!predictedPacketStates.isEmpty()) {
                     predictedPacketStates.clear();
-                    repaint();
+                    // Repaint will happen naturally or by game tick
                 }
             }
-            return;
+            return; // No predictions if simulation is running
         }
+
+        // If network is not validated for prediction, clear existing predictions
         if (!networkValidatedForPrediction) {
             synchronized(predictedPacketStates) {
                 if (!predictedPacketStates.isEmpty()) {
                     predictedPacketStates.clear();
-                    repaint();
                 }
             }
+            repaint(); // Repaint to show cleared predictions
             return;
         }
-        // Create a new Random instance with a fixed seed FOR THIS PREDICTION PASS
-        Random predictionRunRandom = new Random(PREDICTION_SEED);
 
+        // If network IS validated, generate new predictions
+        Random predictionRunRandom = new Random(PREDICTION_SEED); // Consistent seed for prediction
         List<PacketSnapshot> newPrediction = predictNetworkStateDetailed(this.viewedTimeMs, predictionRunRandom);
+
         synchronized(predictedPacketStates) {
             predictedPacketStates.clear();
             predictedPacketStates.addAll(newPrediction);
         }
-        repaint();
+        repaint(); // Repaint to show new predictions
     }
+
 
     private List<PacketSnapshot> predictNetworkStateDetailed(long targetTimeMs, Random predictionRunRandomInstance) {
         List<PacketSnapshot> snapshots = new ArrayList<>();
@@ -987,124 +1021,243 @@ public class GamePanel extends JPanel {
                 continue;
             }
             if (currentPort == null || currentPort.getPosition() == null) {
+                // This case implies a source port somehow became invalid post-generation prediction
+                // or was never properly initialized in the prediction.
                 snapshots.add(new PacketSnapshot(packetInfo.futurePacketId, packetInfo.shape, null, PredictedPacketStatus.LOST, 0.0));
+                java.lang.System.err.println("Prediction Error: PktInfo " + packetInfo.futurePacketId + " has null source port or position.");
                 continue;
             }
-            Point currentPosition = new Point(currentPort.getPosition());
-            Wire currentWire = findWireFromPort(currentPort);
-            double progress = 0.0;
+            Point currentPosition = new Point(currentPort.getPosition()); // Start at source port's position
+            Wire currentWire = findWireFromPort(currentPort); // Find wire connected to this source port
+            double progress = 0.0; // Progress along the currentWire
             PredictedPacketStatus currentStatus = PredictedPacketStatus.ON_WIRE;
-            int currentSystemId = -1;
+            int currentSystemId = -1; // Only relevant if STALLED_AT_NODE or QUEUED
 
+            // Initial state check: Is there even a wire connected to the source port?
             if (currentWire == null) {
-                currentStatus = PredictedPacketStatus.STALLED_AT_NODE;
-                currentSystemId = currentPort.getParentSystem() != null ? currentPort.getParentSystem().getId() : -2;
+                currentStatus = PredictedPacketStatus.STALLED_AT_NODE; // Stalled at the source system itself
+                currentSystemId = currentPort.getParentSystem() != null ? currentPort.getParentSystem().getId() : -2; // Use -2 for unknown parent
                 snapshots.add(new PacketSnapshot(packetInfo.futurePacketId, packetInfo.shape, currentPosition, currentStatus, currentSystemId));
+                java.lang.System.out.println("Prediction: Pkt " + packetInfo.futurePacketId + " STALLED at source " + currentSystemId + " (no wire).");
                 continue;
             }
 
+            // Determine packet speed and acceleration based on shape and exit port compatibility
             NetworkEnums.PacketShape packetShapeEnum = packetInfo.shape;
             NetworkEnums.PortShape exitPortShape = currentPort.getShape();
             NetworkEnums.PortShape requiredPortShapeForPacket = Port.getShapeEnum(packetShapeEnum);
             boolean compatibleExit = (requiredPortShapeForPacket != null && (exitPortShape == requiredPortShapeForPacket ));
+
             double currentSpeed; boolean isAccelerating; double targetSpeed;
             if (packetShapeEnum == NetworkEnums.PacketShape.SQUARE) {
                 currentSpeed = compatibleExit ? (Packet.BASE_SPEED_MAGNITUDE * Packet.SQUARE_COMPATIBLE_SPEED_FACTOR) : Packet.BASE_SPEED_MAGNITUDE;
                 isAccelerating = false; targetSpeed = currentSpeed;
             } else if (packetShapeEnum == NetworkEnums.PacketShape.TRIANGLE) {
                 currentSpeed = Packet.BASE_SPEED_MAGNITUDE; isAccelerating = !compatibleExit;
-                targetSpeed = isAccelerating ? Packet.MAX_SPEED_MAGNITUDE : currentSpeed;
-            } else {
+                targetSpeed = isAccelerating ? Packet.MAX_SPEED_MAGNITUDE : Packet.BASE_SPEED_MAGNITUDE;
+            } else { // Fallback for any other shapes, though not expected by current Packet enum
                 currentSpeed = Packet.BASE_SPEED_MAGNITUDE; isAccelerating = false; targetSpeed = currentSpeed;
             }
-            double currentSimSpeedPerMs = currentSpeed / GAME_TICK_MS;
+            double currentSimSpeedPerMs = currentSpeed / GAME_TICK_MS; // Average speed per ms for discrete simulation step
 
+            // Simulate packet movement until targetTimeMs is reached or packet is delivered/lost/stalled
             while (currentSimTime < targetTimeMs) {
-                if (currentWire == null) break;
-                double timeRemMsInPredictionWindowForPacket = targetTimeMs - currentSimTime;
-                if (timeRemMsInPredictionWindowForPacket <= 0) break;
-                double wireLen = currentWire.getLength();
-                if (wireLen < PREDICTION_FLOAT_TOLERANCE) progress = 1.0;
-                double distRem = wireLen * (1.0 - progress);
-                double effectiveSpeedForSim = currentSpeed;
-                if(isAccelerating) {
-                    effectiveSpeedForSim = (currentSpeed + targetSpeed) / 2.0;
+                if (currentWire == null) { // Should be caught earlier, but safety break
+                    java.lang.System.err.println("Prediction Error: Pkt " + packetInfo.futurePacketId + " lost wire mid-path.");
+                    currentStatus = PredictedPacketStatus.LOST; // Or STALLED if position known
+                    break;
                 }
-                currentSimSpeedPerMs = effectiveSpeedForSim / GAME_TICK_MS;
-                if (currentSimSpeedPerMs < PREDICTION_FLOAT_TOLERANCE / GAME_TICK_MS ) {
-                    currentStatus = PredictedPacketStatus.STALLED_AT_NODE;
-                    if (progress < 1.0) {
-                        Point newPos = currentWire.getPointAtProgress(progress);
-                        if(newPos != null) currentPosition = newPos;
-                    } else {
-                        Port endP = currentWire.getEndPort();
-                        if(endP != null && endP.getParentSystem()!=null) {
-                            currentSystemId = endP.getParentSystem().getId();
-                            if(endP.getPosition() != null) currentPosition = endP.getPosition();
+
+                double timeRemMsInPredictionWindowForPacket = targetTimeMs - currentSimTime;
+                if (timeRemMsInPredictionWindowForPacket <= PREDICTION_FLOAT_TOLERANCE) break; // Effectively at target time
+
+                double wireLen = currentWire.getLength();
+                if (wireLen < PREDICTION_FLOAT_TOLERANCE) { // Effectively zero-length wire
+                    progress = 1.0; // Consider it traversed instantly
+                }
+
+                double distRemOnWire = wireLen * (1.0 - progress);
+                double effectiveSpeedForSimTick = currentSpeed; // Base speed for this tick
+                if(isAccelerating) { // Simplified acceleration: use average if accelerating, or update speed incrementally
+                    // For simplicity in prediction, let's assume it instantly reaches target or averages.
+                    // A more complex prediction would step through acceleration.
+                    // Let's use a simple model: if accelerating, it might take some time to reach target.
+                    // For now, assume it moves at currentSpeed, and if it finishes wire, then update speed.
+                    // Or, if timeToFinish < timeToAccelerate, use average. This is complex for simple prediction.
+                    // Let's stick to currentSpeed for the segment, and update speed if it transitions.
+                    // Alternative: If accelerating, assume it reaches targetSpeed quickly for prediction.
+                    effectiveSpeedForSimTick = (currentSpeed + targetSpeed) / 2.0; // More realistic average during accel
+                }
+                currentSimSpeedPerMs = effectiveSpeedForSimTick / GAME_TICK_MS;
+
+
+                if (currentSimSpeedPerMs < PREDICTION_FLOAT_TOLERANCE / GAME_TICK_MS && distRemOnWire > PREDICTION_FLOAT_TOLERANCE) {
+                    currentStatus = PredictedPacketStatus.STALLED_AT_NODE; // Stuck due to zero speed
+                    // Update position to current progress on wire
+                    Point newPos = currentWire.getPointAtProgress(progress);
+                    if (newPos != null) currentPosition = newPos;
+                    // Determine which system it's stalled AT (either source or destination of current wire)
+                    currentSystemId = currentWire.getEndPort() != null && currentWire.getEndPort().getParentSystem() != null ?
+                            currentWire.getEndPort().getParentSystem().getId() :
+                            (currentWire.getStartPort() != null && currentWire.getStartPort().getParentSystem() != null ?
+                                    currentWire.getStartPort().getParentSystem().getId() : -3);
+                    java.lang.System.out.println("Prediction: Pkt " + packetInfo.futurePacketId + " STALLED at " + currentSystemId + " (zero speed).");
+                    break;
+                }
+
+                double timeToFinishMsOnWire = (wireLen > PREDICTION_FLOAT_TOLERANCE && currentSimSpeedPerMs > PREDICTION_FLOAT_TOLERANCE / GAME_TICK_MS) ?
+                        (distRemOnWire / currentSimSpeedPerMs) : 0.0;
+
+                if (timeToFinishMsOnWire <= timeRemMsInPredictionWindowForPacket + PREDICTION_FLOAT_TOLERANCE) {
+                    // Packet reaches end of current wire within the remaining prediction time window
+                    currentSimTime += timeToFinishMsOnWire;
+                    progress = 1.0;
+                    Port endPort = currentWire.getEndPort();
+
+                    if (endPort == null || endPort.getPosition() == null) {
+                        currentStatus = PredictedPacketStatus.LOST;
+                        currentPosition = (currentWire.getEndPort() != null && currentWire.getEndPort().getPosition() != null) ? currentWire.getEndPort().getPosition() : currentPosition;
+                        java.lang.System.err.println("Prediction Error: Pkt " + packetInfo.futurePacketId + " reached invalid end port on Wire " + currentWire.getId());
+                        currentWire = null; break;
+                    }
+                    currentPosition.setLocation(endPort.getPosition());
+                    System nextSystem = endPort.getParentSystem();
+
+                    if (nextSystem == null) { // Should not happen if endPort is valid
+                        currentStatus = PredictedPacketStatus.LOST;
+                        java.lang.System.err.println("Prediction Error: Pkt " + packetInfo.futurePacketId + " reached end port with no parent system.");
+                        currentWire = null; break;
+                    }
+
+                    if (nextSystem.isReferenceSystem() && !nextSystem.hasOutputPorts()) { // Reached a Sink
+                        currentStatus = PredictedPacketStatus.DELIVERED;
+                        java.lang.System.out.println("Prediction: Pkt " + packetInfo.futurePacketId + " DELIVERED to Sink " + nextSystem.getId());
+                        currentWire = null; break; // End of path
+                    } else { // Reached a Node or a Source (which is an error path for prediction)
+                        if (nextSystem.isReferenceSystem() && nextSystem.hasOutputPorts()){
+                            currentStatus = PredictedPacketStatus.LOST; // Error: packet routed to a source system
+                            currentSystemId = nextSystem.getId();
+                            java.lang.System.err.println("Prediction Error: Pkt " + packetInfo.futurePacketId + " incorrectly routed to Source system " + currentSystemId + ".");
+                            currentWire = null; break;
+                        }
+
+                        Port nextOutPort = findPredictedNextPort(packetInfo.shape, nextSystem, predictionRunRandomInstance);
+                        if (nextOutPort != null && nextOutPort.getPosition() != null) {
+                            Wire nextW = findWireFromPort(nextOutPort);
+                            if (nextW != null) { // Found a valid onward wire
+                                currentWire = nextW;
+                                currentPort = nextOutPort; // The new source port for the next segment
+                                currentPosition.setLocation(currentPort.getPosition());
+                                progress = 0.0;
+                                currentStatus = PredictedPacketStatus.ON_WIRE; // Continue on new wire
+
+                                // Update speed/acceleration for the new wire segment
+                                exitPortShape = currentPort.getShape();
+                                requiredPortShapeForPacket = Port.getShapeEnum(packetShapeEnum); // Re-check, though packet shape is constant
+                                compatibleExit = (requiredPortShapeForPacket != null && (exitPortShape == requiredPortShapeForPacket ));
+
+                                if (packetShapeEnum == NetworkEnums.PacketShape.SQUARE) {
+                                    currentSpeed = compatibleExit ? (Packet.BASE_SPEED_MAGNITUDE * Packet.SQUARE_COMPATIBLE_SPEED_FACTOR) : Packet.BASE_SPEED_MAGNITUDE;
+                                    isAccelerating = false; targetSpeed = currentSpeed;
+                                } else if (packetShapeEnum == NetworkEnums.PacketShape.TRIANGLE) {
+                                    currentSpeed = Packet.BASE_SPEED_MAGNITUDE; isAccelerating = !compatibleExit;
+                                    targetSpeed = isAccelerating ? Packet.MAX_SPEED_MAGNITUDE : Packet.BASE_SPEED_MAGNITUDE;
+                                }
+                                // currentSimSpeedPerMs will be recalculated at start of loop
+                            } else { // Next port found, but no wire connected to it (should be caught by graph validation)
+                                currentStatus = PredictedPacketStatus.STALLED_AT_NODE;
+                                currentPosition.setLocation(nextSystem.getPosition()); // Center of the node
+                                currentSystemId = nextSystem.getId();
+                                java.lang.System.out.println("Prediction: Pkt " + packetInfo.futurePacketId + " STALLED at Node " + currentSystemId + " (next port " + nextOutPort.getId() + " has no wire).");
+                                currentWire = null; break;
+                            }
+                        } else { // No suitable output port found at the node
+                            currentStatus = PredictedPacketStatus.STALLED_AT_NODE;
+                            currentPosition.setLocation(nextSystem.getPosition()); // Center of the node
+                            currentSystemId = nextSystem.getId();
+                            java.lang.System.out.println("Prediction: Pkt " + packetInfo.futurePacketId + " STALLED at Node " + currentSystemId + " (no suitable output port).");
+                            currentWire = null; break;
                         }
                     }
-                    break;
-                }
-                double timeToFinishMsOnWire = (wireLen > PREDICTION_FLOAT_TOLERANCE) ? (distRem / currentSimSpeedPerMs) : 0.0;
-                if (timeToFinishMsOnWire <= timeRemMsInPredictionWindowForPacket + PREDICTION_FLOAT_TOLERANCE) {
-                    currentSimTime += timeToFinishMsOnWire; progress = 1.0; Port endPort = currentWire.getEndPort();
-                    if (endPort == null || endPort.getPosition() == null) { currentStatus = PredictedPacketStatus.LOST; currentPosition = (currentWire.getEndPort() != null && currentWire.getEndPort().getPosition() != null) ? currentWire.getEndPort().getPosition() : currentPosition; currentWire = null; break; }
-                    currentPosition.setLocation(endPort.getPosition()); System nextSystem = endPort.getParentSystem();
-                    if (nextSystem == null) { currentStatus = PredictedPacketStatus.LOST; currentWire = null; break; }
-                    if (nextSystem.isReferenceSystem() && !nextSystem.hasOutputPorts()) {
-                        currentStatus = PredictedPacketStatus.DELIVERED; currentWire = null; break;
-                    } else {
-                        Port nextOut = findPredictedNextPort(packetInfo.shape, nextSystem, predictionRunRandomInstance); // Pass Random
-                        if (nextOut != null && nextOut.getPosition() != null) {
-                            Wire nextW = findWireFromPort(nextOut);
-                            if (nextW != null) {
-                                currentWire = nextW; currentPort = nextOut; currentPosition.setLocation(currentPort.getPosition()); progress = 0.0; currentStatus = PredictedPacketStatus.ON_WIRE;
-                                exitPortShape = currentPort.getShape(); requiredPortShapeForPacket = Port.getShapeEnum(packetShapeEnum); compatibleExit = (requiredPortShapeForPacket != null && (exitPortShape == requiredPortShapeForPacket ));
-                                if (packetShapeEnum == NetworkEnums.PacketShape.SQUARE) { currentSpeed = compatibleExit ? (Packet.BASE_SPEED_MAGNITUDE * Packet.SQUARE_COMPATIBLE_SPEED_FACTOR) : Packet.BASE_SPEED_MAGNITUDE; isAccelerating = false; targetSpeed = currentSpeed; }
-                                else if (packetShapeEnum == NetworkEnums.PacketShape.TRIANGLE) { currentSpeed = Packet.BASE_SPEED_MAGNITUDE; isAccelerating = !compatibleExit; targetSpeed = isAccelerating ? Packet.MAX_SPEED_MAGNITUDE : currentSpeed; }
-                                else { currentSpeed = Packet.BASE_SPEED_MAGNITUDE; isAccelerating = false; targetSpeed = currentSpeed; }
-                            } else { currentStatus = PredictedPacketStatus.STALLED_AT_NODE; currentPosition.setLocation(nextSystem.getPosition()); currentSystemId = nextSystem.getId(); currentWire = null; break; }
-                        } else { currentStatus = PredictedPacketStatus.STALLED_AT_NODE; currentPosition.setLocation(nextSystem.getPosition()); currentSystemId = nextSystem.getId(); currentWire = null; break; }
-                    }
                 } else {
+                    // Packet does not reach end of wire within the time window, calculate intermediate position
                     double distToMove = currentSimSpeedPerMs * timeRemMsInPredictionWindowForPacket;
-                    if (wireLen > PREDICTION_FLOAT_TOLERANCE) { progress += (distToMove / wireLen); }
-                    progress = Math.max(0.0, Math.min(progress, 1.0));
+                    if (wireLen > PREDICTION_FLOAT_TOLERANCE) {
+                        progress += (distToMove / wireLen);
+                    }
+                    progress = Math.max(0.0, Math.min(progress, 1.0)); // Clamp progress
+
                     Point newPos = currentWire.getPointAtProgress(progress);
-                    if (newPos != null) currentPosition = newPos; else java.lang.System.err.println("Pred Warn: Cannot get pos Pkt " + packetInfo.futurePacketId + " on W:" + (currentWire != null ? currentWire.getId() : "null") + " prog:" + progress );
-                    currentSimTime = targetTimeMs;
+                    if (newPos != null) currentPosition = newPos;
+                    else java.lang.System.err.println("Prediction Warn: Cannot get position for Pkt " + packetInfo.futurePacketId + " on Wire " + (currentWire != null ? currentWire.getId() : "null") + " at progress " + String.format("%.2f", progress) );
+
+                    currentSimTime = targetTimeMs; // Consumed all remaining time in this window
                     currentStatus = PredictedPacketStatus.ON_WIRE;
-                    break;
+                    break; // Exit loop as we've reached targetTimeMs for this packet
                 }
+            } // End of while(currentSimTime < targetTimeMs)
+
+            // Add snapshot based on final status
+            if (currentStatus == PredictedPacketStatus.STALLED_AT_NODE) {
+                snapshots.add(new PacketSnapshot(packetInfo.futurePacketId, packetInfo.shape, currentPosition, currentStatus, currentSystemId));
+            } else { // ON_WIRE, DELIVERED, LOST
+                snapshots.add(new PacketSnapshot(packetInfo.futurePacketId, packetInfo.shape, currentPosition, currentStatus, progress));
             }
-            if (currentStatus == PredictedPacketStatus.STALLED_AT_NODE) { snapshots.add(new PacketSnapshot(packetInfo.futurePacketId, packetInfo.shape, currentPosition, currentStatus, currentSystemId)); }
-            else { snapshots.add(new PacketSnapshot(packetInfo.futurePacketId, packetInfo.shape, currentPosition, currentStatus, progress)); }
         }
         return snapshots;
     }
 
-    private Port findPredictedNextPort(NetworkEnums.PacketShape packetShape, System node, Random randomForPrediction) { // Added Random param
-        if (node == null || (node.isReferenceSystem() && !node.hasOutputPorts())) return null;
-        if (node.isReferenceSystem() && node.hasOutputPorts()) { java.lang.System.err.println("Prediction Warning: Packet ("+packetShape+") reached a Source system ("+node.getId()+") during prediction path. Invalid route."); return null; }
+
+    private Port findPredictedNextPort(NetworkEnums.PacketShape packetShape, System node, Random randomForPrediction) {
+        if (node == null || (node.isReferenceSystem() && !node.hasOutputPorts())) return null; // Should not route to Sinks this way
+        if (node.isReferenceSystem() && node.hasOutputPorts()) {
+            java.lang.System.err.println("Prediction Warning: Packet ("+packetShape+") reached a Source system ("+node.getId()+") during prediction path. This implies an invalid route where a packet is sent back to a source.");
+            return null; // Invalid path
+        }
+
         List<Port> compatiblePorts = new ArrayList<>();
-        List<Port> otherNonAnyConnectedPorts = new ArrayList<>();
+        List<Port> otherNonAnyConnectedPorts = new ArrayList<>(); // For non-matching shapes
+
         NetworkEnums.PortShape requiredShape = Port.getShapeEnum(packetShape);
-        if (requiredShape == null) return null;
-        synchronized(node.getOutputPorts()) {
-            List<Port> currentOutputPorts = new ArrayList<>(node.getOutputPorts());
-            for (Port p : currentOutputPorts) {
-                if (p != null && p.isConnected()) {
-                    if (p.getShape() == requiredShape) {
-                        compatiblePorts.add(p);
-                    } else {
+        if (requiredShape == null) {
+            java.lang.System.err.println("Prediction Error: Cannot determine required port shape for packet shape " + packetShape);
+            return null; // Cannot route if packet shape is unknown
+        }
+
+        // Synchronize access to outputPorts if modifying System class or its port lists concurrently
+        // For prediction, we usually work with a snapshot or assume no concurrent modification.
+        // If System.getOutputPorts() returns a synchronized list or a copy, direct iteration is fine.
+        // Assuming getOutputPorts() provides a safe list for iteration:
+        List<Port> currentOutputPorts = node.getOutputPorts(); // Get a safe copy or unmodifiable list
+
+        for (Port p : currentOutputPorts) {
+            if (p != null && p.isConnected()) { // Only consider connected ports
+                // Check if a wire is actually connected from this port (findWireFromPort does this)
+                if (findWireFromPort(p) == null) continue; // Port claims connected, but no wire found by GamePanel
+
+                if (p.getShape() == requiredShape) {
+                    compatiblePorts.add(p);
+                } else {
+                    // We only consider specific shapes for routing, ANY is not a routable shape here
+                    // This logic aligns with how System.findAvailableOutputPort prioritizes
+                    if (p.getShape() == NetworkEnums.PortShape.SQUARE || p.getShape() == NetworkEnums.PortShape.TRIANGLE) {
                         otherNonAnyConnectedPorts.add(p);
                     }
                 }
             }
         }
-        if (!compatiblePorts.isEmpty()) { Collections.shuffle(compatiblePorts, randomForPrediction); return compatiblePorts.get(0); } // Use passed Random
-        if (!otherNonAnyConnectedPorts.isEmpty()) { Collections.shuffle(otherNonAnyConnectedPorts, randomForPrediction); return otherNonAnyConnectedPorts.get(0);} // Use passed Random
-        return null;
+
+        if (!compatiblePorts.isEmpty()) {
+            Collections.shuffle(compatiblePorts, randomForPrediction);
+            return compatiblePorts.get(0);
+        }
+        // If no compatible ports, try other specific-shaped (non-ANY) ports
+        if (!otherNonAnyConnectedPorts.isEmpty()) {
+            Collections.shuffle(otherNonAnyConnectedPorts, randomForPrediction);
+            return otherNonAnyConnectedPorts.get(0);
+        }
+
+        return null; // No suitable connected output port found
     }
 
 

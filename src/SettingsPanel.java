@@ -1,3 +1,5 @@
+// ===== File: SettingsPanel.java =====
+
 // FILE: SettingsPanel.java
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -235,15 +237,16 @@ public class SettingsPanel extends JPanel {
             int sliderValue = volumeSlider.getValue();
             volumeValueLabel.setText(String.format("%d%%", sliderValue)); // Update label as slider moves
 
-            if (!volumeSlider.getValueIsAdjusting()) { // Apply change when user releases slider
-                float newVolume = sliderValue / 100.0f;
-                game.setMasterVolume(newVolume);
+            float newVolume = sliderValue / 100.0f;
+            game.setMasterVolume(newVolume); // Apply volume change immediately
 
-                // If volume is set > 0 while muted, unmute
-                if (game.isMuted() && newVolume > 0) {
-                    muteCheckbox.setSelected(false); // Visually update checkbox
-                    game.toggleMute(); // This will also call updateVolumeSliderState
-                }
+            // If volume is dragged to > 0 while the game logic thinks it's muted, then unmute.
+            // This ensures that dragging the slider up from 0 while muted will unmute the game.
+            if (game.isMuted() && newVolume > 0) {
+                // game.toggleMute() will flip the game's 'isMuted' state,
+                // update the background music, and then call settingsPanel.updateUIFromGameState(),
+                // which in turn correctly updates the muteCheckbox visual state and the slider's enabled state.
+                game.toggleMute();
             }
         }
     }
@@ -251,8 +254,10 @@ public class SettingsPanel extends JPanel {
     private class MuteCheckboxListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            game.toggleMute(); // This already updates volume in NetworkGame
-            updateVolumeSliderState(); // Reflect mute state on slider enabled status
+            game.toggleMute();
+            // No need to call updateVolumeSliderState() here explicitly,
+            // as game.toggleMute() will trigger settingsPanel.updateUIFromGameState(),
+            // which in turn calls updateVolumeSliderState().
         }
     }
 
