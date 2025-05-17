@@ -1,3 +1,4 @@
+// === System.java ===
 // FILE: System.java
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +14,8 @@ public class System {
     public static final int SYSTEM_WIDTH = 80;
     public static final int SYSTEM_HEIGHT = 60;
     private static final int QUEUE_CAPACITY = 5;
-    private static final int INDICATOR_FLASH_MS = 250;
     private static int nextId = 0;
-    private static final Random random = new Random();
+    private static Random globalRandom = new Random(); // For simulation logic
     private final int id;
     private int x, y;
     private final boolean isReferenceSystem;
@@ -27,8 +27,6 @@ public class System {
     private int packetsGenerated = 0;
     private int generationFrequencyMillis = 2000;
     private long lastGenerationTime = -1;
-    private boolean firstGenerationDone = false;
-    private final javax.swing.Timer indicatorTimer;
 
     public static class PredictedPacketInfo {
         public final int futurePacketId;
@@ -52,17 +50,25 @@ public class System {
         }
     }
 
+    /**
+     * Resets the global random number generator with a specific seed.
+     * This is crucial for achieving deterministic behavior between prediction and simulation.
+     * @param seed The seed to use.
+     */
+    public static void resetGlobalRandomSeed(long seed) {
+        globalRandom = new Random(seed);
+        java.lang.System.out.println("System.globalRandom seeded with: " + seed);
+    }
+
+
     public System(int x, int y, boolean isReference) {
         this.id = nextId++;
         this.x = x;
         this.y = y;
         this.isReferenceSystem = isReference;
-        this.indicatorTimer = new javax.swing.Timer(INDICATOR_FLASH_MS, e -> indicatorOn = false);
-        this.indicatorTimer.setRepeats(false);
     }
 
     public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) {
-        // Ensure no ANY ports are added if that's the new rule
         if (shape == NetworkEnums.PortShape.ANY) {
             throw new IllegalArgumentException("PortShape.ANY is not allowed in this configuration.");
         }
@@ -121,7 +127,6 @@ public class System {
 
     public void receivePacket(Packet packet, GamePanel gamePanel) {
         if (packet == null || gamePanel == null) return;
-        flashIndicator();
         packet.setCurrentSystem(this);
         gamePanel.addRoutingCoins(packet);
 
@@ -137,19 +142,18 @@ public class System {
 
     private void processOrQueuePacket(Packet packet, GamePanel gamePanel) {
         Port outputPort = findAvailableOutputPort(packet, gamePanel);
-        if (outputPort != null) { // A path is found (either compatible or non-compatible but empty)
+        if (outputPort != null) {
             Wire outputWire = gamePanel.findWireFromPort(outputPort);
             if (outputWire != null) {
                 NetworkEnums.PortShape packetRequiredPortShape = Port.getShapeEnum(packet.getShape());
                 boolean compatibleExit = (packetRequiredPortShape != null &&
-                        outputPort.getShape() == packetRequiredPortShape); // ANY is removed
+                        outputPort.getShape() == packetRequiredPortShape);
                 packet.setWire(outputWire, compatibleExit);
-            } else { // Should not happen if findAvailableOutputPort works correctly with gamePanel.isWireOccupied
+            } else {
                 java.lang.System.err.println("CRITICAL ERROR: System " + id + ": Output port " + outputPort + " reported available but GamePanel found no wire! Pkt " + packet.getId() + " LOST (queued instead).");
-                // Fallback to queueing if wire somehow disappears
                 queuePacket(packet, gamePanel);
             }
-        } else { // No empty output path found, queue the packet
+        } else {
             queuePacket(packet, gamePanel);
         }
     }
@@ -167,7 +171,7 @@ public class System {
 
 
     public void processQueue(GamePanel gamePanel) {
-        if (isReferenceSystem) return; // Only Nodes process queues
+        if (isReferenceSystem) return;
 
         Packet packetToProcess = null;
         synchronized (packetQueue) {
@@ -180,17 +184,17 @@ public class System {
 
         if (packetToProcess.isMarkedForRemoval()) {
             synchronized (packetQueue) {
-                packetQueue.poll(); // Remove already marked packet
+                packetQueue.poll();
             }
             return;
         }
 
         Port outputPort = findAvailableOutputPort(packetToProcess, gamePanel);
-        if (outputPort != null) { // An output path is available
+        if (outputPort != null) {
             Wire outputWire = gamePanel.findWireFromPort(outputPort);
             if (outputWire != null) {
                 Packet sentPacket = null;
-                synchronized (packetQueue) { // Ensure the packet is still the one we planned to send
+                synchronized (packetQueue) {
                     if (!packetQueue.isEmpty() && packetQueue.peek().equals(packetToProcess)) {
                         sentPacket = packetQueue.poll();
                     }
@@ -201,18 +205,13 @@ public class System {
                     boolean compatibleExit = (packetRequiredPortShape != null &&
                             outputPort.getShape() == packetRequiredPortShape);
                     sentPacket.setWire(outputWire, compatibleExit);
-                    flashIndicator();
                 } else {
-                    // Packet was removed or changed between peek and poll, or queue became empty.
-                    // The next tick will re-evaluate.
                     java.lang.System.err.println("System " + id + " queue processing: Packet " + packetToProcess.getId() + " changed/removed before send.");
                 }
             } else {
-                // This case should be rare if findAvailableOutputPort is accurate.
                 java.lang.System.err.println("CRITICAL ERROR: System " + id + ": Queue processing found available port " + outputPort + " but GamePanel has no wire! Pkt " + packetToProcess.getId() + " remains queued.");
             }
         }
-        // If outputPort is null, packet remains in queue for next tick.
     }
 
     private Port findAvailableOutputPort(Packet packet, GamePanel gamePanel) {
@@ -224,22 +223,20 @@ public class System {
         NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());
         if (requiredPacketShape == null) {
             java.lang.System.err.println("System " + id + ": Cannot determine required port shape for Packet " + packet.getId());
-            return null; // Cannot route if packet shape is unknown
+            return null;
         }
 
         synchronized(outputPorts) {
             List<Port> shuffledPorts = new ArrayList<>(outputPorts);
-            Collections.shuffle(shuffledPorts, random); // Randomize to distribute load
+            Collections.shuffle(shuffledPorts, globalRandom); // Use the global seeded random
 
             for (Port port : shuffledPorts) {
                 if (port != null && port.isConnected()) {
                     Wire wire = gamePanel.findWireFromPort(port);
-                    // Check if wire exists and is NOT occupied
                     if (wire != null && !gamePanel.isWireOccupied(wire)) {
                         if (port.getShape() == requiredPacketShape) {
                             compatibleEmptyPorts.add(port);
                         } else {
-                            // Since ANY ports are removed, all other shapes are non-compatible
                             nonCompatibleEmptyPorts.add(port);
                         }
                     }
@@ -247,17 +244,15 @@ public class System {
             }
         }
 
-        // Priority 1: Compatible and empty ports
         if (!compatibleEmptyPorts.isEmpty()) {
-            return compatibleEmptyPorts.get(0); // Return the first (randomized) compatible empty port
+            return compatibleEmptyPorts.get(0);
         }
 
-        // Priority 2: Non-compatible but empty ports
         if (!nonCompatibleEmptyPorts.isEmpty()) {
-            return nonCompatibleEmptyPorts.get(0); // Return the first (randomized) non-compatible empty port
+            return nonCompatibleEmptyPorts.get(0);
         }
 
-        return null; // No empty output port (neither compatible nor non-compatible) found
+        return null;
     }
 
 
@@ -266,8 +261,7 @@ public class System {
             this.packetsToGenerate = Math.max(0, totalPackets);
             this.generationFrequencyMillis = Math.max(200, frequencyMs);
             this.packetsGenerated = 0;
-            this.lastGenerationTime = -1; // Reset for the new configuration
-            this.firstGenerationDone = false;
+            this.lastGenerationTime = -1;
             java.lang.System.out.println("SOURCE System " + id + " configured: Generate " + this.packetsToGenerate + " packets, frequency=" + this.generationFrequencyMillis + "ms");
         } else {
             java.lang.System.err.println("Warning: Cannot configure generator for " + (isReferenceSystem ? "Sink" : "non-reference") + " System " + id);
@@ -280,12 +274,10 @@ public class System {
             return;
         }
 
-        if (lastGenerationTime == -1) { // First packet generation attempt for this configuration
-            lastGenerationTime = currentTimeMillis; // Set initial time
-            // For the very first packet, allow it to generate immediately if conditions met below.
-            // For subsequent packets, the frequency check will apply.
+        if (lastGenerationTime == -1) {
+            lastGenerationTime = currentTimeMillis;
         } else if (currentTimeMillis - lastGenerationTime < generationFrequencyMillis) {
-            return; // Not time yet for the next packet
+            return;
         }
 
 
@@ -302,30 +294,24 @@ public class System {
         }
 
         if (!availablePorts.isEmpty()) {
-            lastGenerationTime = currentTimeMillis; // Update time *before* successful generation
-            Collections.shuffle(availablePorts, random);
+            lastGenerationTime = currentTimeMillis;
+            Collections.shuffle(availablePorts, globalRandom); // Use the global seeded random
             Port chosenPort = availablePorts.get(0);
-            Wire outputWire = gamePanel.findWireFromPort(chosenPort); // Re-fetch, should be same
+            Wire outputWire = gamePanel.findWireFromPort(chosenPort);
             NetworkEnums.PacketShape shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
 
             if (shapeToGenerate != null && outputWire != null) {
                 Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY());
                 NetworkEnums.PortShape packetRequiredPortShape = Port.getShapeEnum(newPacket.getShape());
-                // Compatibility check for speed setting (ANY ports removed, so direct match needed for compatible speed)
                 boolean compatibleExit = (packetRequiredPortShape != null &&
                         chosenPort.getShape() == packetRequiredPortShape);
                 newPacket.setWire(outputWire, compatibleExit);
                 gamePanel.addPacket(newPacket);
                 packetsGenerated++;
-                flashIndicator();
             } else {
-                // This case implies an issue like port shape not mapping or wire disappearing,
-                // which should be rare. If it occurs, we don't update lastGenerationTime,
-                // allowing another attempt sooner on the next tick.
                 java.lang.System.err.println("System " + id + " generation failed post-check: Shape " + chosenPort.getShape() + " or wire issue. Retrying.");
             }
         }
-        // If no available ports, lastGenerationTime is not updated, so it will try again next suitable tick.
     }
 
 
@@ -350,7 +336,13 @@ public class System {
         long currentGenTime = generationFrequencyMillis;
         int predictedPacketIndex = 0;
 
+        // Note: predictGeneratedPackets itself does not use random selection between ports
+        // for different packets of the *same* source. It cycles.
+        // The randomness comes when multiple sources generate at similar times, or when
+        // nodes make routing decisions. The GamePanel's findPredictedNextPort uses its own seeded Random.
+
         while (predictedPacketIndex < packetsToGenerate && currentGenTime <= upToTimeMs) {
+            // Simple round-robin for port selection from a single source in prediction
             Port chosenPort = connectedOutputPorts.get(predictedPacketIndex % connectedOutputPorts.size());
             NetworkEnums.PacketShape shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
 
@@ -366,8 +358,26 @@ public class System {
         return predicted;
     }
 
+    private boolean areAllMyPortsConnected() {
+        synchronized (inputPorts) {
+            for (Port p : inputPorts) {
+                if (p != null && !p.isConnected()) {
+                    return false;
+                }
+            }
+        }
+        synchronized (outputPorts) {
+            for (Port p : outputPorts) {
+                if (p != null && !p.isConnected()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public void draw(Graphics2D g2d) {
+        this.indicatorOn = areAllMyPortsConnected();
         Color bodyColor = isReferenceSystem ? new Color(90, 90, 90) : new Color(60, 80, 130);
         g2d.setColor(bodyColor);
         g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
@@ -377,7 +387,7 @@ public class System {
         int indicatorSize = 8;
         int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
         int indicatorY = y - indicatorSize - 3;
-        g2d.setColor(indicatorOn ? Color.GREEN.brighter() : new Color(0, 100, 0));
+        g2d.setColor(indicatorOn ? Color.GREEN.brighter() : new Color(100, 0, 0));
         g2d.fillOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
         g2d.setColor(Color.DARK_GRAY);
         g2d.drawOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
@@ -397,24 +407,14 @@ public class System {
         }
     }
 
-    private void flashIndicator() {
-        if (!indicatorTimer.isRunning()) {
-            indicatorOn = true;
-        }
-        indicatorTimer.restart();
-    }
-
-    // Removed PortShape.ANY logic as it's no longer used for port creation
     public static NetworkEnums.PacketShape getPacketShapeFromPortShapeStatic(NetworkEnums.PortShape portShape) {
         if (portShape == null) return null;
         switch (portShape) {
             case SQUARE:   return NetworkEnums.PacketShape.SQUARE;
             case TRIANGLE: return NetworkEnums.PacketShape.TRIANGLE;
-            // case ANY: Should not happen if ANY ports are disallowed.
-            //    return random.nextBoolean() ? NetworkEnums.PacketShape.SQUARE : NetworkEnums.PacketShape.TRIANGLE;
             default:
                 java.lang.System.err.println("Warning: Unknown PortShape encountered in getPacketShapeFromPortShapeStatic: " + portShape);
-                return null; // Or throw an exception
+                return null;
         }
     }
 
