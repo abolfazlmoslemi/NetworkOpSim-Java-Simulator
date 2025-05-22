@@ -1,3 +1,5 @@
+// ======= LevelLoader.java =======
+
 // FILE: LevelLoader.java
 import javax.swing.*;
 import java.awt.*;
@@ -59,11 +61,10 @@ public class LevelLoader {
     }
 
     private static int getWireBudgetForLevel(int level) {
-        // Keeping wire budget high as requested, despite increased difficulty
         switch (level) {
-            case 1: return 20000;
-            case 2: return 30000;
-            default: return 1000;
+            case 1: return 4750; // Updated wire budget for level 1
+            case 2: return 6500; // Updated wire budget for level 2
+            default: return 1000; // Default fallback (should ideally not be reached if level validation is robust)
         }
     }
 

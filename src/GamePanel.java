@@ -1,3 +1,5 @@
+// ======= GamePanel.java =======
+
 // FILE: GamePanel.java
 // ===== GamePanel.java =====
 // FILE: GamePanel.java
@@ -112,6 +114,7 @@ public class GamePanel extends JPanel {
     private volatile long simulationTimeElapsedMs = 0; // Time elapsed in current live simulation run
     private volatile long currentLevelTimeLimitMs = 0;
     private volatile long maxPredictionTimeForScrubbingMs = 0; // Max time for prediction scrubbing (usually level time limit)
+    private int finalRemainingWireLengthAtLevelEnd = -1; // Stores actual remaining wire at end of level
 
     // Collision detection optimization
     private final Set<Pair<Integer,Integer>> activelyCollidingPairs = new HashSet<>();
@@ -188,23 +191,32 @@ public class GamePanel extends JPanel {
 
     public void initializeLevel(int level) {
         stopSimulation(); // Stop any ongoing simulation or timers
-        gameState.resetForLevel(); // Reset GameState stats for the new level attempt
-        this.currentLevel = level;
+
+        // Load level layout which sets max wire length in gameState
+        LevelLoader.LevelLayout layout = LevelLoader.loadLevel(level, gameState, game);
+        if (layout == null) { // Failed to load level
+            game.returnToMenu();
+            return;
+        }
+        // gameState.setMaxWireLengthForLevel has already been called in LevelLoader
+        // Now, resetForNewLevel will use this maxWireLengthPerLevel to set remainingWireLength
+        gameState.resetForNewLevel(); // Resets packet stats AND wire length to max for the level
+
+        this.currentLevel = layout.levelNumber; // Actual level loaded (might be fallback)
         this.networkValidatedForPrediction = false; // Network needs re-validation
+        this.finalRemainingWireLengthAtLevelEnd = -1; // Reset stored wire length for end dialog
 
         // Set time limits for the current level
         if (this.currentLevel == 1) this.currentLevelTimeLimitMs = LEVEL_1_TIME_LIMIT_MS;
         else if (this.currentLevel == 2) this.currentLevelTimeLimitMs = LEVEL_2_TIME_LIMIT_MS;
         else this.currentLevelTimeLimitMs = LEVEL_1_TIME_LIMIT_MS; // Default for unlisted levels
-        this.maxPredictionTimeForScrubbingMs = this.currentLevelTimeLimitMs; // Max prediction time matches level limit
+        this.maxPredictionTimeForScrubbingMs = this.currentLevelTimeLimitMs;
 
-        // Reset global IDs and random seed for deterministic behavior (especially for prediction)
         Packet.resetGlobalId();
         System.resetGlobalId();
         Port.resetGlobalId();
-        System.resetGlobalRandomSeed(PREDICTION_SEED); // Use a fixed seed for prediction consistency
+        System.resetGlobalRandomSeed(PREDICTION_SEED);
 
-        // Reset game state variables
         totalPacketsSuccessfullyDelivered = 0;
         levelComplete = false;
         gameOver = false;
@@ -213,35 +225,26 @@ public class GamePanel extends JPanel {
         selectedOutputPort = null;
         currentWiringColor = DEFAULT_WIRING_COLOR;
         setCursor(Cursor.getDefaultCursor());
-        viewedTimeMs = 0; // Start scrubbing from time 0
+        viewedTimeMs = 0;
         simulationTimeElapsedMs = 0;
         activelyCollidingPairs.clear();
 
-        clearLevelElements(); // Clear all systems, wires, packets from previous level
+        clearLevelElements();
 
-        // Deactivate and stop power-up timers
         deactivateAtar(); atarTimer.stop();
         deactivateAiryaman(); airyamanTimer.stop();
 
-        // Load level layout
-        LevelLoader.LevelLayout layout = LevelLoader.loadLevel(level, gameState, game);
-        if (layout == null) { // Failed to load level
-            game.returnToMenu();
-            return;
-        }
         synchronized (systems) { systems.clear(); systems.addAll(layout.systems); }
-        synchronized (wires) { wires.clear(); wires.addAll(layout.wires); } // Wires are usually empty from loader
-        this.currentLevel = layout.levelNumber; // Actual level loaded (might be fallback)
+        synchronized (wires) { wires.clear(); wires.addAll(layout.wires); }
 
-        // Initial network validation for prediction
         String initialErrorMessage = getNetworkValidationErrorMessage();
         this.networkValidatedForPrediction = (initialErrorMessage == null);
-        updatePrediction(); // Run initial prediction for time 0 if network is valid
+        updatePrediction();
 
-        showHUD = true; // Show HUD at level start
+        showHUD = true;
         hudTimer.restart();
         repaint();
-        SwingUtilities.invokeLater(this::requestFocusInWindow); // Ensure panel has focus
+        SwingUtilities.invokeLater(this::requestFocusInWindow);
     }
 
     private void clearLevelElements() {
@@ -251,61 +254,61 @@ public class GamePanel extends JPanel {
         synchronized (predictedPacketStates) { predictedPacketStates.clear(); }
         synchronized (tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); }
 
-
-        synchronized (wires) {
-            for (Wire w : wires) if (w != null) w.destroy(); // Disconnect ports
-            wires.clear();
-        }
-        synchronized (systems) {
-            for (System s : systems) if (s != null) s.resetForNewRun(); // Reset internal state
-            systems.clear();
-        }
-        displayedPredictionStats = new PredictionRunStats(0,0,0,0,0); // Reset HUD stats
+        // Wires and systems are cleared and re-added in initializeLevel
+        // so no need to individually destroy/reset here if they are cleared from main lists.
+        // However, if they were not cleared from main lists, this would be necessary:
+        // synchronized (wires) {
+        //     for (Wire w : wires) if (w != null) w.destroy();
+        //     wires.clear();
+        // }
+        // synchronized (systems) {
+        //     for (System s : systems) if (s != null) s.resetForNewRun();
+        //     systems.clear();
+        // }
+        displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
     }
 
     public void attemptStartSimulation() {
-        if (simulationStarted && gamePaused) { // If paused, resume
+        if (simulationStarted && gamePaused) {
             pauseGame(false);
             return;
         }
-        if (simulationStarted || gameOver || levelComplete) return; // Can't start if already running/ended
+        if (simulationStarted || gameOver || levelComplete) return;
 
-        // Validate network before starting
         String validationMessage = getNetworkValidationErrorMessage();
         if (validationMessage != null) {
             if (!game.isMuted()) game.playSoundEffect("error");
             JOptionPane.showMessageDialog(this, "Network Validation Failed:\n" + validationMessage, "Network Not Ready", JOptionPane.WARNING_MESSAGE);
-            if (this.networkValidatedForPrediction) { // If it was valid, now it's not
+            if (this.networkValidatedForPrediction) {
                 this.networkValidatedForPrediction = false;
-                updatePrediction(); // Clear prediction display
+                updatePrediction();
             }
             return;
         }
-        this.networkValidatedForPrediction = true; // Network is valid
+        this.networkValidatedForPrediction = true;
 
-        // Reset states for a fresh simulation run
-        Packet.resetGlobalId(); // Reset packet IDs for this run
-        System.resetGlobalRandomSeed(PREDICTION_SEED); // Use the same seed as prediction for consistency if desired, or a new one for gameplay
-        // For now, using PREDICTION_SEED for potential debug consistency.
-        // A new Random().nextLong() might be better for actual gameplay.
+        // Key Change: Call resetForSimulationAttemptOnly, which does NOT reset wire length.
+        gameState.resetForSimulationAttemptOnly();
+
+        Packet.resetGlobalId();
+        System.resetGlobalRandomSeed(PREDICTION_SEED);
         synchronized(systems) { for (System s : systems) if (s != null) s.resetForNewRun(); }
         synchronized(packets){ packets.clear(); }
         synchronized(packetsToAdd){ packetsToAdd.clear(); }
         synchronized(packetsToRemove){ packetsToRemove.clear(); }
         activelyCollidingPairs.clear();
-        gameState.resetForLevel(); // Reset coin earnings for this attempt, wire length, packet loss etc.
         totalPacketsSuccessfullyDelivered = 0;
+        this.finalRemainingWireLengthAtLevelEnd = -1; // Reset for this new attempt
 
-        // Start simulation
         simulationStarted = true;
         gameRunning = true;
         gamePaused = false;
-        lastTickTime = 0; // Will be set on first gameTick
-        viewedTimeMs = 0; // Live simulation time starts from 0
+        lastTickTime = 0;
+        viewedTimeMs = 0;
         simulationTimeElapsedMs = 0;
 
-        synchronized(predictedPacketStates){ predictedPacketStates.clear();} // Clear any lingering prediction visuals
-        displayedPredictionStats = new PredictionRunStats(0,0,0,0,0); // Reset prediction stats display
+        synchronized(predictedPacketStates){ predictedPacketStates.clear();}
+        displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
 
         gameLoopTimer.start();
         repaint();
@@ -683,6 +686,8 @@ public class GamePanel extends JPanel {
 
     private void handleEndOfLevelByTimeLimit() {
         if (gameOver || levelComplete) return; // Already ended
+
+        this.finalRemainingWireLengthAtLevelEnd = gameState.getRemainingWireLength(); // Store wire length before stopping
         stopSimulation();
 
         // Any packets still in transit or queued are considered lost at time limit
@@ -792,6 +797,7 @@ public class GamePanel extends JPanel {
         if (allSourcesFinishedGenerating && packetsOnWireOrBuffersEmpty && queuesAreEmpty) {
             // All generated packets have been processed (either delivered or lost)
             if (!levelComplete && !gameOver) { // Ensure this runs only once
+                this.finalRemainingWireLengthAtLevelEnd = gameState.getRemainingWireLength(); // Store wire length
                 stopSimulation();
                 boolean lostTooMany = gameState.getPacketLossPercentage() >= PACKET_LOSS_GAME_OVER_THRESHOLD;
                 if (lostTooMany) {
@@ -833,8 +839,16 @@ public class GamePanel extends JPanel {
         message.append("\nPackets Generated: ").append(gameState.getTotalPacketsGeneratedCount());
         message.append("\nPackets Lost: ").append(gameState.getTotalPacketsLostCount());
         message.append("\nPacket Units Lost: ").append(gameState.getTotalPacketLossUnits()).append(" units (").append(String.format("%.1f%%", gameState.getPacketLossPercentage())).append(")");
-        message.append("\nTotal Coins (Overall): ").append(gameState.getCoins()); // Show total coins from GameState
-        message.append("\nRemaining Wire Length: ").append(gameState.getRemainingWireLength());
+        message.append("\nTotal Coins (Overall): ").append(gameState.getCoins());
+
+        // Use the stored final wire length for display
+        if (this.finalRemainingWireLengthAtLevelEnd != -1) {
+            message.append("\nRemaining Wire Length: ").append(this.finalRemainingWireLengthAtLevelEnd);
+        } else {
+            // Fallback in case it wasn't set (e.g., if dialog shown through non-standard path)
+            message.append("\nRemaining Wire Length: ").append(gameState.getRemainingWireLength());
+        }
+
         message.append("\nSimulation Time: ").append(String.format("%.2f / %.0f s", simulationTimeElapsedMs / 1000.0, currentLevelTimeLimitMs / 1000.0));
 
         // Options for dialog
@@ -843,26 +857,26 @@ public class GamePanel extends JPanel {
         String retryOption = "Retry Level " + currentLevel;
         String menuOption = "Main Menu";
 
-        int nextLevelNumber = currentLevel + 1; // For display
+        int nextLevelNumber = currentLevel + 1;
         boolean nextLevelExists = nextLevelNumber <= gameState.getMaxLevels();
-        boolean nextLevelIsUnlocked = success && nextLevelExists && gameState.isLevelUnlocked(currentLevel); // Check based on 0-indexed unlock
+        boolean nextLevelIsUnlocked = success && nextLevelExists && gameState.isLevelUnlocked(currentLevel);
 
         if (success) {
             if (nextLevelIsUnlocked) {
                 nextLevelOption = "Next Level (" + nextLevelNumber + ")";
                 optionsList.add(nextLevelOption);
-            } else if (!nextLevelExists) { // Completed the last level
+            } else if (!nextLevelExists) {
                 message.append("\n\nAll levels completed!");
             }
             optionsList.add(retryOption);
             optionsList.add(menuOption);
-        } else { // Failed
+        } else {
             optionsList.add(retryOption);
             optionsList.add(menuOption);
         }
 
         Object[] options = optionsList.toArray();
-        if (options.length == 0) options = new Object[]{menuOption}; // Should not happen
+        if (options.length == 0) options = new Object[]{menuOption};
 
         int choice = JOptionPane.showOptionDialog(this.game,
                 message.toString(), title, JOptionPane.DEFAULT_OPTION,
@@ -870,12 +884,11 @@ public class GamePanel extends JPanel {
 
         String selectedOption;
         if (choice == JOptionPane.CLOSED_OPTION || choice < 0 || choice >= options.length) {
-            selectedOption = menuOption; // Default to menu if dialog closed or invalid choice
+            selectedOption = menuOption;
         } else {
             selectedOption = options[choice].toString();
         }
 
-        // Handle choice
         if (selectedOption.equals(menuOption)) {
             game.returnToMenu();
         } else if (selectedOption.equals(retryOption)) {
@@ -884,7 +897,7 @@ public class GamePanel extends JPanel {
         } else if (nextLevelOption != null && selectedOption.equals(nextLevelOption)) {
             game.setLevel(nextLevelNumber);
             game.startGame();
-        } else { // Should not happen, but fallback
+        } else {
             game.returnToMenu();
         }
     }
