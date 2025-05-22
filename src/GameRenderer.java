@@ -1,4 +1,6 @@
 // FILE: GameRenderer.java
+// ===== GameRenderer.java =====
+// FILE: GameRenderer.java
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -24,6 +26,7 @@ public class GameRenderer {
     private static final Font END_GAME_OVERLAY_FONT_SMALL = new Font("Arial", Font.PLAIN, 16);
     private static final Font TIME_SCRUB_FONT = new Font("Consolas", Font.BOLD, 14);
     private static final Font PREDICTION_STATUS_FONT = new Font("Arial", Font.BOLD, 9);
+    private static final Font PREDICTION_NOISE_FONT = new Font("Arial", Font.PLAIN, 8);
     private static final Font TEMP_MESSAGE_FONT = new Font("Arial", Font.BOLD, 16);
     private static final Color GRID_COLOR = new Color(40, 40, 50);
     private static final Color HUD_BACKGROUND_COLOR = new Color(20, 20, 30, 210);
@@ -32,15 +35,22 @@ public class GameRenderer {
     private static final Color TIME_SCRUB_BG_COLOR = new Color(50, 50, 60, 200);
     private static final Color TIME_SCRUB_FG_COLOR = Color.WHITE;
     private static final Color TIME_SCRUB_BAR_COLOR = Color.CYAN;
-    private static final int PREDICTION_ALPHA_DEFAULT = 160;
+
+    private static final int PREDICTION_ALPHA_ON_WIRE = 180;
+    private static final int PREDICTION_ALPHA_QUEUED = 150;
     private static final int PREDICTION_ALPHA_STALLED = 120;
-    private static final int PREDICTION_ALPHA_LOST = 100;
-    private static final int PREDICTION_ALPHA_DELIVERED = 120;
-    private static final Color PREDICTION_COLOR_LOST_BASE = Color.GRAY;
+    // private static final int PREDICTION_ALPHA_LOST = 100;      // No longer drawing LOST packets directly
+    private static final int PREDICTION_ALPHA_DELIVERED = 160;
+    // private static final Color PREDICTION_COLOR_LOST_BASE = Color.GRAY; // No longer drawing LOST packets
     private static final Color PREDICTION_COLOR_STALLED_BASE = Color.ORANGE.darker();
+    private static final Color PREDICTION_COLOR_QUEUED_BASE = Color.MAGENTA.darker();
     private static final Color PREDICTION_COLOR_DELIVERED_BASE = Color.GREEN.darker();
     private static final Color PREDICTION_INDICATOR_COLOR = new Color(230, 230, 230, 220);
-    private static final Color PREDICTION_LOST_X_COLOR = new Color(255, 0, 0, 150);
+    // private static final Color PREDICTION_LOST_X_COLOR = new Color(255, 0, 0, 150); // No longer drawing X for LOST
+    private static final Color PREDICTION_NOISE_TEXT_COLOR = Color.WHITE;
+    private static final Color PREDICTION_IDEAL_POS_MARKER_COLOR = new Color(255,255,255, 50);
+    private static final int PREDICTION_IDEAL_POS_MARKER_SIZE = 3;
+
     private static final int GRID_SIZE = 25;
     private static final int TIME_SCRUB_HEIGHT = 30;
     private static final int TIME_SCRUB_PADDING = 10;
@@ -66,48 +76,56 @@ public class GameRenderer {
         try {
             setupHighQualityRendering(g2d);
             drawGrid(g2d);
+
+            // Draw Wires
             synchronized(gamePanel.getWires()) {
                 for (Wire w : gamePanel.getWires()) {
                     if (w != null) w.draw(g2d);
                 }
             }
+
+            // Draw Systems
             synchronized(gamePanel.getSystems()) {
                 for (System s : gamePanel.getSystems()) {
                     if (s != null) s.draw(g2d);
                 }
             }
+
+            // Draw wiring line if in wire drawing mode
             if (gamePanel.isWireDrawingMode() && gamePanel.getSelectedOutputPort() != null && gamePanel.getMouseDragPos() != null) {
                 drawWiringLine(g2d);
             }
-            if (gamePanel.isSimulationStarted()) {
-                synchronized(gamePanel.getPackets()) {
-                    List<Packet> packetsSnapshot = new ArrayList<>(gamePanel.getPackets());
-                    for (Packet p : packetsSnapshot) {
-                        if (p != null && !p.isMarkedForRemoval() && p.getCurrentSystem() == null) {
-                            p.draw(g2d);
-                        }
-                    }
+
+            // Draw Packets (Live or Predicted)
+            if (gamePanel.isSimulationStarted()) { // Live simulation
+                List<Packet> packetsToRender = gamePanel.getPacketsForRendering();
+                for (Packet p : packetsToRender) {
+                    p.draw(g2d); // Packet.draw handles its own visual state
                 }
-            } else {
+            } else { // Pre-simulation (time scrubbing)
                 if (gamePanel.isNetworkValidatedForPrediction()) {
-                    synchronized (gamePanel.getPredictedPacketStates()) {
-                        List<PacketSnapshot> predictionSnapshot = new ArrayList<>(gamePanel.getPredictedPacketStates());
-                        for (PacketSnapshot snapshot : predictionSnapshot) {
+                    List<PacketSnapshot> predictionSnapshot = gamePanel.getPredictedPacketStates();
+                    for (PacketSnapshot snapshot : predictionSnapshot) {
+                        // Filter out LOST packets from rendering, stats are enough
+                        if (snapshot.getStatus() != PredictedPacketStatus.LOST) {
                             drawPredictedPacket(g2d, snapshot);
                         }
                     }
                 }
-                drawTimeScrubberUI(g2d);
+                drawTimeScrubberUI(g2d); // Always draw scrubber in pre-sim
             }
 
+            // Draw HUD
             if (gamePanel.isShowHUD()) {
                 drawHUD(g2d);
             } else {
                 drawHudToggleHint(g2d);
             }
 
+            // Draw Temporary Message (if any)
             drawTemporaryMessage(g2d);
 
+            // Draw Overlays (Pause, Game Over, Level Complete)
             String pauseInstruction = "";
             if (gamePanel.isGamePaused()) {
                 pauseInstruction = String.format("%s: Resume | %s: Menu",
@@ -148,7 +166,9 @@ public class GameRenderer {
         Port startPort = gamePanel.getSelectedOutputPort();
         Point dragPos = gamePanel.getMouseDragPos();
         Color wiringColor = gamePanel.getCurrentWiringColor();
+
         if (startPort == null || startPort.getPosition() == null || dragPos == null) return;
+
         g2d.setColor(wiringColor);
         Stroke oldStroke = g2d.getStroke();
         g2d.setStroke(WIRING_LINE_STROKE);
@@ -161,65 +181,81 @@ public class GameRenderer {
         int startY = 30;
         int lineHeightBold = 20;
         int lineHeightPlain = 18;
-        int hudWidth = 250;
+        int hudWidth = 250; // Approximate width, adjust as needed
+
         List<String> lines = new ArrayList<>();
         List<Color> lineColors = new ArrayList<>();
         List<Font> lineFonts = new ArrayList<>();
         List<Integer> lineHeights = new ArrayList<>();
+
+        // Level
         lines.add("LEVEL: " + gamePanel.getCurrentLevel());
-        lineColors.add(HUD_LEVEL_COLOR);
-        lineFonts.add(HUD_FONT_BOLD);
-        lineHeights.add(lineHeightBold);
+        lineColors.add(HUD_LEVEL_COLOR); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+
+        // Coins
         lines.add("COINS: " + gameState.getCoins());
-        lineColors.add(HUD_COINS_COLOR);
-        lineFonts.add(HUD_FONT_BOLD);
-        lineHeights.add(lineHeightBold);
+        lineColors.add(HUD_COINS_COLOR); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+
+        // Wire
         lines.add("WIRE LEFT: " + gameState.getRemainingWireLength());
-        lineColors.add(HUD_WIRE_COLOR);
-        lineFonts.add(HUD_FONT_BOLD);
-        lineHeights.add(lineHeightBold);
-        int generatedCount = gameState.getTotalPacketsGeneratedCount();
-        int lostCount = gameState.getTotalPacketsLostCount();
+        lineColors.add(HUD_WIRE_COLOR); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+
+        int generatedCount, lostCount, unitsGenerated, unitsLost;
+        double lossPercent;
+
+        if (gamePanel.isSimulationStarted()) { // Live simulation stats
+            generatedCount = gameState.getTotalPacketsGeneratedCount();
+            lostCount = gameState.getTotalPacketsLostCount();
+            unitsGenerated = gameState.getTotalPacketUnitsGenerated();
+            unitsLost = gameState.getTotalPacketLossUnits();
+            lossPercent = gameState.getPacketLossPercentage();
+
+            long simTimeMs = gamePanel.getSimulationTimeElapsedMs();
+            lines.add(String.format("TIME: %.2f s", simTimeMs / 1000.0));
+            lineColors.add(HUD_TIME_COLOR); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+
+            String powerupText = "";
+            if (gamePanel.isAtarActive() || gamePanel.isAiryamanActive()) {
+                powerupText = "ACTIVE:";
+                if (gamePanel.isAtarActive()) powerupText += " Atar";
+                if (gamePanel.isAiryamanActive()) powerupText += " Airyaman";
+                lines.add(powerupText.trim());
+                lineColors.add(HUD_POWERUP_COLOR); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+            }
+
+        } else { // Prediction stats
+            GamePanel.PredictionRunStats predStats = gamePanel.getDisplayedPredictionStats();
+            generatedCount = predStats.totalPacketsGenerated;
+            lostCount = predStats.totalPacketsLost;
+            unitsGenerated = predStats.totalPacketUnitsGenerated;
+            unitsLost = predStats.totalPacketUnitsLost;
+            lossPercent = predStats.packetLossPercentage;
+
+            lines.add(String.format("PRED. TIME: %.2f s", gamePanel.getViewedTimeMs() / 1000.0));
+            lineColors.add(HUD_TIME_COLOR); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+        }
+
+        // Packet counts and loss percentage (common for both live and prediction)
         lines.add("Generated: " + generatedCount);
-        lineColors.add(HUD_COUNT_COLOR);
-        lineFonts.add(HUD_COUNT_FONT);
-        lineHeights.add(lineHeightPlain);
+        lineColors.add(HUD_COUNT_COLOR); lineFonts.add(HUD_COUNT_FONT); lineHeights.add(lineHeightPlain);
+
         lines.add("Lost: " + lostCount);
-        lineColors.add(HUD_COUNT_COLOR);
-        lineFonts.add(HUD_COUNT_FONT);
-        lineHeights.add(lineHeightPlain);
-        double lossPercent = gameState.getPacketLossPercentage();
+        lineColors.add(HUD_COUNT_COLOR); lineFonts.add(HUD_COUNT_FONT); lineHeights.add(lineHeightPlain);
+
         Color lossColor;
-        if (!gamePanel.isSimulationStarted()) {
-            lossColor = Color.GRAY;
-        } else if (lossPercent >= 35) {
+        if (!gamePanel.isSimulationStarted() && !gamePanel.isNetworkValidatedForPrediction()) {
+            lossColor = Color.DARK_GRAY; // Loss is irrelevant if network not valid for prediction
+        } else if (lossPercent >= 35.0) {
             lossColor = HUD_LOSS_DANGER_COLOR;
-        } else if (lossPercent >= 15) {
+        } else if (lossPercent >= 15.0) {
             lossColor = HUD_LOSS_WARN_COLOR;
         } else {
             lossColor = HUD_LOSS_OK_COLOR;
         }
-        lines.add(String.format("LOSS (Units): %.1f%% (%d U)", lossPercent, gameState.getTotalPacketLossUnits()));
-        lineColors.add(lossColor);
-        lineFonts.add(HUD_FONT_BOLD);
-        lineHeights.add(lineHeightBold);
-        if (gamePanel.isSimulationStarted()) {
-            long simTimeMs = gamePanel.getSimulationTimeElapsedMs();
-            lines.add(String.format("TIME: %.2f s", simTimeMs / 1000.0));
-            lineColors.add(HUD_TIME_COLOR);
-            lineFonts.add(HUD_FONT_BOLD);
-            lineHeights.add(lineHeightBold);
-        }
-        String powerupText = "";
-        if (gamePanel.isSimulationStarted() && (gamePanel.isAtarActive() || gamePanel.isAiryamanActive())) {
-            powerupText = "ACTIVE:";
-            if (gamePanel.isAtarActive()) powerupText += " Atar";
-            if (gamePanel.isAiryamanActive()) powerupText += " Airyaman";
-            lines.add(powerupText.trim());
-            lineColors.add(HUD_POWERUP_COLOR);
-            lineFonts.add(HUD_FONT_BOLD);
-            lineHeights.add(lineHeightBold);
-        }
+        lines.add(String.format("LOSS (Units): %.1f%% (%d U)", lossPercent, unitsLost));
+        lineColors.add(lossColor); lineFonts.add(HUD_FONT_BOLD); lineHeights.add(lineHeightBold);
+
+        // Key hints
         String hintText = "";
         String keyToggleHUD = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.TOGGLE_HUD));
         String keyEsc = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.ESCAPE_MENU_CANCEL));
@@ -233,25 +269,35 @@ public class GameRenderer {
                 String keyPause = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.PAUSE_RESUME_GAME));
                 String keyStore = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.OPEN_STORE));
                 hintText = String.format("%s: Pause | %s: Store | %s: Menu", keyPause, keyStore, keyEsc);
-            } else if (gamePanel.isGamePaused()) {
             }
+            // For paused state, hints are drawn on the overlay
+
             if (!hintText.isEmpty()) {
                 hintText += " | " + keyToggleHUD + ": HUD";
-            } else {
-                hintText = keyToggleHUD + ": HUD";
+            } else if (gamePanel.isGameRunning() && gamePanel.isGamePaused()){
+                // Hint text for paused state will be handled by pause overlay
             }
-            lines.add(hintText);
-            lineColors.add(HUD_HINT_COLOR);
-            lineFonts.add(HUD_FONT_PLAIN);
-            lineHeights.add(lineHeightPlain);
+            else {
+                hintText = keyToggleHUD + ": HUD"; // Default if no other context
+            }
+
+            if(!hintText.isEmpty()){ // Only add if there is something to show
+                lines.add(hintText);
+                lineColors.add(HUD_HINT_COLOR); lineFonts.add(HUD_FONT_PLAIN); lineHeights.add(lineHeightPlain);
+            }
         }
+
+        // Calculate total HUD height and draw background
         int totalHeightAccumulated = 0;
         for (int height : lineHeights) {
             totalHeightAccumulated += height;
         }
-        int hudHeight = 20 + totalHeightAccumulated;
+        int hudHeight = 20 + totalHeightAccumulated; // Padding top/bottom
+
         g2d.setColor(HUD_BACKGROUND_COLOR);
         g2d.fillRoundRect(hudX - 10, startY - 20, hudWidth, hudHeight, 15, 15);
+
+        // Draw text lines
         int currentY = startY;
         for (int i = 0; i < lines.size(); i++) {
             g2d.setColor(lineColors.get(i));
@@ -267,34 +313,41 @@ public class GameRenderer {
         String keyToggleHUD = keyBindings.getKeyText(keyBindings.getKeyCode(KeyBindings.GameAction.TOGGLE_HUD));
         String text = keyToggleHUD + ": Toggle HUD";
         FontMetrics fm = g2d.getFontMetrics();
-        int y = gamePanel.getHeight() - fm.getDescent() - 5;
+        int y = gamePanel.getHeight() - fm.getDescent() - 5; // Bottom of screen
         g2d.drawString(text, 10, y);
     }
 
     private void drawPauseOverlay(Graphics2D g2d, String instructionText) {
+        // Semi-transparent background
         Composite originalComposite = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
-        g2d.setComposite(originalComposite);
+        g2d.setComposite(originalComposite); // Restore composite
+
+        // "PAUSED" text
         String text = "PAUSED";
         g2d.setFont(PAUSE_OVERLAY_FONT_LARGE);
         FontMetrics fm = g2d.getFontMetrics();
         int textWidth = fm.stringWidth(text);
         int x = (gamePanel.getWidth() - textWidth) / 2;
-        int y = gamePanel.getHeight() / 2;
-        g2d.setColor(Color.DARK_GRAY);
+        int y = gamePanel.getHeight() / 2; // Center vertically
+
+        g2d.setColor(Color.DARK_GRAY); // Shadow
         g2d.drawString(text, x + 3, y + 3);
-        g2d.setColor(Color.YELLOW);
+        g2d.setColor(Color.YELLOW);    // Main text
         g2d.drawString(text, x, y);
+
+        // Instruction text
         g2d.setFont(PAUSE_OVERLAY_FONT_SMALL);
         fm = g2d.getFontMetrics();
         int instructionWidth = fm.stringWidth(instructionText);
         int ix = (gamePanel.getWidth() - instructionWidth) / 2;
-        int iy = y + fm.getAscent() + 10;
-        g2d.setColor(Color.BLACK);
+        int iy = y + fm.getAscent() + 10; // Below "PAUSED"
+
+        g2d.setColor(Color.BLACK); // Shadow for instruction
         g2d.drawString(instructionText, ix + 1, iy + 1);
-        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.setColor(Color.LIGHT_GRAY); // Main instruction text
         g2d.drawString(instructionText, ix, iy);
     }
 
@@ -304,134 +357,193 @@ public class GameRenderer {
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
         g2d.setComposite(originalComposite);
+
         g2d.setFont(END_GAME_OVERLAY_FONT_LARGE);
         FontMetrics fm = g2d.getFontMetrics();
         int textWidth = fm.stringWidth(message);
         int x = (gamePanel.getWidth() - textWidth) / 2;
-        int y = gamePanel.getHeight() / 2 - 20;
-        g2d.setColor(Color.BLACK);
+        int y = gamePanel.getHeight() / 2 - 20; // Slightly above center
+
+        g2d.setColor(Color.BLACK); // Shadow
         g2d.drawString(message, x + 4, y + 4);
-        g2d.setColor(color);
+        g2d.setColor(color);       // Main text
         g2d.drawString(message, x, y);
+
         g2d.setFont(END_GAME_OVERLAY_FONT_SMALL);
         g2d.setColor(Color.LIGHT_GRAY);
         String subText = "(Results dialog will appear shortly)";
         fm = g2d.getFontMetrics();
         int subWidth = fm.stringWidth(subText);
         int sx = (gamePanel.getWidth() - subWidth) / 2;
-        int sy = y + fm.getAscent() + 15;
+        int sy = y + fm.getAscent() + 15; // Below main message
         g2d.drawString(subText, sx, sy);
     }
 
     private void drawTimeScrubberUI(Graphics2D g2d) {
         int panelWidth = gamePanel.getWidth();
         int panelHeight = gamePanel.getHeight();
+
         int scrubY = panelHeight - TIME_SCRUB_HEIGHT - TIME_SCRUB_PADDING;
         int scrubX = TIME_SCRUB_PADDING;
         int scrubWidth = panelWidth - 2 * TIME_SCRUB_PADDING;
+
+        // Background
         g2d.setColor(TIME_SCRUB_BG_COLOR);
         g2d.fillRoundRect(scrubX, scrubY, scrubWidth, TIME_SCRUB_HEIGHT, 10, 10);
-        g2d.setColor(TIME_SCRUB_BG_COLOR.darker());
+        g2d.setColor(TIME_SCRUB_BG_COLOR.darker()); // Border
         g2d.drawRoundRect(scrubX, scrubY, scrubWidth, TIME_SCRUB_HEIGHT, 10, 10);
+
+        // Progress bar
         long currentTime = gamePanel.getViewedTimeMs();
         long maxTime = gamePanel.getMaxPredictionTimeMs();
         double progress = (maxTime > 0) ? (double) currentTime / maxTime : 0.0;
-        progress = Math.max(0.0, Math.min(1.0, progress));
-        int progressBarInnerX = scrubX + 2;
+        progress = Math.max(0.0, Math.min(1.0, progress)); // Clamp progress
+
+        int progressBarInnerX = scrubX + 2; // Small padding inside
         int progressBarInnerWidth = scrubWidth - 4;
         int progressFillWidth = (int) (progress * progressBarInnerWidth);
+
         if (progressFillWidth > 0) {
             g2d.setColor(TIME_SCRUB_BAR_COLOR);
             g2d.fillRect(progressBarInnerX, scrubY + 2, progressFillWidth, TIME_SCRUB_HEIGHT - 4);
         }
+
+        // Text
         g2d.setFont(TIME_SCRUB_FONT);
         g2d.setColor(TIME_SCRUB_FG_COLOR);
-        String timeString = String.format("View Time: %.2f s", currentTime / 1000.0);
+        String timeString = String.format("View Time: %.2f s / %.2f s", currentTime / 1000.0, maxTime / 1000.0);
         FontMetrics fm = g2d.getFontMetrics();
         int textWidth = fm.stringWidth(timeString);
-        int textX = scrubX + (scrubWidth - textWidth) / 2;
-        int textY = scrubY + fm.getAscent() + (TIME_SCRUB_HEIGHT - fm.getHeight()) / 2;
+        int textX = scrubX + (scrubWidth - textWidth) / 2; // Center text
+        int textY = scrubY + fm.getAscent() + (TIME_SCRUB_HEIGHT - fm.getHeight()) / 2; // Center text vertically
         g2d.drawString(timeString, textX, textY);
     }
 
     private void drawPredictedPacket(Graphics2D g2d, PacketSnapshot snapshot) {
-        if (snapshot.getStatus() == PredictedPacketStatus.NOT_YET_GENERATED || snapshot.getPosition() == null) {
+        if (snapshot.getStatus() == PredictedPacketStatus.NOT_YET_GENERATED || snapshot.getVisualPosition() == null) {
+            return; // Don't draw if not generated or no position
+        }
+        // ** MODIFICATION: Do not draw LOST packets in prediction visuals, stats are enough **
+        if (snapshot.getStatus() == PredictedPacketStatus.LOST) {
             return;
         }
-        Point position = snapshot.getPosition();
+
+        Point visualPosPoint = snapshot.getVisualPosition(); // This is the (potentially noise-offset) visual position
+        Point2D.Double idealPosDouble = snapshot.getIdealPosition(); // This is the "true" position on the wire center
+
         int drawSize = snapshot.getDrawSize();
         int halfSize = drawSize / 2;
-        int x = position.x - halfSize;
-        int y = position.y - halfSize;
-        Color baseColor = Port.getColorFromShape(snapshot.getShape());
-        int alpha = PREDICTION_ALPHA_DEFAULT;
+        int drawX = visualPosPoint.x - halfSize; // Top-left for drawing
+        int drawY = visualPosPoint.y - halfSize;
+
+        Color baseColor = Port.getColorFromShape(snapshot.getShape()); // Get color based on shape
+        int alpha = PREDICTION_ALPHA_ON_WIRE; // Default alpha
         String statusIndicator = null;
+
         switch (snapshot.getStatus()) {
-            case LOST:
-                alpha = PREDICTION_ALPHA_LOST;
-                baseColor = PREDICTION_COLOR_LOST_BASE;
-                break;
+            // case LOST: // Already handled above, not drawn
+            //     break;
             case STALLED_AT_NODE:
-                alpha = PREDICTION_ALPHA_STALLED;
-                baseColor = PREDICTION_COLOR_STALLED_BASE;
-                statusIndicator = "S";
+                alpha = PREDICTION_ALPHA_STALLED; baseColor = PREDICTION_COLOR_STALLED_BASE; statusIndicator = "S";
+                break;
+            case QUEUED:
+                alpha = PREDICTION_ALPHA_QUEUED; baseColor = PREDICTION_COLOR_QUEUED_BASE; statusIndicator = "Q";
                 break;
             case DELIVERED:
-                alpha = PREDICTION_ALPHA_DELIVERED;
-                baseColor = PREDICTION_COLOR_DELIVERED_BASE;
-                statusIndicator = "D";
+                alpha = PREDICTION_ALPHA_DELIVERED; baseColor = PREDICTION_COLOR_DELIVERED_BASE; statusIndicator = "D";
                 break;
             case ON_WIRE:
+                // Alpha and baseColor remain default
                 break;
-            default:
+            default: // Should not happen
                 break;
         }
         Color drawColor = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), alpha);
         g2d.setColor(drawColor);
+
+        Path2D path = null; // For triangle
         AffineTransform oldTransform = g2d.getTransform();
-        Path2D path = null;
+        boolean transformed = false;
+
         try {
-            switch (snapshot.getShape()) {
-                case SQUARE:
-                    g2d.fillRect(x, y, drawSize, drawSize);
-                    break;
-                case TRIANGLE:
-                    path = new Path2D.Double();
-                    path.moveTo(position.x, y); // Top point
-                    path.lineTo(x + drawSize, y + drawSize); // Bottom-right
-                    path.lineTo(x, y + drawSize); // Bottom-left
-                    path.closePath();
-                    g2d.fill(path);
-                    break;
-                default: // Should be Circle or other, draw oval as fallback
-                    g2d.fillOval(x, y, drawSize, drawSize);
-                    break;
-            }
-            g2d.setColor(drawColor.darker());
-            g2d.setStroke(new BasicStroke(1));
-            switch (snapshot.getShape()) {
-                case SQUARE: g2d.drawRect(x, y, drawSize, drawSize); break;
-                case TRIANGLE: if (path != null) g2d.draw(path); break;
-                default: g2d.drawOval(x, y, drawSize, drawSize); break;
+            // Draw ideal position marker if packet is on wire and has noise (visual deviates from ideal)
+            if (snapshot.getStatus() == PredictedPacketStatus.ON_WIRE && snapshot.getNoiseLevel() > 0.05 && idealPosDouble != null) {
+                g2d.setColor(PREDICTION_IDEAL_POS_MARKER_COLOR);
+                int markerHalf = PREDICTION_IDEAL_POS_MARKER_SIZE / 2;
+                int idealXInt = (int)Math.round(idealPosDouble.x);
+                int idealYInt = (int)Math.round(idealPosDouble.y);
+                g2d.drawLine(idealXInt - markerHalf, idealYInt, idealXInt + markerHalf, idealYInt); // Horizontal
+                g2d.drawLine(idealXInt, idealYInt - markerHalf, idealXInt, idealYInt + markerHalf); // Vertical
+                g2d.setColor(drawColor); // Switch back to packet color
             }
 
+            // Handle rotation for TRIANGLE shape
+            Point2D.Double rotDir = snapshot.getRotationDirection();
+            if (snapshot.getShape() == NetworkEnums.PacketShape.TRIANGLE && rotDir != null) {
+                g2d.translate(visualPosPoint.x, visualPosPoint.y);
+                g2d.rotate(Math.atan2(rotDir.y, rotDir.x));
+                path = new Path2D.Double();
+                path.moveTo(halfSize, 0); path.lineTo(-halfSize, -halfSize); path.lineTo(-halfSize, halfSize);
+                path.closePath();
+                g2d.fill(path);
+                transformed = true;
+            } else { // Draw non-rotated shapes or fallback triangle
+                switch (snapshot.getShape()) {
+                    case SQUARE:
+                        g2d.fillRect(drawX, drawY, drawSize, drawSize);
+                        break;
+                    case TRIANGLE: // Fallback if no rotation direction
+                        path = new Path2D.Double();
+                        path.moveTo(visualPosPoint.x, drawY); // Top point
+                        path.lineTo(drawX + drawSize, drawY + drawSize); // Bottom-right
+                        path.lineTo(drawX, drawY + drawSize); // Bottom-left
+                        path.closePath();
+                        g2d.fill(path);
+                        break;
+                    default: // Should not happen with current enums
+                        g2d.fillOval(drawX, drawY, drawSize, drawSize);
+                        break;
+                }
+            }
+
+            // Draw border for the packet shape
+            g2d.setColor(drawColor.darker()); // Darker border
+            g2d.setStroke(new BasicStroke(1));
+            if (transformed && path != null) { // If rotated triangle
+                g2d.draw(path);
+            } else { // For non-rotated shapes
+                switch (snapshot.getShape()) {
+                    case SQUARE: g2d.drawRect(drawX, drawY, drawSize, drawSize); break;
+                    case TRIANGLE: if (path != null) g2d.draw(path); break;
+                    default: g2d.drawOval(drawX, drawY, drawSize, drawSize); break;
+                }
+            }
+
+            // Draw status indicator (S, Q, D) in the center of the packet
             if (statusIndicator != null) {
                 g2d.setColor(PREDICTION_INDICATOR_COLOR);
                 g2d.setFont(PREDICTION_STATUS_FONT);
                 FontMetrics fm = g2d.getFontMetrics();
                 int charWidth = fm.stringWidth(statusIndicator);
-                int charHeight = fm.getAscent();
-                g2d.drawString(statusIndicator, position.x - charWidth / 2, position.y + charHeight / 3);
+                // Center the indicator char in the packet
+                g2d.drawString(statusIndicator, visualPosPoint.x - charWidth / 2, visualPosPoint.y + fm.getAscent() / 3);
             }
-            else if (snapshot.getStatus() == PredictedPacketStatus.LOST) {
-                g2d.setColor(PREDICTION_LOST_X_COLOR);
-                g2d.setStroke(new BasicStroke(1.5f));
-                g2d.drawLine(x, y, x + drawSize, y + drawSize);
-                g2d.drawLine(x + drawSize, y, x, y + drawSize);
+
+            // Draw noise level text if significant
+            if (snapshot.getNoiseLevel() > 0.05) {
+                g2d.setFont(PREDICTION_NOISE_FONT);
+                g2d.setColor(PREDICTION_NOISE_TEXT_COLOR);
+                String noiseText = String.format("%.1f", snapshot.getNoiseLevel());
+                FontMetrics fm = g2d.getFontMetrics();
+                // Position noise text slightly offset from packet (e.g., bottom-right)
+                g2d.drawString(noiseText, visualPosPoint.x + halfSize/2 + 2, visualPosPoint.y + halfSize + fm.getAscent() - 2 );
             }
+
         } finally {
             g2d.setStroke(new BasicStroke(1)); // Reset stroke
-            // g2d.setTransform(oldTransform); // Not needed if not transforming for prediction
+            if (transformed) {
+                g2d.setTransform(oldTransform); // Restore original transform
+            }
         }
     }
 
@@ -445,12 +557,12 @@ public class GameRenderer {
 
             long currentTime = java.lang.System.currentTimeMillis();
             long timeLeft = displayUntil - currentTime;
-            long fadeDuration = 500; // Start fading 500ms before disappearing
+            long fadeDuration = 500; // Start fading out in the last 500ms
 
-            if (timeLeft <= 0) {
-                gamePanel.getGame().clearTemporaryMessage(); // Message expired
+            if (timeLeft <= 0) { // Message expired
+                gamePanel.getGame().clearTemporaryMessage(); // Tell game to clear it
                 return;
-            } else if (timeLeft < fadeDuration) {
+            } else if (timeLeft < fadeDuration) { // Fading out
                 alphaFactor = (float)timeLeft / fadeDuration;
                 alphaFactor = Math.max(0.0f, Math.min(1.0f, alphaFactor)); // Clamp
             }
@@ -458,16 +570,20 @@ public class GameRenderer {
             g2d.setFont(TEMP_MESSAGE_FONT);
             FontMetrics fm = g2d.getFontMetrics();
             int textWidth = fm.stringWidth(text);
-            int textHeight = fm.getHeight();
+            int textHeight = fm.getHeight(); // Includes ascent, descent, leading
             int panelWidth = gamePanel.getWidth();
 
+            // Position message near top-center
             int x = (panelWidth - textWidth) / 2;
-            int y = 30 + fm.getAscent();
+            int y = 30 + fm.getAscent(); // Y is baseline of text
 
-            Color bgColor = new Color(0, 0, 0, (int)(150 * alphaFactor));
+            // Background for readability
+            Color bgColor = new Color(0, 0, 0, (int)(150 * alphaFactor)); // Semi-transparent black, fades with text
             g2d.setColor(bgColor);
+            // Rectangle for background: x, y_top, width, height
             g2d.fillRoundRect(x - 10, y - textHeight + fm.getDescent() - 5, textWidth + 20, textHeight + 5, 10, 10);
 
+            // Text color with alpha
             g2d.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), (int)(255 * alphaFactor)));
             g2d.drawString(text, x, y);
         }

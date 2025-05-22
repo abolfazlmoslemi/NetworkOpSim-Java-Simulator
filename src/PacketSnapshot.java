@@ -1,93 +1,94 @@
+// ===== PacketSnapshot.java =====
 // FILE: PacketSnapshot.java
 import java.awt.Point;
+import java.awt.geom.Point2D; // IMPORT ADDED
 import java.util.Objects;
 
 /**
- * Stores the predicted state of a packet at a specific time during the
- * pre-simulation time scrubbing phase.
+ * Stores the visual state of a packet as determined by the fast prediction simulation
+ * at a specific viewed time. This is primarily for rendering purposes.
  */
 public class PacketSnapshot {
-    private final int originalPacketId;             // ID of the packet this snapshot represents (or a future ID)
-    private final NetworkEnums.PacketShape shape;   // Shape of the packet
-    private final Point position;                   // Predicted position (null if NOT_YET_GENERATED)
-    private final PredictedPacketStatus status;     // Predicted status (e.g., ON_WIRE, DELIVERED)
-    private final double progressOnWire;            // Predicted progress [0,1] if status is ON_WIRE
-    private final int systemIdIfStalledOrQueued;    // ID of the system if status is STALLED_AT_NODE or QUEUED
+    private final int originalPacketId;
+    private final NetworkEnums.PacketShape shape;
+    private final Point visualPosition; // This is java.awt.Point
+    private final PredictedPacketStatus status;
+    private final double progressOnWire;
+    private final int systemIdIfStalledOrQueued;
+    private final double noiseLevel;
+    private final Point2D.Double idealPosition; // This is java.awt.geom.Point2D.Double
+    private final Point2D.Double rotationDirection; // This is java.awt.geom.Point2D.Double
 
-    /** Constructor for packets not yet generated at the viewed time. */
-    public PacketSnapshot(int originalPacketId, NetworkEnums.PacketShape shape) {
-        this.originalPacketId = originalPacketId;
-        this.shape = Objects.requireNonNull(shape, "PacketSnapshot shape cannot be null");
+    public PacketSnapshot(Packet packet, PredictedPacketStatus status) {
+        Objects.requireNonNull(packet, "Source packet for snapshot cannot be null");
+        this.originalPacketId = packet.getId();
+        this.shape = packet.getShape();
+        this.visualPosition = packet.getPosition(); // Packet.getPosition() returns Point
+        this.idealPosition = packet.getIdealPositionDouble(); // Packet.getIdealPositionDouble() returns Point2D.Double
+        this.status = status;
+        this.noiseLevel = packet.getNoise();
+
+        if (status == PredictedPacketStatus.ON_WIRE) {
+            this.progressOnWire = packet.getProgressOnWire();
+            this.systemIdIfStalledOrQueued = -1;
+        } else if (status == PredictedPacketStatus.QUEUED || status == PredictedPacketStatus.STALLED_AT_NODE) {
+            this.progressOnWire = 0.0;
+            this.systemIdIfStalledOrQueued = (packet.getCurrentSystem() != null) ? packet.getCurrentSystem().getId() : -2;
+        } else {
+            this.progressOnWire = (status == PredictedPacketStatus.DELIVERED) ? 1.0 : 0.0;
+            this.systemIdIfStalledOrQueued = -1;
+        }
+
+        if (packet.getShape() == NetworkEnums.PacketShape.TRIANGLE && packet.getCurrentWire() != null) {
+            Point2D.Double packetVelocity = packet.getVelocity(); // Returns Point2D.Double
+            Point2D.Double wireDirection = packet.getCurrentWire().getDirectionVector(); // Returns Point2D.Double
+
+            if (packetVelocity != null && Math.hypot(packetVelocity.x, packetVelocity.y) > 0.01) {
+                this.rotationDirection = packetVelocity;
+            } else if (wireDirection != null) {
+                this.rotationDirection = wireDirection;
+            } else {
+                this.rotationDirection = null;
+            }
+        } else {
+            this.rotationDirection = null;
+        }
+    }
+
+    public PacketSnapshot(int futurePacketId, NetworkEnums.PacketShape shape) {
+        this.originalPacketId = futurePacketId;
+        this.shape = Objects.requireNonNull(shape, "PacketSnapshot shape cannot be null for future packet");
         this.status = PredictedPacketStatus.NOT_YET_GENERATED;
-        this.position = null; // No position yet
+        this.visualPosition = null;
+        this.idealPosition = null;
         this.progressOnWire = 0.0;
-        this.systemIdIfStalledOrQueued = -1; // Not applicable
+        this.systemIdIfStalledOrQueued = -1;
+        this.noiseLevel = 0.0;
+        this.rotationDirection = null;
     }
-
-    /** Constructor for packets predicted ON_WIRE, DELIVERED, or LOST (with position). */
-    public PacketSnapshot(int originalPacketId, NetworkEnums.PacketShape shape, Point position, PredictedPacketStatus status, double progressOnWire) {
-        // Validate status vs constructor usage
-        if (status == PredictedPacketStatus.QUEUED || status == PredictedPacketStatus.STALLED_AT_NODE || status == PredictedPacketStatus.NOT_YET_GENERATED) {
-            throw new IllegalArgumentException("Incorrect constructor used for status: " + status + ". Use the systemId constructor or the no-position constructor.");
-        }
-        if ((status == PredictedPacketStatus.ON_WIRE || status == PredictedPacketStatus.DELIVERED || status == PredictedPacketStatus.LOST) && position == null) {
-            // For LOST status, position might be the last known valid position or the target port's position. Null is problematic.
-            // Let's require a position for LOST as well, representing where it was lost.
-            throw new IllegalArgumentException("Position cannot be null for status: " + status);
-        }
-
-        this.originalPacketId = originalPacketId;
-        this.shape = Objects.requireNonNull(shape, "PacketSnapshot shape cannot be null");
-        this.position = (position != null) ? new Point(position) : null; // Defensive copy
-        this.status = status;
-        // Ensure progress is valid for ON_WIRE, default otherwise
-        this.progressOnWire = (status == PredictedPacketStatus.ON_WIRE)
-                ? Math.max(0.0, Math.min(1.0, progressOnWire)) // Clamp progress
-                : (status == PredictedPacketStatus.DELIVERED ? 1.0 : 0.0); // Default progress for non-wire states
-        this.systemIdIfStalledOrQueued = -1; // Not applicable for these statuses
-    }
-
-    /** Constructor for packets predicted STALLED_AT_NODE or QUEUED (at a system location). */
-    public PacketSnapshot(int originalPacketId, NetworkEnums.PacketShape shape, Point systemPosition, PredictedPacketStatus status, int systemId) {
-        // Validate status vs constructor usage
-        if (status != PredictedPacketStatus.STALLED_AT_NODE && status != PredictedPacketStatus.QUEUED) {
-            throw new IllegalArgumentException("Incorrect constructor used for status: " + status + ". Use the position/progress constructor or the no-position constructor.");
-        }
-        if (systemPosition == null) {
-            throw new IllegalArgumentException("System position cannot be null for status: " + status);
-        }
-        if (systemId < 0) {
-            throw new IllegalArgumentException("System ID must be non-negative for status: " + status);
-        }
-
-        this.originalPacketId = originalPacketId;
-        this.shape = Objects.requireNonNull(shape, "PacketSnapshot shape cannot be null");
-        this.position = new Point(systemPosition); // Position is the system's center
-        this.status = status;
-        this.progressOnWire = 0.0; // No progress on wire when stalled/queued
-        this.systemIdIfStalledOrQueued = systemId;
-    }
-
 
     // --- Getters ---
     public int getOriginalPacketId() { return originalPacketId; }
     public NetworkEnums.PacketShape getShape() { return shape; }
-    public Point getPosition() { return (position != null) ? new Point(position) : null; } // Return copy
+    public Point getVisualPosition() { return (visualPosition != null) ? new Point(visualPosition) : null; }
+    public Point2D.Double getIdealPosition() {
+        return (idealPosition != null) ? new Point2D.Double(idealPosition.x, idealPosition.y) : null;
+    }
     public PredictedPacketStatus getStatus() { return status; }
     public double getProgressOnWire() { return progressOnWire; }
     public int getSystemIdIfStalledOrQueued() { return systemIdIfStalledOrQueued; }
+    public double getNoiseLevel() { return noiseLevel; }
+    public Point2D.Double getRotationDirection() {
+        return (rotationDirection != null) ? new Point2D.Double(rotationDirection.x, rotationDirection.y) : null;
+    }
 
-    /** Calculates draw size based on packet shape using Packet constants. */
     public int getDrawSize() {
         int sizeUnits;
         switch (shape) {
             case SQUARE:   sizeUnits = 2; break;
             case TRIANGLE: sizeUnits = 3; break;
-            default:       sizeUnits = 1; break; // Fallback
+            default:       sizeUnits = 1; break;
         }
-        // Assumes Packet.BASE_DRAW_SIZE and scaling factor are accessible or replicated here
-        // Ideally, Packet class would expose this calculation statically or via an instance.
-        // Using the logic directly from Packet for now:
         return Packet.BASE_DRAW_SIZE + (sizeUnits * 2);
     }
 
@@ -97,13 +98,18 @@ public class PacketSnapshot {
         if (status == PredictedPacketStatus.STALLED_AT_NODE || status == PredictedPacketStatus.QUEUED) {
             systemInfo = ", systemId=" + systemIdIfStalledOrQueued;
         }
+        String posStr = (visualPosition != null) ? visualPosition.x + "," + visualPosition.y : "null";
+        String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null";
+
         return "PacketSnapshot{" +
                 "pktId=" + originalPacketId +
                 ", shape=" + shape +
-                ", pos=" + (position != null ? position.x + "," + position.y : "null") +
+                ", visPos=" + posStr +
+                ", idealPos=" + idealPosStr +
                 ", status=" + status +
                 (status == PredictedPacketStatus.ON_WIRE ? (", prog=" + String.format("%.2f", progressOnWire)) : "") +
                 systemInfo +
+                ", noise=" + String.format("%.1f", noiseLevel) +
                 '}';
     }
 
@@ -112,17 +118,19 @@ public class PacketSnapshot {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PacketSnapshot that = (PacketSnapshot) o;
-        // Compare all fields for equality
         return originalPacketId == that.originalPacketId &&
                 Double.compare(that.progressOnWire, progressOnWire) == 0 &&
                 systemIdIfStalledOrQueued == that.systemIdIfStalledOrQueued &&
+                Double.compare(that.noiseLevel, noiseLevel) == 0 &&
                 shape == that.shape &&
-                Objects.equals(position, that.position) && // Uses Point's equals
-                status == that.status;
+                Objects.equals(visualPosition, that.visualPosition) &&
+                Objects.equals(idealPosition, that.idealPosition) &&
+                status == that.status &&
+                Objects.equals(rotationDirection, that.rotationDirection);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(originalPacketId, shape, position, status, progressOnWire, systemIdIfStalledOrQueued);
+        return Objects.hash(originalPacketId, shape, visualPosition, idealPosition, status, progressOnWire, systemIdIfStalledOrQueued, noiseLevel, rotationDirection);
     }
 }
