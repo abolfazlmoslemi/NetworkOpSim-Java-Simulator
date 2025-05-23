@@ -1,0 +1,4 @@
+--patch-module
+networkoperatorsimulator.appmodule=_
+--add-reads
+networkoperatorsimulator.appmodule=ALL-UNNAMED
