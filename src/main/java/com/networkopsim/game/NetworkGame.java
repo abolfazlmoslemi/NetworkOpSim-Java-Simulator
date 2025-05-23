@@ -1,3 +1,5 @@
+// ===== File: NetworkGame.java =====
+
 package com.networkopsim.game;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -326,7 +328,8 @@ public class NetworkGame extends JFrame {
             }
         }
         try {
-            storeDialog.updateCoins(gameState.getCoins());
+            // storeDialog.updateCoins(gameState.getCoins()); // OLD LINE
+            storeDialog.updateCoinsDisplay(gameState.getCoins()); // CORRECTED LINE
             storeDialog.setLocationRelativeTo(this);
             storeDialog.setVisible(true);
             if (gamePanel.isShowing()) {

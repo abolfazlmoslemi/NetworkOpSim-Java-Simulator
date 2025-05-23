@@ -1,3 +1,5 @@
+// ===== File: KeyBindingPanel.java =====
+
 package com.networkopsim.game;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,6 +33,9 @@ public class KeyBindingPanel extends JDialog {
     private static final Font BUTTON_FONT_SMALL = new Font("Segoe UI Semibold", Font.BOLD, 14);
     private static final Font WAITING_FONT = new Font("Segoe UI", Font.BOLD, 17);
     private static final Color SEPARATOR_COLOR = new Color(70, 75, 85);
+
+    // Flag to track if changes have been made that are not yet saved
+    private boolean hasUnsavedChanges = false;
 
     public KeyBindingPanel(NetworkGame owner, KeyBindings keyBindings) {
         super(owner, "Configure Key Bindings", true);
@@ -102,6 +107,7 @@ public class KeyBindingPanel extends JDialog {
         styleUtilityButton(saveButton, new Color(70, 120, 70));
         saveButton.addActionListener(e -> {
             keyBindings.saveBindingsToFile();
+            hasUnsavedChanges = false; // Changes are now saved
             // game.playSoundEffect("ui_confirm"); // REMOVED
             dispose();
         });
@@ -109,19 +115,24 @@ public class KeyBindingPanel extends JDialog {
         styleUtilityButton(defaultsButton, new Color(110, 110, 70));
         defaultsButton.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you want to reset all key bindings to their defaults?",
+                    "Are you sure you want to reset all key bindings to their defaults?\n" +
+                            "These changes will not be permanent until you click 'Save & Close'.",
                     "Reset Bindings?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confirm == JOptionPane.YES_OPTION) {
-                keyBindings.resetToDefaults();
+                keyBindings.resetToDefaults(); // Resets in memory
                 updateAllKeyButtonLabels();
-                keyBindings.saveBindingsToFile();
+                hasUnsavedChanges = true; // Mark that there are unsaved changes
+                // DO NOT save to file here automatically
                 // game.playSoundEffect("ui_confirm"); // REMOVED
             }
         });
         JButton closeButton = new JButton("Close Without Saving");
         styleUtilityButton(closeButton, new Color(100,100,110));
         closeButton.addActionListener(e -> {
-            keyBindings.loadBindingsFromFile(); // Reload original bindings
+            if (hasUnsavedChanges) {
+                keyBindings.loadBindingsFromFile(); // Reload original bindings if there were unsaved changes
+            }
+            hasUnsavedChanges = false;
             // game.playSoundEffect("ui_cancel"); // REMOVED
             dispose();
         });
@@ -148,7 +159,10 @@ public class KeyBindingPanel extends JDialog {
                     tryAssignKey(newKeyCode);
                     e.consume();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    keyBindings.loadBindingsFromFile();
+                    if (hasUnsavedChanges) {
+                        keyBindings.loadBindingsFromFile();
+                    }
+                    hasUnsavedChanges = false;
                     dispose();
                 }
             }
@@ -158,13 +172,19 @@ public class KeyBindingPanel extends JDialog {
             @Override
             public void windowOpened(WindowEvent e) {
                 KeyBindingPanel.this.requestFocusInWindow();
+                hasUnsavedChanges = false; // Reset flag when window opens
             }
             @Override
             public void windowClosing(WindowEvent e) {
                 if (actionToChange != null) {
-                    cancelKeyChange();
+                    cancelKeyChange(); // Cancel any pending key change
                 }
-                keyBindings.loadBindingsFromFile(); // Ensure bindings are reverted if panel closed without saving
+                if (hasUnsavedChanges) {
+                    // Optional: Prompt user if they want to save changes
+                    // For now, just revert like "Close Without Saving"
+                    keyBindings.loadBindingsFromFile();
+                }
+                hasUnsavedChanges = false;
                 // game.playSoundEffect("ui_cancel"); // REMOVED
             }
         });
@@ -237,8 +257,9 @@ public class KeyBindingPanel extends JDialog {
             currentButton.setText(keyBindings.getKeyText(keyBindings.getKeyCode(actionToChange)));
             if(!game.isMuted()) game.playSoundEffect("error"); // Keep error sound for key conflict
         } else {
-            keyBindings.setKeyCode(actionToChange, newKeyCode);
+            keyBindings.setKeyCode(actionToChange, newKeyCode); // This sets the binding in memory
             currentButton.setText(keyBindings.getKeyText(newKeyCode));
+            hasUnsavedChanges = true; // Mark that there are unsaved changes
             // game.playSoundEffect("ui_keypress"); // REMOVED
         }
         currentButton.setEnabled(true);
