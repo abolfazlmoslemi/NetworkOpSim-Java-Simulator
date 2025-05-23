@@ -1,3 +1,5 @@
+// ===== GamePanel.java =====
+
 // ===== File: GamePanel.java =====
 
 package com.networkopsim.game;
@@ -217,7 +219,7 @@ public class GamePanel extends JPanel {
         Packet.resetGlobalId();
         System.resetGlobalId();
         Port.resetGlobalId();
-        System.resetGlobalRandomSeed(PREDICTION_SEED);
+        System.resetGlobalRandomSeed(PREDICTION_SEED); // Seed for deterministic system behavior (e.g. initial random choices if any)
 
         totalPacketsSuccessfullyDelivered = 0;
         levelComplete = false;
@@ -241,7 +243,7 @@ public class GamePanel extends JPanel {
 
         String initialErrorMessage = getNetworkValidationErrorMessage();
         this.networkValidatedForPrediction = (initialErrorMessage == null);
-        updatePrediction();
+        updatePrediction(); // This will run a prediction if network is valid
 
         showHUD = true;
         hudTimer.restart();
@@ -256,8 +258,6 @@ public class GamePanel extends JPanel {
         synchronized (predictedPacketStates) { predictedPacketStates.clear(); }
         synchronized (tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); }
 
-        // Wires and systems are cleared and re-added in initializeLevel
-        // so no need to individually destroy/reset here if they are cleared from main lists.
         displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
     }
 
@@ -274,32 +274,42 @@ public class GamePanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Network Validation Failed:\n" + validationMessage, "Network Not Ready", JOptionPane.WARNING_MESSAGE);
             if (this.networkValidatedForPrediction) {
                 this.networkValidatedForPrediction = false;
-                updatePrediction();
+                updatePrediction(); // Clear prediction display
             }
             return;
         }
-        this.networkValidatedForPrediction = true;
+        this.networkValidatedForPrediction = true; // Network is valid for simulation
 
-        // Key Change: Call resetForSimulationAttemptOnly, which does NOT reset wire length.
+        // Reset game state for a new simulation attempt (persists wire length)
         gameState.resetForSimulationAttemptOnly();
 
+        // Reset simulation-specific elements for determinism
         Packet.resetGlobalId();
-        System.resetGlobalRandomSeed(PREDICTION_SEED); // CRUCIAL for determinism in live sim too
-        synchronized(systems) { for (System s : systems) if (s != null) s.resetForNewRun(); }
+        System.resetGlobalRandomSeed(PREDICTION_SEED); // CRUCIAL for determinism in live sim
+
+        synchronized(systems) {
+            // Sort systems by ID before resetting for deterministic reset order, if reset order matters
+            // (Typically doesn't, but good practice for consistency)
+            List<System> sortedSystems = new ArrayList<>(systems);
+            sortedSystems.sort(Comparator.comparingInt(System::getId));
+            for (System s : sortedSystems) {
+                if (s != null) s.resetForNewRun();
+            }
+        }
         synchronized(packets){ packets.clear(); }
         synchronized(packetsToAdd){ packetsToAdd.clear(); }
         synchronized(packetsToRemove){ packetsToRemove.clear(); }
         activelyCollidingPairs.clear();
         totalPacketsSuccessfullyDelivered = 0;
-        this.finalRemainingWireLengthAtLevelEnd = -1; // Reset for this new attempt
+        this.finalRemainingWireLengthAtLevelEnd = -1;
 
         simulationStarted = true;
         gameRunning = true;
         gamePaused = false;
-        // lastTickTime = 0; // No longer needed
         viewedTimeMs = 0;
         simulationTimeElapsedMs = 0;
 
+        // Clear any prior prediction display data
         synchronized(predictedPacketStates){ predictedPacketStates.clear();}
         displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
 
@@ -345,69 +355,56 @@ public class GamePanel extends JPanel {
         gamePaused = false;
         if(gameLoopTimer.isRunning()) gameLoopTimer.stop();
 
-        // Stop power-up timers if active
         if(atarTimer.isRunning()) { deactivateAtar(); atarTimer.stop(); }
         if(airyamanTimer.isRunning()) { deactivateAiryaman(); airyamanTimer.stop(); }
 
-        // If simulation wasn't formally started (e.g., user exits from pre-sim phase),
-        // ensure prediction state is correctly updated/cleared.
         if (!simulationStarted) {
             String currentError = getNetworkValidationErrorMessage();
             this.networkValidatedForPrediction = (currentError == null);
-            updatePrediction(); // Update prediction display based on current network validity
+            updatePrediction();
         }
         repaint();
     }
 
     public void pauseGame(boolean pause) {
-        if (!simulationStarted || gameOver || levelComplete) return; // Can't pause if not running or ended
+        if (!simulationStarted || gameOver || levelComplete) return;
 
-        if (pause && !gamePaused) { // Pause the game
+        if (pause && !gamePaused) {
             gamePaused = true;
             if(gameLoopTimer.isRunning()) gameLoopTimer.stop();
-            // Stop power-up timers but remember their state
             if(atarTimer.isRunning()) atarTimer.stop();
             if(airyamanTimer.isRunning()) airyamanTimer.stop();
-            repaint(); // Redraw to show "PAUSED" overlay
-        } else if (!pause && gamePaused) { // Resume the game
+            repaint();
+        } else if (!pause && gamePaused) {
             gamePaused = false;
-            // lastTickTime = 0; // No longer needed: Reset lastTickTime to avoid large jump on resume
             gameLoopTimer.start();
-            // Resume power-up timers if they were active
-            if(atarActive && !atarTimer.isRunning()) atarTimer.start(); // restart uses remaining time
+            if(atarActive && !atarTimer.isRunning()) atarTimer.start();
             if(airyamanActive && !airyamanTimer.isRunning()) airyamanTimer.start();
-            repaint(); // Redraw to remove overlay
+            repaint();
         }
     }
 
 
     private void gameTick() {
         if (!gameRunning || gamePaused || !simulationStarted) return;
-        if (gameOver || levelComplete) { // If game ended, stop simulation
+        if (gameOver || levelComplete) {
             stopSimulation();
             return;
         }
 
-        // For deterministic simulation, always advance game time by a fixed amount per tick.
-        // The gameLoopTimer is set to GAME_TICK_MS.
         long elapsedThisTickMs = GAME_TICK_MS;
+        simulationTimeElapsedMs += elapsedThisTickMs;
 
-        simulationTimeElapsedMs += elapsedThisTickMs; // Accumulate total simulation time
-
-        // The first parameter to runSimulationTickLogic is documented as
-        // "Not directly used for movement step, but for system timing".
-        // In prediction, this is the timeStepForTick.
-        // For consistency and to match prediction logic, we pass elapsedThisTickMs.
         runSimulationTickLogic(elapsedThisTickMs, false, simulationTimeElapsedMs, atarActive, airyamanActive);
 
-        checkEndConditions(); // Check if level is complete or game over
+        checkEndConditions();
         repaint();
     }
 
     private void runSimulationTickLogic(
-            long tickDurationMsForMovement, // This is the fixed GAME_TICK_MS for live, or predictionTickDuration for pred.
+            long tickDurationMsForMovement,
             boolean isPredictionRun,
-            long currentTotalSimTimeMs,     // Used by systems for generation timing
+            long currentTotalSimTimeMs,
             boolean currentAtarActive,
             boolean currentAiryamanActive) {
 
@@ -415,25 +412,22 @@ public class GamePanel extends JPanel {
         processPacketBuffersInternal();
 
         // 2. Attempt packet generation from Source systems
-        // Create a snapshot and sort by ID for deterministic processing order
         List<System> systemsSnapshotSorted;
         synchronized (systems) {
             systemsSnapshotSorted = new ArrayList<>(systems);
-            // Sort by ID to ensure deterministic order if multiple systems could act
             systemsSnapshotSorted.sort(Comparator.comparingInt(System::getId));
         }
         for (System s : systemsSnapshotSorted) {
-            if (s != null && s.isReferenceSystem() && s.hasOutputPorts()) { // If it's a Source
+            if (s != null && s.isReferenceSystem() && s.hasOutputPorts()) {
                 s.attemptPacketGeneration(this, currentTotalSimTimeMs, isPredictionRun);
             }
         }
-        processPacketBuffersInternal(); // Process packets added by generation
+        processPacketBuffersInternal();
 
         // 3. Update active packets (movement, reaching end of wire)
         List<Packet> currentPacketsSnapshotSorted;
         synchronized (packets) {
-            currentPacketsSnapshotSorted = new ArrayList<>(packets); // Avoid CME
-            // Sort by ID to ensure deterministic processing order
+            currentPacketsSnapshotSorted = new ArrayList<>(packets);
             currentPacketsSnapshotSorted.sort(Comparator.comparingInt(Packet::getId));
         }
         for (Packet p : currentPacketsSnapshotSorted) {
@@ -441,31 +435,29 @@ public class GamePanel extends JPanel {
                 p.update(this, currentAiryamanActive, isPredictionRun);
             }
         }
-        processPacketBuffersInternal(); // Process packets that reached systems or got lost
+        processPacketBuffersInternal();
 
         // 4. Process system queues (Nodes trying to send out queued packets)
-        // Use the already sorted systemsSnapshotSorted for deterministic processing of Node queues
         for (System s : systemsSnapshotSorted) { // Using the same sorted list from step 2
-            if (s != null && !s.isReferenceSystem()) { // Only Nodes process queues
+            if (s != null && !s.isReferenceSystem()) {
                 s.processQueue(this, isPredictionRun);
             }
         }
-        processPacketBuffersInternal(); // Process packets sent from queues
+        processPacketBuffersInternal();
 
         // 5. Detect and handle collisions (if Airyaman is not active)
         if (!currentAiryamanActive) {
             // Use the already sorted currentPacketsSnapshotSorted for deterministic collision checks
             detectAndHandleCollisionsBroadPhaseInternal(currentPacketsSnapshotSorted, currentAtarActive, isPredictionRun);
         }
-        processPacketBuffersInternal(); // Process packets lost due to noise from collisions
+        processPacketBuffersInternal();
     }
 
     private void processPacketBuffersInternal() {
         // Remove packets marked for removal
         if (!packetsToRemove.isEmpty()) {
             synchronized (packetsToRemove) {
-                // Sort packets to be removed by ID for deterministic removal order,
-                // though this usually doesn't affect simulation outcome if removal is clean.
+                // Sort packets to be removed by ID for deterministic removal order
                 packetsToRemove.sort(Comparator.comparingInt(Packet::getId));
                 synchronized (packets) {
                     packets.removeAll(packetsToRemove);
@@ -492,11 +484,10 @@ public class GamePanel extends JPanel {
             if (isPredictionRun) {
                 predictionRun_totalPacketsGeneratedCount++;
                 predictionRun_totalPacketUnitsGenerated += packet.getSize();
-                // Add to the temporary list for this specific prediction run
                 synchronized(tempPredictionRunGeneratedPackets){
                     tempPredictionRunGeneratedPackets.add(packet);
                 }
-            } else { // Live game run
+            } else {
                 gameState.recordPacketGeneration(packet);
             }
         }
@@ -506,15 +497,14 @@ public class GamePanel extends JPanel {
     public void packetLostInternal(Packet packet, boolean isPredictionRun) {
         if (packet != null && !packet.isMarkedForRemoval()) {
             packet.markForRemoval();
-            packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST); // Crucial for prediction
+            packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST);
             synchronized (packetsToRemove) { packetsToRemove.add(packet); }
 
             if (isPredictionRun) {
-                // Accumulate stats for this prediction run
                 predictionRun_totalPacketsLostCount++;
                 predictionRun_totalPacketUnitsLost += packet.getSize();
-            } else { // Live game run
-                gameState.increasePacketLoss(packet); // Update overall game state
+            } else {
+                gameState.increasePacketLoss(packet);
                 if (!game.isMuted()) game.playSoundEffect("packet_loss");
             }
         }
@@ -523,22 +513,17 @@ public class GamePanel extends JPanel {
     public void packetSuccessfullyDeliveredInternal(Packet packet, boolean isPredictionRun) {
         if (packet != null && !packet.isMarkedForRemoval()) {
             packet.markForRemoval();
-            packet.setFinalStatusForPrediction(PredictedPacketStatus.DELIVERED); // Crucial for prediction
+            packet.setFinalStatusForPrediction(PredictedPacketStatus.DELIVERED);
             synchronized (packetsToRemove) { packetsToRemove.add(packet); }
 
-            if (!isPredictionRun) { // Live game run
+            if (!isPredictionRun) {
                 totalPacketsSuccessfullyDelivered++;
-                // Coins are typically added when packet enters any non-source system,
-                // so no separate coin logic here needed for "delivery" itself.
             }
-            // For prediction, this packet will be snapshotted as DELIVERED.
-            // Prediction stats (loss, generated) are not directly affected by successful delivery,
-            // other than this packet *not* being counted as lost.
         }
     }
 
     public void addRoutingCoinsInternal(Packet packet, boolean isPredictionRun) {
-        if (packet != null && !isPredictionRun) { // Only add coins in live game, not prediction
+        if (packet != null && !isPredictionRun) {
             gameState.addCoins(packet.getBaseCoinValue());
         }
     }
@@ -548,8 +533,8 @@ public class GamePanel extends JPanel {
         if (packetSnapshotSortedById.isEmpty()) return;
 
         Map<Point, List<Packet>> spatialGrid = new HashMap<>();
-        Set<Pair<Integer, Integer>> currentTickCollisions = new HashSet<>(); // Collisions found this tick
-        Set<Pair<Integer, Integer>> checkedPairsThisTick = new HashSet<>();  // To avoid checking pairs twice
+        Set<Pair<Integer, Integer>> currentTickCollisions = new HashSet<>();
+        Set<Pair<Integer, Integer>> checkedPairsThisTick = new HashSet<>();
 
         // Populate spatial grid using the pre-sorted list
         for (Packet p : packetSnapshotSortedById) {
@@ -576,30 +561,28 @@ public class GamePanel extends JPanel {
         // Check for collisions within cells and with neighboring cells, iterating over sorted cell keys
         for (Point cellKey : sortedCellKeys) {
             List<Packet> packetsInCell = spatialGrid.get(cellKey);
-            if (packetsInCell == null) continue; // Should not happen if keys from spatialGrid.keySet()
+            if (packetsInCell == null) continue;
 
             // Check collisions within the current cell
-            // Packets within packetsInCell are already in ID-sorted order due to packetSnapshotSortedById
             checkCollisionsInListInternal(packetsInCell, packetsInCell, currentTickCollisions, checkedPairsThisTick, packetSnapshotSortedById, currentAtarActive, isPredictionRun);
 
             // Check collisions with neighboring cells (only in one direction to avoid duplicates)
-            int[] dx = {1, 1, 0, -1}; // dx for right, bottom-right, bottom, bottom-left
-            int[] dy = {0, 1, 1,  1}; // dy for right, bottom-right, bottom, bottom-left
+            int[] dx = {1, 1, 0, -1};
+            int[] dy = {0, 1, 1,  1};
             for (int i = 0; i < dx.length; i++) {
                 Point neighborCellKey = new Point(cellKey.x + dx[i], cellKey.y + dy[i]);
                 List<Packet> packetsInNeighborCell = spatialGrid.get(neighborCellKey);
                 if (packetsInNeighborCell != null && !packetsInNeighborCell.isEmpty()) {
-                    // Packets in packetsInNeighborCell are also ID-sorted
                     checkCollisionsInListInternal(packetsInCell, packetsInNeighborCell, currentTickCollisions, checkedPairsThisTick, packetSnapshotSortedById, currentAtarActive, isPredictionRun);
                 }
             }
         }
 
-        // Update activelyCollidingPairs set (for continuous collision effects/sounds)
+        // Update activelyCollidingPairs set
         Set<Pair<Integer, Integer>> pairsToRemoveFromActive = new HashSet<>(activelyCollidingPairs);
-        pairsToRemoveFromActive.removeAll(currentTickCollisions); // These were not colliding this tick but were before
+        pairsToRemoveFromActive.removeAll(currentTickCollisions);
         activelyCollidingPairs.removeAll(pairsToRemoveFromActive);
-        activelyCollidingPairs.addAll(currentTickCollisions); // Add new/ongoing collisions
+        activelyCollidingPairs.addAll(currentTickCollisions);
     }
 
     // Parameters list1 and list2 are derived from packetSnapshotSortedById, so they are already ID-sorted.
@@ -608,33 +591,27 @@ public class GamePanel extends JPanel {
                                                Set<Pair<Integer, Integer>> checkedPairsThisTick,
                                                List<Packet> fullPacketSnapshotForImpactWave, // This is already ID-sorted
                                                boolean currentAtarActive, boolean isPredictionRun) {
-        for (Packet p1 : list1) { // p1 is from an ID-sorted list
+        for (Packet p1 : list1) {
             if (p1 == null || p1.isMarkedForRemoval() || p1.getCurrentSystem() != null || p1.getCurrentWire() == null) continue;
-            for (Packet p2 : list2) { // p2 is from an ID-sorted list
+            for (Packet p2 : list2) {
                 if (p2 == null || p2.isMarkedForRemoval() || p2.getCurrentSystem() != null || p2.getCurrentWire() == null) continue;
-                if (p1.getId() == p2.getId()) continue; // Don't check packet against itself
+                if (p1.getId() == p2.getId()) continue;
 
-                // Optimization: If list1 == list2 (checking within the same cell),
-                // ensure p1.getId() < p2.getId() to avoid duplicate checks (p1,p2) and (p2,p1)
-                // and to make the checkedPairsThisTick logic simpler.
-                // If list1 != list2 (cross-cell check), this isn't strictly necessary if checkedPairsThisTick is robust.
                 if (list1 == list2 && p1.getId() >= p2.getId()) {
                     continue;
                 }
 
                 Pair<Integer, Integer> currentPair = makeOrderedPair(p1.getId(), p2.getId());
-                if (checkedPairsThisTick.contains(currentPair)) continue; // Already checked this pair
+                if (checkedPairsThisTick.contains(currentPair)) continue;
 
                 if (p1.collidesWith(p2)) {
-                    currentTickCollisions.add(currentPair); // Mark as colliding this tick
-                    if (!activelyCollidingPairs.contains(currentPair)) { // If this is a *new* collision (not ongoing)
+                    currentTickCollisions.add(currentPair);
+                    if (!activelyCollidingPairs.contains(currentPair)) {
                         if (!isPredictionRun && !game.isMuted()) game.playSoundEffect("collision");
 
-                        // Apply direct collision noise
                         p1.addNoise(DIRECT_COLLISION_NOISE_PER_PACKET);
                         p2.addNoise(DIRECT_COLLISION_NOISE_PER_PACKET);
 
-                        // Set visual offset based on collision direction
                         Point2D.Double p1VisPos = p1.getPositionDouble();
                         Point2D.Double p2VisPos = p2.getPositionDouble();
                         if (p1VisPos != null && p2VisPos != null) {
@@ -647,17 +624,15 @@ public class GamePanel extends JPanel {
                             p2.setVisualOffsetDirectionFromForce(new Point2D.Double(forceDirP2X, forceDirP2Y));
                         }
 
-                        // Handle impact wave noise (if Atar power-up is not active)
                         if (!currentAtarActive) {
                             Point impactCenter = calculateImpactCenter(p1.getPositionDouble(), p2.getPositionDouble());
                             if (impactCenter != null) {
-                                // Pass the fullPacketSnapshotForImpactWave which is already ID-sorted
                                 handleImpactWaveNoiseInternal(impactCenter, fullPacketSnapshotForImpactWave, p1, p2);
                             }
                         }
                     }
                 }
-                checkedPairsThisTick.add(currentPair); // Mark this pair as checked for this tick
+                checkedPairsThisTick.add(currentPair);
             }
         }
     }
@@ -668,7 +643,7 @@ public class GamePanel extends JPanel {
                     (int)Math.round((p1Pos.getY() + p2Pos.getY()) / 2.0));
         } else if (p1Pos != null) { return new Point((int)Math.round(p1Pos.x), (int)Math.round(p1Pos.y)); }
         else if (p2Pos != null) { return new Point((int)Math.round(p2Pos.x), (int)Math.round(p2Pos.y)); }
-        return null; // Should not happen if both packets are valid
+        return null;
     }
 
     private Pair<Integer, Integer> makeOrderedPair(int id1, int id2) {
@@ -678,7 +653,7 @@ public class GamePanel extends JPanel {
     // The 'snapshot' parameter (fullPacketSnapshotForImpactWave) is already ID-sorted.
     private void handleImpactWaveNoiseInternal(Point center, List<Packet> snapshotSortedById, Packet ignore1, Packet ignore2) {
         double waveRadiusSq = IMPACT_WAVE_RADIUS * IMPACT_WAVE_RADIUS;
-        for (Packet p : snapshotSortedById) { // Iterate over ID-sorted list
+        for (Packet p : snapshotSortedById) {
             if (p == null || p.isMarkedForRemoval() || p.getCurrentSystem() != null ||
                     p == ignore1 || p == ignore2 || p.getCurrentWire() == null) continue;
 
@@ -686,14 +661,13 @@ public class GamePanel extends JPanel {
             if (pVisPos == null) continue;
 
             double distSq = center.distanceSq(pVisPos);
-            if (distSq < waveRadiusSq && distSq > 1e-6) { // If within radius and not at exact center
+            if (distSq < waveRadiusSq && distSq > 1e-6) {
                 double distance = Math.sqrt(distSq);
-                double normalizedDistance = distance / IMPACT_WAVE_RADIUS; // 0 (at center) to 1 (at edge)
-                double noiseAmount = IMPACT_WAVE_MAX_NOISE * (1.0 - normalizedDistance); // More noise closer to center
+                double normalizedDistance = distance / IMPACT_WAVE_RADIUS;
+                double noiseAmount = IMPACT_WAVE_MAX_NOISE * (1.0 - normalizedDistance);
                 noiseAmount = Math.max(0.0, noiseAmount);
 
                 if (noiseAmount > 0) {
-                    // Set visual offset direction away from impact center
                     double forceDirX = pVisPos.x - center.x;
                     double forceDirY = pVisPos.y - center.y;
                     p.setVisualOffsetDirectionFromForce(new Point2D.Double(forceDirX, forceDirY));
@@ -705,13 +679,11 @@ public class GamePanel extends JPanel {
 
 
     private void handleEndOfLevelByTimeLimit() {
-        if (gameOver || levelComplete) return; // Already ended
+        if (gameOver || levelComplete) return;
 
-        this.finalRemainingWireLengthAtLevelEnd = gameState.getRemainingWireLength(); // Store wire length before stopping
+        this.finalRemainingWireLengthAtLevelEnd = gameState.getRemainingWireLength();
         stopSimulation();
 
-        // Any packets still in transit or queued are considered lost at time limit
-        // Sort packets by ID for deterministic processing
         List<Packet> remainingPacketsSorted;
         synchronized (packets) {
             remainingPacketsSorted = new ArrayList<>(packets);
@@ -723,8 +695,6 @@ public class GamePanel extends JPanel {
             }
         }
 
-        // Also consider packets in system queues as lost
-        // Sort systems by ID for deterministic processing
         List<System> systemsSnapshotSorted;
         synchronized(systems) {
             systemsSnapshotSorted = new ArrayList<>(systems);
@@ -732,15 +702,13 @@ public class GamePanel extends JPanel {
         }
         for(System s : systemsSnapshotSorted) {
             if(s != null && !s.isReferenceSystem()) {
-                // Process queue deterministically if needed, though here we just clear it
-                List<Packet> queueSnapshot = new ArrayList<>(s.packetQueue); // snapshot to avoid CME if System modifies its own queue
-                queueSnapshot.sort(Comparator.comparingInt(Packet::getId)); // Sort for determinism
+                List<Packet> queueSnapshot = new ArrayList<>(s.packetQueue);
+                queueSnapshot.sort(Comparator.comparingInt(Packet::getId));
                 for(Packet p : queueSnapshot){
                     if(p != null && !p.isMarkedForRemoval()) {
                         gameState.increasePacketLoss(p);
                     }
                 }
-                // After processing for stats, clear the actual queue
                 s.packetQueue.clear();
             }
         }
@@ -753,11 +721,11 @@ public class GamePanel extends JPanel {
         } else {
             levelComplete = true;
             if (!game.isMuted()) game.playSoundEffect("level_complete");
-            if (currentLevel < gameState.getMaxLevels()) { // currentLevel is 1-based
-                gameState.unlockLevel(currentLevel); // Unlock next level (level parameter is 0-based index)
+            if (currentLevel < gameState.getMaxLevels()) {
+                gameState.unlockLevel(currentLevel);
             }
         }
-        SwingUtilities.invokeLater(() -> showEndLevelDialog(!lostTooMany)); // Success if not lostTooMany
+        SwingUtilities.invokeLater(() -> showEndLevelDialog(!lostTooMany));
     }
 
 
@@ -775,57 +743,53 @@ public class GamePanel extends JPanel {
         int sourcesChecked = 0;
         boolean sourcesHadPacketsToGenerate = false;
 
-        List<System> systemsSnapshotSorted; // Use sorted list for determinism
+        List<System> systemsSnapshotSorted;
         synchronized (systems) {
             systemsSnapshotSorted = new ArrayList<>(systems);
             systemsSnapshotSorted.sort(Comparator.comparingInt(System::getId));
         }
         for (System s : systemsSnapshotSorted) {
-            if (s != null && s.isReferenceSystem() && s.hasOutputPorts()) { // It's a Source system
+            if (s != null && s.isReferenceSystem() && s.hasOutputPorts()) {
                 sourcesChecked++;
                 if (s.getTotalPacketsToGenerate() > 0) {
                     sourcesHadPacketsToGenerate = true;
                     if (s.getPacketsGeneratedCount() < s.getTotalPacketsToGenerate()) {
-                        allSourcesFinishedGenerating = false; // This source is not done
+                        allSourcesFinishedGenerating = false;
                         break;
                     }
                 }
             }
         }
 
-        // If there are no sources or no sources configured to generate, they are "finished"
         if (sourcesChecked == 0 || !sourcesHadPacketsToGenerate) {
             allSourcesFinishedGenerating = true;
         }
 
         if (!allSourcesFinishedGenerating) {
-            return; // Still generating, so level is not over yet
+            return;
         }
 
-        // All sources are done. Now check if all packets are processed.
         boolean packetsOnWireOrBuffersEmpty;
         boolean queuesAreEmpty = true;
 
         synchronized (packets) {
             synchronized(packetsToAdd) {
-                synchronized(packetsToRemove) { // Although remove should be empty if processed
+                synchronized(packetsToRemove) {
                     packetsOnWireOrBuffersEmpty = packets.isEmpty() && packetsToAdd.isEmpty();
                 }
             }
         }
 
-        // Use the same sorted system list
-        for(System s : systemsSnapshotSorted) {
-            if (s != null && !s.isReferenceSystem() && s.getQueueSize() > 0) { // Node system with items in queue
+        for(System s : systemsSnapshotSorted) { // Use the same sorted system list
+            if (s != null && !s.isReferenceSystem() && s.getQueueSize() > 0) {
                 queuesAreEmpty = false;
                 break;
             }
         }
 
         if (allSourcesFinishedGenerating && packetsOnWireOrBuffersEmpty && queuesAreEmpty) {
-            // All generated packets have been processed (either delivered or lost)
-            if (!levelComplete && !gameOver) { // Ensure this runs only once
-                this.finalRemainingWireLengthAtLevelEnd = gameState.getRemainingWireLength(); // Store wire length
+            if (!levelComplete && !gameOver) {
+                this.finalRemainingWireLengthAtLevelEnd = gameState.getRemainingWireLength();
                 stopSimulation();
                 boolean lostTooMany = gameState.getPacketLossPercentage() >= PACKET_LOSS_GAME_OVER_THRESHOLD;
                 if (lostTooMany) {
@@ -834,11 +798,11 @@ public class GamePanel extends JPanel {
                 } else {
                     levelComplete = true;
                     if (!game.isMuted()) game.playSoundEffect("level_complete");
-                    if (currentLevel < gameState.getMaxLevels()) { // currentLevel is 1-based
-                        gameState.unlockLevel(currentLevel); // Unlock next level (level param is 0-based index)
+                    if (currentLevel < gameState.getMaxLevels()) {
+                        gameState.unlockLevel(currentLevel);
                     }
                 }
-                SwingUtilities.invokeLater(() -> showEndLevelDialog(!lostTooMany)); // Success if not lostTooMany
+                SwingUtilities.invokeLater(() -> showEndLevelDialog(!lostTooMany));
             }
         }
     }
@@ -869,17 +833,14 @@ public class GamePanel extends JPanel {
         message.append("\nPacket Units Lost: ").append(gameState.getTotalPacketLossUnits()).append(" units (").append(String.format("%.1f%%", gameState.getPacketLossPercentage())).append(")");
         message.append("\nTotal Coins (Overall): ").append(gameState.getCoins());
 
-        // Use the stored final wire length for display
         if (this.finalRemainingWireLengthAtLevelEnd != -1) {
             message.append("\nRemaining Wire Length: ").append(this.finalRemainingWireLengthAtLevelEnd);
         } else {
-            // Fallback in case it wasn't set (e.g., if dialog shown through non-standard path)
             message.append("\nRemaining Wire Length: ").append(gameState.getRemainingWireLength());
         }
 
         message.append("\nSimulation Time: ").append(String.format("%.2f / %.0f s", simulationTimeElapsedMs / 1000.0, currentLevelTimeLimitMs / 1000.0));
 
-        // Options for dialog
         List<String> optionsList = new ArrayList<>();
         String nextLevelOption = null;
         String retryOption = "Retry Level " + currentLevel;
@@ -960,7 +921,7 @@ public class GamePanel extends JPanel {
                         "Network Not Ready for Scrubbing", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if (viewedTimeMs < maxPredictionTimeForScrubbingMs) { // Only increment if not already at max
+            if (viewedTimeMs < maxPredictionTimeForScrubbingMs) {
                 viewedTimeMs = Math.min(maxPredictionTimeForScrubbingMs, viewedTimeMs + TIME_SCRUB_INCREMENT_MS);
             }
             updatePrediction();
@@ -982,21 +943,20 @@ public class GamePanel extends JPanel {
     }
 
     private void updatePrediction() {
-        if (simulationStarted) { // If live simulation is running, clear prediction data
+        if (simulationStarted) {
             synchronized(predictedPacketStates) { predictedPacketStates.clear(); }
             synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); }
             displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
             repaint();
             return;
         }
-        if (!networkValidatedForPrediction) { // If network is invalid, clear prediction data
+        if (!networkValidatedForPrediction) {
             synchronized(predictedPacketStates) { predictedPacketStates.clear(); }
             synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); }
             displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
             repaint();
             return;
         }
-        // Network is valid and not in live simulation, so run prediction
         runFastPredictionSimulation(this.viewedTimeMs);
         repaint();
     }
@@ -1004,12 +964,19 @@ public class GamePanel extends JPanel {
     private void runFastPredictionSimulation(long targetTimeMs) {
         // 1. Reset global states for deterministic run
         Packet.resetGlobalId();
-        System.resetGlobalId(); // Ensure System IDs are reset if they affect behavior (they do for new System instances)
-        Port.resetGlobalId();   // Ensure Port IDs are reset
+        System.resetGlobalId();
+        Port.resetGlobalId();
         System.resetGlobalRandomSeed(PREDICTION_SEED); // CRUCIAL for determinism
 
-        // 2. Reset GamePanel's simulation state lists
-        synchronized(systems) { for (System s : systems) { if (s != null) s.resetForNewRun(); } }
+        // 2. Reset GamePanel's simulation state lists & System states
+        synchronized(systems) {
+            // Sort systems by ID before resetting for deterministic reset order
+            List<System> sortedSystems = new ArrayList<>(systems);
+            sortedSystems.sort(Comparator.comparingInt(System::getId));
+            for (System s : sortedSystems) {
+                if (s != null) s.resetForNewRun();
+            }
+        }
         synchronized(packets) { packets.clear(); }
         synchronized(packetsToAdd) { packetsToAdd.clear(); }
         synchronized(packetsToRemove) { packetsToRemove.clear(); }
@@ -1025,56 +992,45 @@ public class GamePanel extends JPanel {
 
         // 4. Simulate tick by tick up to targetTimeMs
         long currentInternalSimTime = 0;
-        final long predictionTickDuration = GAME_TICK_MS; // Use same tick duration as game for consistency
+        final long predictionTickDuration = GAME_TICK_MS;
 
-        // Ensure targetTimeMs does not exceed the maximum allowed prediction time
         long actualTargetTimeMs = Math.min(targetTimeMs, this.maxPredictionTimeForScrubbingMs);
 
         while (currentInternalSimTime < actualTargetTimeMs) {
             long timeStepForTick = Math.min(predictionTickDuration, actualTargetTimeMs - currentInternalSimTime);
-            if (timeStepForTick <= 0) break; // Should not happen if loop condition is correct
+            if (timeStepForTick <= 0) break;
 
             runSimulationTickLogic(timeStepForTick, true, currentInternalSimTime, PREDICTION_ATAR_ACTIVE, PREDICTION_AIRYAMAN_ACTIVE);
             currentInternalSimTime += timeStepForTick;
         }
-        processPacketBuffersInternal(); // Final buffer processing after all ticks
+        processPacketBuffersInternal();
 
         // 5. Create snapshots for all packets generated during this prediction run
         synchronized(predictedPacketStates) {
-            predictedPacketStates.clear(); // Clear snapshots from any previous display
+            predictedPacketStates.clear();
 
-            // Sort tempPredictionRunGeneratedPackets by ID for deterministic snapshot creation
             synchronized(tempPredictionRunGeneratedPackets) {
                 tempPredictionRunGeneratedPackets.sort(Comparator.comparingInt(Packet::getId));
             }
 
-            for (Packet p : tempPredictionRunGeneratedPackets) { // Iterate ALL packets created in THIS prediction run
+            for (Packet p : tempPredictionRunGeneratedPackets) {
                 if (p == null) continue;
 
                 PredictedPacketStatus statusToSnapshot = p.getFinalStatusForPrediction();
 
                 if (statusToSnapshot != null) {
-                    // Packet has a definitive end status (DELIVERED, LOST, or STALLED_AT_NODE set by System logic)
                     predictedPacketStates.add(new PacketSnapshot(p, statusToSnapshot));
                 } else {
-                    // No definitive end status from packet logic, determine from current state
-                    if (p.getCurrentSystem() != null) { // Is it held by a system (implies queued)?
+                    if (p.getCurrentSystem() != null) {
                         predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.QUEUED));
-                    } else if (p.getCurrentWire() != null) { // Is it on a wire?
-                        if (!p.isMarkedForRemoval()) { // And not somehow marked for removal without a final status
+                    } else if (p.getCurrentWire() != null) {
+                        if (!p.isMarkedForRemoval()) {
                             predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.ON_WIRE));
                         } else {
-                            // This is a logic gap: marked for removal but no final status.
-                            // For prediction, assume LOST. This should ideally be caught by system logic.
-                            // java.lang.System.err.println("Prediction: Packet " + p.getId() + " marked for removal but no final status. Assuming LOST.");
-                            p.setFinalStatusForPrediction(PredictedPacketStatus.LOST); // Set it now
+                            p.setFinalStatusForPrediction(PredictedPacketStatus.LOST);
                             predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.LOST));
-                            // Note: This won't double-count in predictionRun_totalPacketUnitsLost if it was already counted.
                         }
                     } else {
-                        // Not DELIVERED/LOST, not STALLED (by system), not in a System's queue, not on a Wire.
-                        // This packet is in an ambiguous state. It was generated.
-                        // Default to STALLED_AT_NODE as a fallback.
                         predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.STALLED_AT_NODE));
                     }
                 }
@@ -1083,7 +1039,7 @@ public class GamePanel extends JPanel {
 
         // 6. Store the aggregated prediction stats for the HUD
         this.displayedPredictionStats = new PredictionRunStats(
-                actualTargetTimeMs, // Use the time up to which simulation actually ran
+                actualTargetTimeMs,
                 predictionRun_totalPacketsGeneratedCount,
                 predictionRun_totalPacketsLostCount,
                 predictionRun_totalPacketUnitsGenerated,
@@ -1091,9 +1047,6 @@ public class GamePanel extends JPanel {
         );
 
         // 7. Clean up simulation state lists for the *next* prediction run or actual game start.
-        // (predictedPacketStates is kept for rendering. tempPredictionRunGeneratedPackets is cleared at start of next prediction)
-        // Global ID/seed resets already happened at the beginning of this method.
-        // System.resetForNewRun() already happened.
         synchronized(packets) { packets.clear(); }
         synchronized(packetsToAdd) { packetsToAdd.clear(); }
         synchronized(packetsToRemove) { packetsToRemove.clear(); }
@@ -1102,19 +1055,16 @@ public class GamePanel extends JPanel {
 
     public List<Packet> getPacketsForRendering() {
         List<Packet> packetsToRender = new ArrayList<>();
-        if (simulationStarted) { // Only render from 'packets' list if live simulation is running
+        if (simulationStarted) {
             synchronized (packets) {
                 for (Packet p : packets) {
-                    // Only render packets that are on a wire (not in a system's queue and not removed)
                     if (p != null && !p.isMarkedForRemoval() && p.getCurrentSystem() == null) {
                         packetsToRender.add(p);
                     }
                 }
             }
-            // Sort for deterministic render order, although visual overlap is the main concern
             packetsToRender.sort(Comparator.comparingInt(Packet::getId));
         }
-        // If not simulationStarted, rendering is handled by predictedPacketStates in GameRenderer
         return packetsToRender;
     }
 
@@ -1122,11 +1072,10 @@ public class GamePanel extends JPanel {
     public NetworkGame getGame() { return game; }
     public GameState getGameState() { return gameState; }
     public PredictionRunStats getDisplayedPredictionStats() { return displayedPredictionStats; }
-    public List<System> getSystems() { return Collections.unmodifiableList(systems); } // For read-only access
-    public List<Wire> getWires() { return Collections.unmodifiableList(wires); }     // For read-only access
+    public List<System> getSystems() { return Collections.unmodifiableList(systems); }
+    public List<Wire> getWires() { return Collections.unmodifiableList(wires); }
     public List<PacketSnapshot> getPredictedPacketStates() {
         synchronized(predictedPacketStates) {
-            // Return a copy sorted by originalPacketId for consistent rendering order
             List<PacketSnapshot> sortedSnapshots = new ArrayList<>(predictedPacketStates);
             sortedSnapshots.sort(Comparator.comparingInt(PacketSnapshot::getOriginalPacketId));
             return Collections.unmodifiableList(sortedSnapshots);
