@@ -91,14 +91,7 @@ public class Packet {
             this.finalStatusForPrediction = null;
         }
 
-
-        Port startPort = wire.getStartPort();
-        if (startPort == null || startPort.getPosition() == null) {
-            // java.lang.System.err.println("WARN: Packet " + id + " assigned to wire " + wire.getId() + " with invalid start port/position! Resetting state.");
-            this.idealPosition = new Point2D.Double(0, 0); this.velocity = new Point2D.Double(0, 0); this.currentSpeedMagnitude = 0.0; this.targetSpeedMagnitude = 0.0; this.isAccelerating = false; return;
-        }
-        Point startPosPoint = startPort.getPosition();
-        this.idealPosition = new Point2D.Double(startPosPoint.x, startPosPoint.y);
+        updateIdealPositionAndVelocity(); // Initial setup
 
         double initialSpeed;
         if (this.shape == NetworkEnums.PacketShape.SQUARE) {
@@ -115,14 +108,7 @@ public class Packet {
             this.targetSpeedMagnitude = initialSpeed;
         }
         this.currentSpeedMagnitude = initialSpeed;
-
-        Point2D.Double dir = wire.getDirectionVector();
-        if (dir == null) { // Should not happen if wire is valid
-            // java.lang.System.err.println("WARN: Packet " + id + " on wire " + wire.getId() + " has null direction vector.");
-            this.velocity = new Point2D.Double(0,0); this.currentSpeedMagnitude = 0.0; this.targetSpeedMagnitude = 0.0; this.isAccelerating = false;
-        } else {
-            this.velocity = new Point2D.Double(dir.x * this.currentSpeedMagnitude, dir.y * this.currentSpeedMagnitude);
-        }
+        updateIdealPositionAndVelocity(); // Update velocity with new speed
     }
 
     public void setCurrentSystem(System system) {
@@ -156,52 +142,36 @@ public class Packet {
             this.velocity = new Point2D.Double(0,0);
             this.currentSpeedMagnitude = 0.0;
             this.isAccelerating = false;
-            if (!isPredictionRun && !this.markedForRemoval) {
-                // java.lang.System.err.println("Packet " + id + " has no wire and not in system. Marking as LOST.");
-            }
             if (this.finalStatusForPrediction != PredictedPacketStatus.LOST &&
-                    this.finalStatusForPrediction != PredictedPacketStatus.DELIVERED) { // Don't override if already definitively resolved
+                    this.finalStatusForPrediction != PredictedPacketStatus.DELIVERED) {
                 setFinalStatusForPrediction(PredictedPacketStatus.LOST);
             }
             gamePanel.packetLostInternal(this, isPredictionRun);
             return;
         }
 
-        Point2D.Double wireDir = currentWire.getDirectionVector();
-        if (wireDir == null) { // Should not happen for a valid wire
-            velocity = new Point2D.Double(0,0); currentSpeedMagnitude = 0; isAccelerating = false;
-        } else {
-            if (isAccelerating) {
-                if (currentSpeedMagnitude < targetSpeedMagnitude) {
-                    currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + TRIANGLE_ACCELERATION_RATE);
-                } else { // Reached or exceeded target speed
-                    currentSpeedMagnitude = targetSpeedMagnitude;
-                    isAccelerating = false; // Stop accelerating
-                }
+        // --- SPEED UPDATE ---
+        if (isAccelerating) {
+            if (currentSpeedMagnitude < targetSpeedMagnitude) {
+                currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + TRIANGLE_ACCELERATION_RATE);
+            } else { // Reached or exceeded target speed
+                currentSpeedMagnitude = targetSpeedMagnitude;
+                isAccelerating = false; // Stop accelerating
             }
-            // Update velocity vector based on current speed and wire direction
-            velocity.x = wireDir.x * currentSpeedMagnitude;
-            velocity.y = wireDir.y * currentSpeedMagnitude;
         }
 
-        idealPosition.x += velocity.x;
-        idealPosition.y += velocity.y;
-
+        // --- PROGRESS AND POSITION UPDATE ---
         double wireLength = currentWire.getLength();
         if (wireLength > 1e-6) {
-            Port startPort = currentWire.getStartPort();
-            if (startPort != null && startPort.getPrecisePosition() != null) { // Use precise position
-                Point2D.Double wireStartPos = startPort.getPrecisePosition();
-                double distFromStart = idealPosition.distance(wireStartPos);
-                progressOnWire = distFromStart / wireLength;
-            } else { // Fallback if start port or its position is invalid
-                progressOnWire = 1.0;
-            }
-        } else { // Wire is effectively zero-length
-            progressOnWire = 1.0;
+            double distanceToTravel = currentSpeedMagnitude;
+            progressOnWire += distanceToTravel / wireLength;
+        } else {
+            progressOnWire = 1.0; // Instantly traverse zero-length wires
         }
         progressOnWire = Math.max(0.0, Math.min(1.0, progressOnWire));
+        updateIdealPositionAndVelocity(); // Update position and velocity vector based on new progress
 
+        // --- CHECK END CONDITIONS ---
         if (!markedForRemoval && noise >= this.size) { // Packet size acts as noise tolerance
             setFinalStatusForPrediction(PredictedPacketStatus.LOST);
             gamePanel.packetLostInternal(this, isPredictionRun);
@@ -211,22 +181,35 @@ public class Packet {
         if (progressOnWire >= 1.0 - 1e-9) { // Reached end of wire (with tolerance)
             Port endPort = currentWire.getEndPort();
             if (endPort == null || endPort.getPosition() == null) { // End port is invalid
-                // java.lang.System.err.println("Packet " + id + " reached end of wire " + currentWire.getId() + " but end port is invalid. LOST.");
                 setFinalStatusForPrediction(PredictedPacketStatus.LOST);
                 gamePanel.packetLostInternal(this, isPredictionRun);
                 return;
             }
-            Point endPortPoint = endPort.getPosition();
-            idealPosition.setLocation(endPortPoint.x, endPortPoint.y); // Snap to end port position
+            // Snap to end port position before delivering
+            this.idealPosition = endPort.getPrecisePosition();
 
             System targetSystem = endPort.getParentSystem();
             if (targetSystem != null) {
                 targetSystem.receivePacket(this, gamePanel, isPredictionRun); // Deliver to next system
-            } else { // End port is not connected to a system (should not happen with valid wires)
-                // java.lang.System.err.println("Packet " + id + " reached end of wire " + currentWire.getId() + " but end port has no parent system. LOST.");
+            } else { // End port is not connected to a system
                 setFinalStatusForPrediction(PredictedPacketStatus.LOST);
                 gamePanel.packetLostInternal(this, isPredictionRun);
             }
+        }
+    }
+
+    private void updateIdealPositionAndVelocity() {
+        if (currentWire == null) return;
+        Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire);
+        if (pathInfo != null) {
+            this.idealPosition = pathInfo.position;
+            this.velocity = new Point2D.Double(
+                    pathInfo.direction.x * currentSpeedMagnitude,
+                    pathInfo.direction.y * currentSpeedMagnitude
+            );
+        } else {
+            this.idealPosition = currentWire.getStartPort().getPrecisePosition();
+            this.velocity = new Point2D.Double(0,0);
         }
     }
 
@@ -235,16 +218,16 @@ public class Packet {
             if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); // Default upwards
             return;
         }
-        Point2D.Double wireDir = currentWire.getDirectionVector();
-        if (wireDir == null) { // Should not happen for a valid wire
+        Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire);
+        if (pathInfo == null) { // Should not happen for a valid wire
             if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); // Default upwards
             return;
         }
+        Point2D.Double wireDir = pathInfo.direction;
 
         if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) {
-            // No force or zero force, maintain existing offset or set default perpendicular based on preference
-            if (this.visualOffsetDirection == null) { // Initialize if not already set
-                this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); // Default: (-dy, dx)
+            if (this.visualOffsetDirection == null) {
+                this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
                 if (this.initialOffsetSidePreference == 1) { // Flip if preference is 1
                     this.visualOffsetDirection.x *= -1;
                     this.visualOffsetDirection.y *= -1;
@@ -266,13 +249,12 @@ public class Packet {
         double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y);
 
         if (Math.abs(dotProductWithPerp1) < 1e-6) { // Force is parallel to wire or zero
-            // If force is parallel, keep existing offset or set default based on preference
             if (this.visualOffsetDirection == null) {
                 this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
                 if (this.initialOffsetSidePreference == 1) {
                     this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1;
                 }
-            } // else, keep the existing visualOffsetDirection
+            }
         } else if (dotProductWithPerp1 > 0) { // Force is generally in the direction of perp1
             this.visualOffsetDirection = perp1;
         } else { // Force is generally in the direction of -perp1 (which is perp2)
@@ -306,8 +288,9 @@ public class Packet {
         }
 
         if (this.visualOffsetDirection == null) { // Initialize if not set by force
-            Point2D.Double wireDir = currentWire.getDirectionVector();
-            if (wireDir == null) return new Point2D.Double(0,0);
+            Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire);
+            if (pathInfo == null) return new Point2D.Double(0,0);
+            Point2D.Double wireDir = pathInfo.direction;
 
             this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
             if (this.initialOffsetSidePreference == 1) {
@@ -375,17 +358,9 @@ public class Packet {
         boolean transformed = false;
 
         try {
-            Point2D.Double directionForRotation = null;
-            if (currentWire != null) {
-                Point2D.Double currentVel = getVelocity();
-                if (currentVel != null && Math.hypot(currentVel.x, currentVel.y) > 0.01) {
-                    directionForRotation = currentVel;
-                } else if (currentWire.getDirectionVector() != null) {
-                    directionForRotation = currentWire.getDirectionVector();
-                }
-            }
+            Point2D.Double directionForRotation = getVelocity();
 
-            if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null) {
+            if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null && Math.hypot(directionForRotation.x, directionForRotation.y) > 0.01) {
                 g2d.translate(visualPosition.x, visualPosition.y);
                 g2d.rotate(Math.atan2(directionForRotation.y, directionForRotation.x));
                 path = new Path2D.Double();
@@ -492,17 +467,14 @@ public class Packet {
 
     public void addNoise(double amount) {
         if (amount > 0 && !markedForRemoval) {
-            // double oldNoise = this.noise; // Not strictly needed unless for debugging change
             this.noise = Math.min(this.size, this.noise + amount);
-            // visualOffsetDirection will be re-calculated or initialized if null in calculateCurrentVisualOffset
-            // or explicitly set by setVisualOffsetDirectionFromForce.
         }
     }
 
     public void resetNoise() {
         if (!markedForRemoval && this.noise > 0) {
             this.noise = 0.0;
-            this.visualOffsetDirection = null; // Reset offset direction, will be recalculated if noise reappears/force applied
+            this.visualOffsetDirection = null; // Reset offset direction
         }
     }
 

@@ -1,3 +1,5 @@
+// ==== GameRenderer.java ====
+
 package com.networkopsim.game;// FILE: GameRenderer.java
 // ===== GameRenderer.java =====
 // FILE: GameRenderer.javapackage com.networkopsim.game;package com.networkopsim.g
@@ -77,10 +79,18 @@ public class GameRenderer {
             setupHighQualityRendering(g2d);
             drawGrid(g2d);
 
+            // MODIFIED: More nuanced wire drawing logic
             // Draw Wires
+            boolean isBudgetExceeded = gameState.getRemainingWireLength() < 0;
+            List<System> systemsSnapshot = gamePanel.getSystems();
             synchronized(gamePanel.getWires()) {
                 for (Wire w : gamePanel.getWires()) {
-                    if (w != null) w.draw(g2d);
+                    if (w != null) {
+                        // A wire is "invalid" for rendering if it intersects a system OR the total budget is exceeded.
+                        // This is independent of whether the whole network is connected.
+                        boolean isWireVisuallyInvalid = isBudgetExceeded || gamePanel.isWireIntersectingAnySystem(w, systemsSnapshot);
+                        w.draw(g2d, !isWireVisuallyInvalid); // Pass true if valid, false if invalid
+                    }
                 }
             }
 

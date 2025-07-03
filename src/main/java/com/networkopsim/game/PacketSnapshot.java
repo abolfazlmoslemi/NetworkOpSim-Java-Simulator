@@ -1,6 +1,6 @@
 package com.networkopsim.game;
 import java.awt.Point;
-import java.awt.geom.Point2D; // IMPORT ADDED
+import java.awt.geom.Point2D;
 import java.util.Objects;
 
 /**
@@ -38,15 +38,16 @@ public class PacketSnapshot {
             this.systemIdIfStalledOrQueued = -1;
         }
 
-        if (packet.getShape() == NetworkEnums.PacketShape.TRIANGLE && packet.getCurrentWire() != null) {
-            Point2D.Double packetVelocity = packet.getVelocity(); // Returns Point2D.Double
-            Point2D.Double wireDirection = packet.getCurrentWire().getDirectionVector(); // Returns Point2D.Double
+        // === CORRECTED LOGIC FOR ROTATION ===
+        if (packet.getShape() == NetworkEnums.PacketShape.TRIANGLE) {
+            Point2D.Double packetVelocity = packet.getVelocity(); // Get the packet's current velocity.
 
+            // The velocity is the most accurate representation of the packet's direction.
+            // If the velocity has a meaningful magnitude, use it for rotation.
             if (packetVelocity != null && Math.hypot(packetVelocity.x, packetVelocity.y) > 0.01) {
                 this.rotationDirection = packetVelocity;
-            } else if (wireDirection != null) {
-                this.rotationDirection = wireDirection;
             } else {
+                // If the packet is not moving, there's no inherent direction. No rotation is best.
                 this.rotationDirection = null;
             }
         } else {

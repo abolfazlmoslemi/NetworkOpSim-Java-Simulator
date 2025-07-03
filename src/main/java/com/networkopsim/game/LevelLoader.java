@@ -60,8 +60,8 @@ public class LevelLoader {
 
     private static int getWireBudgetForLevel(int level) {
         switch (level) {
-            case 1: return 4750; // Updated wire budget for level 1
-            case 2: return 6500; // Updated wire budget for level 2
+            case 1: return 30000; // Updated wire budget for level 1
+            case 2: return 30000; // Updated wire budget for level 2
             default: return 1000; // Default fallback (should ideally not be reached if level validation is robust)
         }
     }
