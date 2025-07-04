@@ -1,3 +1,5 @@
+// ===== File: PacketSnapshot.java =====
+
 package com.networkopsim.game;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -10,22 +12,28 @@ import java.util.Objects;
 public class PacketSnapshot {
     private final int originalPacketId;
     private final NetworkEnums.PacketShape shape;
-    private final Point visualPosition; // This is java.awt.Point
+    private final Point visualPosition;
     private final PredictedPacketStatus status;
     private final double progressOnWire;
     private final int systemIdIfStalledOrQueued;
     private final double noiseLevel;
-    private final Point2D.Double idealPosition; // This is java.awt.geom.Point2D.Double
-    private final Point2D.Double rotationDirection; // This is java.awt.geom.Point2D.Double
+    private final Point2D.Double idealPosition;
+    private final Point2D.Double rotationDirection;
+
+    // --- NEW FIELD TO FIX THE COMPILE ERROR ---
+    private final NetworkEnums.PacketType packetType;
 
     public PacketSnapshot(Packet packet, PredictedPacketStatus status) {
         Objects.requireNonNull(packet, "Source packet for snapshot cannot be null");
         this.originalPacketId = packet.getId();
         this.shape = packet.getShape();
-        this.visualPosition = packet.getPosition(); // Packet.getPosition() returns Point
-        this.idealPosition = packet.getIdealPositionDouble(); // Packet.getIdealPositionDouble() returns Point2D.Double
+        this.visualPosition = packet.getPosition();
+        this.idealPosition = packet.getIdealPositionDouble();
         this.status = status;
         this.noiseLevel = packet.getNoise();
+
+        // --- Initialize the new field ---
+        this.packetType = packet.getPacketType();
 
         if (status == PredictedPacketStatus.ON_WIRE) {
             this.progressOnWire = packet.getProgressOnWire();
@@ -38,16 +46,11 @@ public class PacketSnapshot {
             this.systemIdIfStalledOrQueued = -1;
         }
 
-        // === CORRECTED LOGIC FOR ROTATION ===
         if (packet.getShape() == NetworkEnums.PacketShape.TRIANGLE) {
-            Point2D.Double packetVelocity = packet.getVelocity(); // Get the packet's current velocity.
-
-            // The velocity is the most accurate representation of the packet's direction.
-            // If the velocity has a meaningful magnitude, use it for rotation.
+            Point2D.Double packetVelocity = packet.getVelocity();
             if (packetVelocity != null && Math.hypot(packetVelocity.x, packetVelocity.y) > 0.01) {
                 this.rotationDirection = packetVelocity;
             } else {
-                // If the packet is not moving, there's no inherent direction. No rotation is best.
                 this.rotationDirection = null;
             }
         } else {
@@ -65,6 +68,7 @@ public class PacketSnapshot {
         this.systemIdIfStalledOrQueued = -1;
         this.noiseLevel = 0.0;
         this.rotationDirection = null;
+        this.packetType = NetworkEnums.PacketType.NORMAL; // Default for future packets
     }
 
     // --- Getters ---
@@ -82,11 +86,17 @@ public class PacketSnapshot {
         return (rotationDirection != null) ? new Point2D.Double(rotationDirection.x, rotationDirection.y) : null;
     }
 
+    // --- NEW GETTER TO FIX THE COMPILE ERROR ---
+    public NetworkEnums.PacketType getPacketType() {
+        return packetType;
+    }
+
     public int getDrawSize() {
         int sizeUnits;
         switch (shape) {
             case SQUARE:   sizeUnits = 2; break;
             case TRIANGLE: sizeUnits = 3; break;
+            case CIRCLE:   sizeUnits = 1; break;
             default:       sizeUnits = 1; break;
         }
         return Packet.BASE_DRAW_SIZE + (sizeUnits * 2);
@@ -104,6 +114,7 @@ public class PacketSnapshot {
         return "PacketSnapshot{" +
                 "pktId=" + originalPacketId +
                 ", shape=" + shape +
+                ", type=" + packetType + // Added for debugging
                 ", visPos=" + posStr +
                 ", idealPos=" + idealPosStr +
                 ", status=" + status +
@@ -123,6 +134,7 @@ public class PacketSnapshot {
                 systemIdIfStalledOrQueued == that.systemIdIfStalledOrQueued &&
                 Double.compare(that.noiseLevel, noiseLevel) == 0 &&
                 shape == that.shape &&
+                packetType == that.packetType && // Added to equals
                 Objects.equals(visualPosition, that.visualPosition) &&
                 Objects.equals(idealPosition, that.idealPosition) &&
                 status == that.status &&
@@ -131,6 +143,6 @@ public class PacketSnapshot {
 
     @Override
     public int hashCode() {
-        return Objects.hash(originalPacketId, shape, visualPosition, idealPosition, status, progressOnWire, systemIdIfStalledOrQueued, noiseLevel, rotationDirection);
+        return Objects.hash(originalPacketId, shape, packetType, visualPosition, idealPosition, status, progressOnWire, systemIdIfStalledOrQueued, noiseLevel, rotationDirection);
     }
 }

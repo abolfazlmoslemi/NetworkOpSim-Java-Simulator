@@ -1,4 +1,4 @@
-// ==== GamePanel.java ====
+// ===== File: GamePanel.java =====
 
 package com.networkopsim.game;
 
@@ -73,6 +73,9 @@ public class GamePanel extends JPanel {
     private final List<Packet> packets = Collections.synchronizedList(new ArrayList<>());
     private final List<Packet> packetsToAdd = Collections.synchronizedList(new ArrayList<>());
     private final List<Packet> packetsToRemove = Collections.synchronizedList(new ArrayList<>());
+
+    // NEW: Categorized lists for faster access to specific system types
+    private final List<System> antiTrojanSystems = Collections.synchronizedList(new ArrayList<>());
 
     private volatile boolean atarActive = false;
     private volatile boolean airyamanActive = false;
@@ -197,9 +200,20 @@ public class GamePanel extends JPanel {
         atarTimer.stop();
         deactivateAiryaman();
         airyamanTimer.stop();
+
+        // Clear specialized system lists before populating
+        antiTrojanSystems.clear();
+
         synchronized (systems) {
             systems.clear();
             systems.addAll(layout.systems);
+
+            // Populate specialized lists for quick access
+            for (System s : systems) {
+                if (s != null && s.getSystemType() == NetworkEnums.SystemType.ANTITROJAN) {
+                    antiTrojanSystems.add(s);
+                }
+            }
         }
         synchronized (wires) {
             wires.clear();
@@ -284,7 +298,7 @@ public class GamePanel extends JPanel {
             return "All systems must be part of a single connected network.";
         }
         if (!GraphUtils.areAllSystemPortsConnected(currentSystemsSnapshot)) {
-            return "All ports on every system (Sources, Nodes, Sinks) must be connected.";
+            return "All ports on every system (Sources, Nodes, Sinks, etc.) must be connected.";
         }
         long totalWireLength = 0;
         for (Wire wire : currentWiresSnapshot) {
@@ -299,14 +313,6 @@ public class GamePanel extends JPanel {
         return null;
     }
 
-    /**
-     * MODIFIED: Simplified logic. A wire is only invalid if it intersects a system
-     * that is NOT its start or end system. Crossing its own parent systems is now allowed.
-     *
-     * @param wire The wire to check.
-     * @param allSystems A snapshot of all systems on the panel.
-     * @return true if the wire illegally intersects a third-party system's body.
-     */
     public boolean isWireIntersectingAnySystem(Wire wire, List<System> allSystems) {
         if (wire == null) return false;
         List<Point2D.Double> fullPath = wire.getFullPathPoints();
@@ -319,13 +325,11 @@ public class GamePanel extends JPanel {
             Line2D.Double segment = new Line2D.Double(fullPath.get(i), fullPath.get(i + 1));
             for (System sys : allSystems) {
                 if (sys == null || sys.equals(startSystem) || sys.equals(endSystem)) {
-                    // Skip check if the system is the wire's own start or end system.
                     continue;
                 }
 
                 Rectangle sysBounds = new Rectangle(sys.getX(), sys.getY(), System.SYSTEM_WIDTH, System.SYSTEM_HEIGHT);
                 if (segment.intersects(sysBounds)) {
-                    // Intersection with a third-party system is always illegal.
                     return true;
                 }
             }
@@ -395,6 +399,11 @@ public class GamePanel extends JPanel {
     }
 
     private void runSimulationTickLogic(long tickDurationMsForMovement, boolean isPredictionRun, long currentTotalSimTimeMs, boolean currentAtarActive, boolean currentAiryamanActive) {
+        // Pass the current simulation time to UIManager so System.draw can access it for cooldown bar
+        if (!isPredictionRun) {
+            UIManager.put("game.time.ms", currentTotalSimTimeMs);
+        }
+
         processPacketBuffersInternal();
         List<System> systemsSnapshotSorted;
         synchronized (systems) {
@@ -402,7 +411,7 @@ public class GamePanel extends JPanel {
             systemsSnapshotSorted.sort(Comparator.comparingInt(System::getId));
         }
         for (System s : systemsSnapshotSorted) {
-            if (s != null && s.isReferenceSystem() && s.hasOutputPorts()) {
+            if (s != null && s.getSystemType() == NetworkEnums.SystemType.SOURCE && s.hasOutputPorts()) {
                 s.attemptPacketGeneration(this, currentTotalSimTimeMs, isPredictionRun);
             }
         }
@@ -419,11 +428,24 @@ public class GamePanel extends JPanel {
         }
         processPacketBuffersInternal();
         for (System s : systemsSnapshotSorted) {
-            if (s != null && !s.isReferenceSystem()) {
+            if (s != null && s.getSystemType() != NetworkEnums.SystemType.SOURCE && s.getSystemType() != NetworkEnums.SystemType.SINK) {
                 s.processQueue(this, isPredictionRun);
             }
         }
         processPacketBuffersInternal();
+
+        // --- NEW: Handle AntiTrojan System scanning ---
+        List<System> antiTrojanSnapshot;
+        synchronized(antiTrojanSystems) {
+            antiTrojanSnapshot = new ArrayList<>(antiTrojanSystems);
+        }
+        for (System s : antiTrojanSnapshot) {
+            if (s != null) {
+                s.updateAntiTrojan(this, isPredictionRun);
+            }
+        }
+        // ---------------------------------------------
+
         if (!currentAiryamanActive) {
             detectAndHandleCollisionsBroadPhaseInternal(currentPacketsSnapshotSorted, currentAtarActive, isPredictionRun);
         }
@@ -629,7 +651,7 @@ public class GamePanel extends JPanel {
             systemsSnapshotSorted.sort(Comparator.comparingInt(System::getId));
         }
         for (System s : systemsSnapshotSorted) {
-            if (s != null && !s.isReferenceSystem()) {
+            if (s != null && s.getSystemType() != NetworkEnums.SystemType.SOURCE && s.getSystemType() != NetworkEnums.SystemType.SINK) {
                 List<Packet> queueSnapshot = new ArrayList<>(s.packetQueue);
                 queueSnapshot.sort(Comparator.comparingInt(Packet::getId));
                 for (Packet p : queueSnapshot) if (p != null && !p.isMarkedForRemoval()) gameState.increasePacketLoss(p);
@@ -663,7 +685,7 @@ public class GamePanel extends JPanel {
             systemsSnapshotSorted.sort(Comparator.comparingInt(System::getId));
         }
         for (System s : systemsSnapshotSorted) {
-            if (s != null && s.isReferenceSystem() && s.hasOutputPorts()) {
+            if (s != null && s.getSystemType() == NetworkEnums.SystemType.SOURCE && s.hasOutputPorts()) {
                 sourcesChecked++;
                 if (s.getTotalPacketsToGenerate() > 0) {
                     sourcesHadPacketsToGenerate = true;
@@ -686,7 +708,7 @@ public class GamePanel extends JPanel {
             }
         }
         for (System s : systemsSnapshotSorted)
-            if (s != null && !s.isReferenceSystem() && s.getQueueSize() > 0) {
+            if (s != null && s.getSystemType() != NetworkEnums.SystemType.SOURCE && s.getSystemType() != NetworkEnums.SystemType.SINK && s.getQueueSize() > 0) {
                 queuesAreEmpty = false;
                 break;
             }
