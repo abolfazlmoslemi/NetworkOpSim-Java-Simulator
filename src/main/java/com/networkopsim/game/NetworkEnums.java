@@ -28,8 +28,9 @@ public class NetworkEnums {
         PROTECTED,
         TROJAN,
         MESSENGER,
-        BULK, // For future Distribute/Merge systems
-        BIT     // For future Distribute/Merge systems
+        BULK,       // For Distribute/Merge systems
+        WOBBLE,     // The new self-deflecting packet type
+        BIT         // Represents a piece of a BULK packet, often implemented as a special MESSENGER
     }
 
     // NEW ENUM for different system functionalities
@@ -40,6 +41,8 @@ public class NetworkEnums {
         SPY,        // Teleports normal packets, destroys secret ones
         CORRUPTOR,  // Adds noise, may create Trojan packets
         VPN,        // Creates Protected packets
-        ANTITROJAN  // Scans for and converts Trojan packets
+        ANTITROJAN, // Scans for and converts Trojan packets
+        DISTRIBUTOR,// Breaks down BULK packets
+        MERGER      // Reassembles BIT packets into BULK packets
     }
 }

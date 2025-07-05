@@ -1,5 +1,3 @@
-// ===== Packet.java =====
-
 package com.networkopsim.game;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -14,6 +12,7 @@ public class Packet {
     private static final double TRIANGLE_ACCELERATION_RATE = 0.06;
     public static final double MAX_SPEED_MAGNITUDE = 4.2;
     private static final double SECRET_PACKET_SLOW_SPEED_FACTOR = 0.25;
+    private static final double WOBBLE_SELF_NOISE_RATE = 0.05;
 
     private static final double COLLISION_RADIUS_FACTOR = 1.0;
     private static final Font NOISE_FONT = new Font("Arial", Font.PLAIN, 9);
@@ -50,6 +49,10 @@ public class Packet {
     private Point2D.Double visualOffsetDirection = null;
     private int initialOffsetSidePreference = 0;
 
+    // Fields for Bit/Bulk packet relationship
+    private int bulkParentId = -1;
+    private int totalBitsInGroup = 0;
+
     public static void resetGlobalId() {
         nextPacketId = 0;
     }
@@ -64,12 +67,20 @@ public class Packet {
 
         switch (type) {
             case SECRET:
-                this.size = 4;
-                this.baseCoinValue = 3;
+                this.size = 4; this.baseCoinValue = 3; break;
+            case BULK:
+                this.size = 8; this.baseCoinValue = 8; break;
+            case WOBBLE:
+                this.size = 10; this.baseCoinValue = 10; break;
+            case BIT:
+                this.size = 1; this.baseCoinValue = 0; // BITs don't give coins, the final BULK might.
                 break;
+            case MESSENGER:
+                this.size = 1; this.baseCoinValue = 1; break;
             case NORMAL:
             case TROJAN:
             case PROTECTED: // Should not be created directly, but have fallback values
+            default:
                 if (shape == NetworkEnums.PacketShape.SQUARE) {
                     this.size = 2; this.baseCoinValue = 2;
                 } else if (shape == NetworkEnums.PacketShape.TRIANGLE) {
@@ -78,12 +89,6 @@ public class Packet {
                     this.size = 1; this.baseCoinValue = 1;
                 }
                 break;
-            case MESSENGER:
-                this.size = 1;
-                this.baseCoinValue = 1;
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported PacketType in constructor: " + type);
         }
 
         this.originalSize = this.size;
@@ -114,7 +119,15 @@ public class Packet {
         int drawX = (int) Math.round(visualPosition.x - halfSize);
         int drawY = (int) Math.round(visualPosition.y - halfSize);
         Color packetColor = Port.getColorFromShape(shape);
-        if (packetType == NetworkEnums.PacketType.SECRET) {
+
+        if (packetType == NetworkEnums.PacketType.BIT) {
+            // Unique color per bulk parent
+            packetColor = new Color(Color.HSBtoRGB((this.bulkParentId * 0.27f) % 1.0f, 0.7f, 0.95f));
+        } else if (packetType == NetworkEnums.PacketType.BULK) {
+            packetColor = new Color(0x4a90e2); // Hexagonal blue color
+        } else if (packetType == NetworkEnums.PacketType.WOBBLE) {
+            packetColor = new Color(0xd0d0d0); // Light grey/white color
+        } else if (packetType == NetworkEnums.PacketType.SECRET) {
             packetColor = isUpgradedSecret ? new Color(110, 110, 120) : new Color(50, 70, 120);
         }
         g2d.setColor(packetColor);
@@ -182,6 +195,13 @@ public class Packet {
                         g2d.setStroke(new BasicStroke(2.0f)); g2d.drawLine(centerX - 3, centerY, centerX - 1, centerY + 3); g2d.drawLine(centerX - 1, centerY + 3, centerX + 3, centerY - 2);
                     }
                     break;
+                case BIT:
+                    g2d.setColor(new Color(255, 255, 255, 180));
+                    g2d.setFont(new Font("Monospaced", Font.BOLD, 9));
+                    String bitId = String.valueOf(this.bulkParentId);
+                    if (transformed) g2d.drawString(bitId, -3, 3);
+                    else g2d.drawString(bitId, drawX + 2, drawY + 9);
+                    break;
             }
             g2d.setStroke(defaultStroke);
 
@@ -243,21 +263,36 @@ public class Packet {
         if (this.finalStatusForPrediction == PredictedPacketStatus.QUEUED || this.finalStatusForPrediction == PredictedPacketStatus.STALLED_AT_NODE || this.finalStatusForPrediction == PredictedPacketStatus.DELIVERED || this.finalStatusForPrediction == PredictedPacketStatus.LOST) {
             this.finalStatusForPrediction = null;
         }
-        updateIdealPositionAndVelocity();
+
         double initialSpeed;
-        if (this.shape == NetworkEnums.PacketShape.SQUARE) {
-            initialSpeed = compatiblePortExit ? BASE_SPEED_MAGNITUDE * SQUARE_COMPATIBLE_SPEED_FACTOR : BASE_SPEED_MAGNITUDE;
-            this.isAccelerating = false;
-            this.targetSpeedMagnitude = initialSpeed;
-        } else if (this.shape == NetworkEnums.PacketShape.TRIANGLE) {
-            initialSpeed = BASE_SPEED_MAGNITUDE;
-            this.isAccelerating = !compatiblePortExit;
-            this.targetSpeedMagnitude = this.isAccelerating ? MAX_SPEED_MAGNITUDE : initialSpeed;
-        } else {
-            initialSpeed = BASE_SPEED_MAGNITUDE;
-            this.isAccelerating = false;
-            this.targetSpeedMagnitude = initialSpeed;
+        switch(this.packetType) {
+            case BULK:
+                this.isAccelerating = (wire.getRelayPointsCount() > 0);
+                initialSpeed = this.isAccelerating ? BASE_SPEED_MAGNITUDE : MAX_SPEED_MAGNITUDE;
+                this.targetSpeedMagnitude = MAX_SPEED_MAGNITUDE;
+                break;
+            case WOBBLE:
+                initialSpeed = BASE_SPEED_MAGNITUDE;
+                this.isAccelerating = false;
+                this.targetSpeedMagnitude = initialSpeed;
+                break;
+            default: // Existing logic for SQUARE, TRIANGLE, etc.
+                if (this.shape == NetworkEnums.PacketShape.SQUARE) {
+                    initialSpeed = compatiblePortExit ? BASE_SPEED_MAGNITUDE * SQUARE_COMPATIBLE_SPEED_FACTOR : BASE_SPEED_MAGNITUDE;
+                    this.isAccelerating = false;
+                    this.targetSpeedMagnitude = initialSpeed;
+                } else if (this.shape == NetworkEnums.PacketShape.TRIANGLE) {
+                    initialSpeed = BASE_SPEED_MAGNITUDE;
+                    this.isAccelerating = !compatiblePortExit;
+                    this.targetSpeedMagnitude = this.isAccelerating ? MAX_SPEED_MAGNITUDE : initialSpeed;
+                } else {
+                    initialSpeed = BASE_SPEED_MAGNITUDE;
+                    this.isAccelerating = false;
+                    this.targetSpeedMagnitude = initialSpeed;
+                }
+                break;
         }
+
         this.currentSpeedMagnitude = initialSpeed;
         updateIdealPositionAndVelocity();
     }
@@ -283,6 +318,11 @@ public class Packet {
         } else if (isAccelerating) {
             if (currentSpeedMagnitude < targetSpeedMagnitude) currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + TRIANGLE_ACCELERATION_RATE);
             else { currentSpeedMagnitude = targetSpeedMagnitude; isAccelerating = false; }
+        } else if (this.packetType == NetworkEnums.PacketType.WOBBLE) {
+            // Self-inflicted noise for Wobble packets
+            if (this.noise < this.size / 2.0) { // Cap noise to prevent self-destruction
+                this.addNoise(WOBBLE_SELF_NOISE_RATE);
+            }
         }
 
         double wireLength = currentWire.getLength();
@@ -305,12 +345,27 @@ public class Packet {
             }
             this.idealPosition = endPort.getPrecisePosition();
             System targetSystem = endPort.getParentSystem();
-            if (targetSystem != null) targetSystem.receivePacket(this, gamePanel, isPredictionRun);
+            if (targetSystem != null) {
+                // Log bulk packet usage before handing it to the system
+                if(this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun){
+                    gamePanel.logBulkPacketWireUsage(this.currentWire);
+                }
+                targetSystem.receivePacket(this, gamePanel, isPredictionRun);
+            }
             else { setFinalStatusForPrediction(PredictedPacketStatus.LOST); gamePanel.packetLostInternal(this, isPredictionRun); }
         }
     }
 
-    // --- Unchanged methods from here down ---
+    public void configureAsBit(int parentId, int totalBits) {
+        if(this.packetType == NetworkEnums.PacketType.BIT){
+            this.bulkParentId = parentId;
+            this.totalBitsInGroup = totalBits;
+        }
+    }
+
+    public int getBulkParentId() { return bulkParentId; }
+    public int getTotalBitsInGroup() { return totalBitsInGroup; }
+
     public NetworkEnums.PacketType getPacketType() { return packetType; }
     public void setPacketType(NetworkEnums.PacketType packetType) {
         if(this.packetType != packetType){

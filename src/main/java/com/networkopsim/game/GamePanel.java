@@ -1,4 +1,3 @@
-// ===== File: GamePanel.java =====
 
 package com.networkopsim.game;
 
@@ -73,6 +72,9 @@ public class GamePanel extends JPanel {
     private final List<Packet> packets = Collections.synchronizedList(new ArrayList<>());
     private final List<Packet> packetsToAdd = Collections.synchronizedList(new ArrayList<>());
     private final List<Packet> packetsToRemove = Collections.synchronizedList(new ArrayList<>());
+
+    private final List<Wire> wiresUsedByBulkPacketsThisTick = Collections.synchronizedList(new ArrayList<>());
+    private final List<Wire> wiresToRemove = Collections.synchronizedList(new ArrayList<>());
 
     // NEW: Categorized lists for faster access to specific system types
     private final List<System> antiTrojanSystems = Collections.synchronizedList(new ArrayList<>());
@@ -444,13 +446,50 @@ public class GamePanel extends JPanel {
                 s.updateAntiTrojan(this, isPredictionRun);
             }
         }
-        // ---------------------------------------------
 
         if (!currentAiryamanActive) {
             detectAndHandleCollisionsBroadPhaseInternal(currentPacketsSnapshotSorted, currentAtarActive, isPredictionRun);
         }
+
+        processWireDestruction();
         processPacketBuffersInternal();
     }
+
+    public void logBulkPacketWireUsage(Wire wire) {
+        if(wire != null && !wiresUsedByBulkPacketsThisTick.contains(wire)) {
+            wiresUsedByBulkPacketsThisTick.add(wire);
+        }
+    }
+
+    private void processWireDestruction() {
+        if (!wiresUsedByBulkPacketsThisTick.isEmpty()) {
+            for (Wire w : wiresUsedByBulkPacketsThisTick) {
+                w.recordBulkPacketTraversal();
+                if (w.isDestroyed()) {
+                    synchronized(wiresToRemove) {
+                        if(!wiresToRemove.contains(w)) {
+                            wiresToRemove.add(w);
+                        }
+                    }
+                }
+            }
+            wiresUsedByBulkPacketsThisTick.clear();
+        }
+
+        if (!wiresToRemove.isEmpty()) {
+            synchronized(wires) {
+                for (Wire w : wiresToRemove) {
+                    if (wires.remove(w)) {
+                        w.destroy(); // Disconnects ports
+                        if (!game.isMuted()) game.playSoundEffect("wire_disconnect");
+                    }
+                }
+            }
+            wiresToRemove.clear();
+            validateAndSetPredictionFlag();
+        }
+    }
+
 
     private void processPacketBuffersInternal() {
         if (!packetsToRemove.isEmpty()) {

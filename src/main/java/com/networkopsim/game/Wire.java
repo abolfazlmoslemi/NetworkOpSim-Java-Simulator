@@ -14,14 +14,16 @@ public class Wire {
     public static final int MAX_RELAY_POINTS = 3;
     public static final int RELAY_POINT_SIZE = 8;
     public static final int RELAY_CLICK_RADIUS = 12;
+    public static final int MAX_BULK_TRAVERSALS = 3;
+
 
     private final int id;
     private final Port startPort;
     private final Port endPort;
     private final List<RelayPoint> relayPoints = new CopyOnWriteArrayList<>();
     private double length;
-    // This field is no longer set externally, it's determined during the draw call.
-    // private boolean isValid = true;
+    private int bulkPacketTraversals = 0;
+
 
     public static class RelayPoint {
         private final Wire parentWire;
@@ -113,6 +115,16 @@ public class Wire {
             g2d.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
         }
 
+        // Draw traversal count for bulk packets
+        if (bulkPacketTraversals > 0) {
+            Point midPoint = new Point((int)((path.get(0).x + path.get(path.size()-1).x)/2), (int)((path.get(0).y + path.get(path.size()-1).y)/2));
+            String traversalText = bulkPacketTraversals + "/" + MAX_BULK_TRAVERSALS;
+            g2d.setFont(new Font("Arial", Font.BOLD, 10));
+            Color textColor = (bulkPacketTraversals >= MAX_BULK_TRAVERSALS -1) ? Color.RED : Color.ORANGE;
+            g2d.setColor(textColor);
+            g2d.drawString(traversalText, midPoint.x, midPoint.y - 5);
+        }
+
         for (RelayPoint rp : relayPoints) {
             rp.draw(g2d);
         }
@@ -177,6 +189,18 @@ public class Wire {
 
     public void clearHoverStates() {
         for(RelayPoint rp : relayPoints) rp.setHovered(false);
+    }
+
+    public void recordBulkPacketTraversal() {
+        this.bulkPacketTraversals++;
+    }
+
+    public boolean isDestroyed() {
+        return bulkPacketTraversals >= MAX_BULK_TRAVERSALS;
+    }
+
+    public int getBulkPacketTraversalCount() {
+        return bulkPacketTraversals;
     }
 
     public int getId() { return id; }

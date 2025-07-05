@@ -1,14 +1,19 @@
-package com.networkopsim.game;
+
+        package com.networkopsim.game;
+import com.networkopsim.game.NetworkEnums;
+import com.networkopsim.game.System;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D; // IMPORT ENSURED
 import java.util.Objects;
+import java.util.Random;
 
 public class Port {
     public static final int PORT_SIZE = 10;
-    private final NetworkEnums.PortType type;
-    private final NetworkEnums.PortShape shape;
+    private NetworkEnums.PortType type;
+    private NetworkEnums.PortShape shape;
     private final System parentSystem;
     private final int index;
     private Point position;
@@ -17,19 +22,24 @@ public class Port {
     private static int nextId = 0;
 
     public Port(System parent, NetworkEnums.PortType type, NetworkEnums.PortShape shape, int index) {
-        // MODIFIED: Removed overly restrictive validation to allow for future port shapes like CIRCLE
         this.id = nextId++;
         this.parentSystem = Objects.requireNonNull(parent, "Port parent system cannot be null");
         this.type = Objects.requireNonNull(type, "Port type cannot be null");
         this.shape = Objects.requireNonNull(shape, "Port shape cannot be null");
         this.index = index;
-        // Calculate initial position based on estimated port counts. This will be updated by System if needed.
         int estInputCount = parent.getInputPorts().size() + (type == NetworkEnums.PortType.INPUT ? 1 : 0);
         int estOutputCount = parent.getOutputPorts().size() + (type == NetworkEnums.PortType.OUTPUT ? 1 : 0);
         this.position = calculatePosition(parent.getX(), parent.getY(), estInputCount, estOutputCount, type, index);
     }
 
-    public static void resetGlobalId() { // Added for consistency if needed during frequent level reloads
+    public void randomizeShape() {
+        Random rand = System.getGlobalRandom();
+        int pick = rand.nextInt(NetworkEnums.PortShape.values().length - 1); // Exclude ANY
+        this.shape = NetworkEnums.PortShape.values()[pick];
+    }
+
+
+    public static void resetGlobalId() {
         nextId = 0;
     }
 
@@ -49,7 +59,7 @@ public class Port {
         switch (shape) {
             case SQUARE:   return Color.CYAN;
             case TRIANGLE: return Color.YELLOW;
-            case CIRCLE:   return Color.ORANGE; // ADDED
+            case CIRCLE:   return Color.ORANGE;
             case ANY:      return Color.LIGHT_GRAY;
             default:       return Color.WHITE;
         }
@@ -60,7 +70,7 @@ public class Port {
         switch (shape) {
             case SQUARE:   return Color.CYAN;
             case TRIANGLE: return Color.YELLOW;
-            case CIRCLE:   return Color.ORANGE; // ADDED
+            case CIRCLE:   return new Color(0x4a90e2); // Use a distinct color for bulk/wobble
             default:       return Color.WHITE;
         }
     }
@@ -70,7 +80,7 @@ public class Port {
         switch (packetShape) {
             case SQUARE:   return NetworkEnums.PortShape.SQUARE;
             case TRIANGLE: return NetworkEnums.PortShape.TRIANGLE;
-            case CIRCLE:   return NetworkEnums.PortShape.CIRCLE; // ADDED
+            case CIRCLE:   return NetworkEnums.PortShape.CIRCLE;
             default:       return null;
         }
     }
@@ -104,7 +114,7 @@ public class Port {
                 path.closePath();
                 g2d.fill(path);
                 break;
-            case CIRCLE: // ADDED
+            case CIRCLE:
                 g2d.fillOval(x, y, PORT_SIZE, PORT_SIZE);
                 break;
             case ANY:
@@ -126,7 +136,7 @@ public class Port {
             case TRIANGLE:
                 if (path != null) g2d.draw(path);
                 break;
-            case CIRCLE: // ADDED
+            case CIRCLE:
                 g2d.drawOval(x, y, PORT_SIZE, PORT_SIZE);
                 break;
             case ANY:
