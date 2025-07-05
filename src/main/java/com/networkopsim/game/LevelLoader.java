@@ -29,10 +29,10 @@ public class LevelLoader {
             gameState.setMaxWireLengthForLevel(wireBudget);
             switch (level) {
                 case 1:
-                    initializeLevel1WithNewSystems(systems); // Updated method name
+                    initializeLevel1WithNewSystems(systems);
                     break;
                 case 2:
-                    initializeNightmareLevel2Layout(systems); // Original from prompt
+                    initializeNightmareLevel2Layout(systems);
                     break;
                 default:
                     java.lang.System.err.println("Warning: Invalid level number " + level + ". Loading Level 1 as fallback.");
@@ -68,14 +68,12 @@ public class LevelLoader {
         }
     }
 
-    // NEW: Example level layout using the new SystemTypes
     private static void initializeLevel1WithNewSystems(List<System> systems) {
         java.lang.System.out.println("Loading Level 1 Layout with new systems.");
         int panelWidth = NetworkGame.WINDOW_WIDTH;
         int panelHeight = NetworkGame.WINDOW_HEIGHT;
         int sysWidth = System.SYSTEM_WIDTH;
 
-        // Source and Sink (now with explicit types)
         System sourceS1 = new System(panelWidth / 8, panelHeight / 5, NetworkEnums.SystemType.SOURCE);
         sourceS1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
         sourceS1.configureGenerator(20, 1500);
@@ -85,41 +83,32 @@ public class LevelLoader {
         sinkS1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(sinkS1);
 
-        // --- NEW SYSTEMS ---
-        // A Corruptor system
         System corruptor1 = new System(panelWidth / 3, panelHeight / 3, NetworkEnums.SystemType.CORRUPTOR);
         corruptor1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
-        corruptor1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); // Note the incompatible output
+        corruptor1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
         systems.add(corruptor1);
 
-        // An AntiTrojan system
         System antiTrojan1 = new System(panelWidth / 2, panelHeight / 2, NetworkEnums.SystemType.ANTITROJAN);
         antiTrojan1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
         antiTrojan1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(antiTrojan1);
 
-        // A VPN system
         System vpn1 = new System(panelWidth * 2 / 3, panelHeight * 2 / 3, NetworkEnums.SystemType.VPN);
         vpn1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         vpn1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(vpn1);
 
-        // A Spy system
         System spy1 = new System(panelWidth / 5, panelHeight * 3 / 4, NetworkEnums.SystemType.SPY);
         spy1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(spy1);
 
-        // A second Spy system for teleportation
         System spy2 = new System(panelWidth * 4 / 5, panelHeight / 4, NetworkEnums.SystemType.SPY);
         spy2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(spy2);
     }
 
-
-    // This is the original level 2 from the prompt, left here for compatibility.
-    // It should be updated to use the new System constructor with SystemType.
     private static void initializeNightmareLevel2Layout(List<System> systems) {
         java.lang.System.out.println("Loading NIGHTMARE Level 2 Layout: 3 Sources -> 7 Nodes -> 3 Sinks (No ANY ports, high density)");
         int panelWidth = NetworkGame.WINDOW_WIDTH;
@@ -145,6 +134,12 @@ public class LevelLoader {
         sourceS_C.configureGenerator(28, 1350);
         systems.add(sourceS_C);
 
+        // MODIFIED: Added a source for SECRET packets
+        System sourceSecret = new System(50, panelHeight / 2, NetworkEnums.SystemType.SOURCE);
+        sourceSecret.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); // Port shape doesn't matter for secret packets
+        sourceSecret.configureGenerator(10, 3000, NetworkEnums.PacketType.SECRET);
+        systems.add(sourceSecret);
+
         // Nodes
         int nodeTopRowY = panelHeight / 4 - sysHeight / 2;
         int nodeMidRowY1 = panelHeight / 2 - sysHeight - 30;
@@ -157,7 +152,6 @@ public class LevelLoader {
         node1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
         systems.add(node1);
 
-        // ... (The rest of the nodes would be created with NetworkEnums.SystemType.NODE) ...
         System node2 = new System(panelWidth * 2 / 5 - sysWidth / 2, nodeTopRowY + 20, NetworkEnums.SystemType.NODE);
         node2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); node2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
         node2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); node2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
@@ -173,7 +167,7 @@ public class LevelLoader {
         node4.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); node4.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
         systems.add(node4);
 
-        System node5_center = new System(panelWidth / 2 - sysWidth / 2, nodeMidRowY1 + 10, NetworkEnums.SystemType.NODE);
+        System node5_center = new System(panelWidth / 2 - sysWidth / 2, nodeMidRowY1 + 10, NetworkEnums.SystemType.VPN); // Changed to VPN for testing
         node5_center.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); node5_center.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
         node5_center.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); node5_center.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
         node5_center.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); node5_center.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
