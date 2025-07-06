@@ -187,7 +187,10 @@ public class NetworkGame extends JFrame {
                 String soundPath = "/assets/sounds/" + soundName + ".wav";
                 soundFileStream = getClass().getResourceAsStream(soundPath);
 
-                if (soundFileStream == null) return;
+                if (soundFileStream == null) {
+                    java.lang.System.err.println("Warning: Sound effect not found: " + soundPath);
+                    return;
+                }
 
                 bufferedIn = new BufferedInputStream(soundFileStream);
                 audioStream = AudioSystem.getAudioInputStream(bufferedIn);
@@ -328,10 +331,9 @@ public class NetworkGame extends JFrame {
             }
         }
         try {
-            // storeDialog.updateCoins(gameState.getCoins()); // OLD LINE
-            storeDialog.updateCoinsDisplay(gameState.getCoins()); // CORRECTED LINE
+            storeDialog.updateCoinsDisplay(gameState.getCoins());
             storeDialog.setLocationRelativeTo(this);
-            storeDialog.setVisible(true);
+            storeDialog.setVisible(true); // This call now handles its own UI updates
             if (gamePanel.isShowing()) {
                 SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
             }
@@ -387,7 +389,7 @@ public class NetworkGame extends JFrame {
         if (keyBindingDialog != null) { keyBindingDialog.dispose(); }
         if (temporaryMessageTimer != null && temporaryMessageTimer.isRunning()) temporaryMessageTimer.stop();
         dispose();
-        java.lang.System.exit(0); // CORRECTED LINE
+        java.lang.System.exit(0);
     }
 
     public void showTemporaryMessage(String message, Color color, int durationMs) {

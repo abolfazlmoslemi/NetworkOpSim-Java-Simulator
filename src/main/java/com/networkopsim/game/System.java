@@ -3,6 +3,7 @@
 package com.networkopsim.game;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +45,12 @@ public class System {
     private static final long ANTITROJAN_COOLDOWN_MS = 8000;
     private long antiTrojanCooldownUntil = 0;
     private boolean vpnIsActive = true;
+
+    // --- NEW: System Disabling Fields ---
+    private volatile boolean isDisabled = false;
+    private volatile long disabledUntil = 0;
+    public static final long SYSTEM_DISABLE_DURATION_MS = 10000; // 10 seconds
+    public static final double MAX_SAFE_ENTRY_SPEED = 4.0; // Max speed allowed before shutdown
 
     // Fields for Merger logic
     private final Map<Integer, List<Packet>> mergingPackets = new HashMap<>();
@@ -88,6 +95,7 @@ public class System {
     public int getTotalPacketsToGenerate() { return packetsToGenerateConfig; }
     public int getQueueSize() { synchronized(packetQueue) { return packetQueue.size(); } }
     public long getAntiTrojanCooldownUntil() { return antiTrojanCooldownUntil; }
+    public boolean isDisabled() { return isDisabled; } // NEW GETTER
     private boolean areAllMyPortsConnected() {
         synchronized(inputPorts) { for (Port p : inputPorts) if (p != null && !p.isConnected()) return false; }
         synchronized(outputPorts) { for (Port p : outputPorts) if (p != null && !p.isConnected()) return false; }
@@ -125,10 +133,43 @@ public class System {
         this.packetsGeneratedThisRun = 0; this.lastGenerationTimeThisRun = -1;
         this.antiTrojanCooldownUntil = 0; this.vpnIsActive = true;
         this.mergingPackets.clear();
+        this.isDisabled = false; // NEW
+        this.disabledUntil = 0; // NEW
     }
+
+    // --- NEW: Method to update system state each tick ---
+    public void updateSystemState(long currentTimeMs, GamePanel gamePanel) {
+        // Re-enable the system if the disable duration has passed
+        if (isDisabled && currentTimeMs >= disabledUntil) {
+            isDisabled = false;
+            disabledUntil = 0;
+            if (!isReferenceSystem && !gamePanel.getGame().isMuted()) {
+                gamePanel.getGame().playSoundEffect("system_reboot");
+            }
+        }
+    }
+
 
     public void receivePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         if (packet == null || gamePanel == null) return;
+
+        // --- NEW: System Disabled Logic ---
+        if (this.isDisabled) {
+            packet.reverseDirection(gamePanel); // Packet reverses course
+            return;
+        }
+
+        // --- NEW: Over-speed Check ---
+        if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > MAX_SAFE_ENTRY_SPEED) {
+            this.isDisabled = true;
+            this.disabledUntil = gamePanel.getSimulationTimeElapsedMs() + SYSTEM_DISABLE_DURATION_MS;
+            if (!isPredictionRun && !gamePanel.getGame().isMuted()) {
+                gamePanel.getGame().playSoundEffect("system_shutdown");
+            }
+            packet.reverseDirection(gamePanel); // Packet reverses course after causing shutdown
+            return;
+        }
+
 
         // --- BULK PACKET SPECIAL RULES (APPLY BEFORE ANYTHING ELSE) ---
         if(packet.getPacketType() == NetworkEnums.PacketType.BULK){
@@ -194,7 +235,7 @@ public class System {
     }
 
     public void processQueue(GamePanel gamePanel, boolean isPredictionRun) {
-        if (isReferenceSystem()) return;
+        if (isReferenceSystem() || isDisabled) return; // MODIFIED: Don't process queue if disabled
         Packet packetToProcess;
         synchronized (packetQueue) { if (packetQueue.isEmpty()) return; packetToProcess = packetQueue.peek(); }
         if (packetToProcess == null || packetToProcess.isMarkedForRemoval()) { if(packetToProcess != null) synchronized (packetQueue) { packetQueue.poll(); } return; }
@@ -283,6 +324,22 @@ public class System {
                 g2d.setColor(new Color(0, 255, 255, 40)); int radius = (int)ANTITROJAN_SCAN_RADIUS;
                 g2d.fillOval(x + SYSTEM_WIDTH/2 - radius, y + SYSTEM_HEIGHT/2 - radius, radius*2, radius*2);
             }
+        }
+
+        // --- NEW: Draw Disabled State ---
+        if (isDisabled) {
+            Composite originalComposite = g2d.getComposite();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+            g2d.setColor(new Color(200, 0, 0));
+            g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+            g2d.setComposite(originalComposite);
+
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(new Font("Arial", Font.BOLD, 12));
+            String disabledText = "DISABLED";
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(disabledText);
+            g2d.drawString(disabledText, x + (SYSTEM_WIDTH - textWidth) / 2, y + SYSTEM_HEIGHT / 2 + fm.getAscent() / 2);
         }
     }
 
@@ -387,37 +444,63 @@ public class System {
     private Port findAvailableOutputPort(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         if (packet == null || gamePanel == null) return null;
 
-        // Bulk packets ignore shape compatibility
-        if(packet.getPacketType() == NetworkEnums.PacketType.BULK) {
-            synchronized(outputPorts) {
-                List<Port> shuffledPorts = new ArrayList<>(outputPorts);
-                Collections.shuffle(shuffledPorts, globalRandom);
-                for (Port port : shuffledPorts) {
-                    if (port != null && port.isConnected()) {
-                        Wire wire = gamePanel.findWireFromPort(port);
-                        if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) {
-                            return port;
+        List<Port> candidatePorts = new ArrayList<>();
+        // Find all connected, non-occupied ports leading to non-disabled systems
+        synchronized(outputPorts) {
+            for (Port port : outputPorts) {
+                if (port != null && port.isConnected()) {
+                    Wire wire = gamePanel.findWireFromPort(port);
+                    if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) {
+                        System destinationSystem = wire.getEndPort().getParentSystem();
+                        if (destinationSystem != null && !destinationSystem.isDisabled()) {
+                            candidatePorts.add(port);
                         }
                     }
                 }
             }
-            return null;
+        }
+        if (candidatePorts.isEmpty()) return null;
+        Collections.shuffle(candidatePorts, globalRandom);
+
+        // Bulk and Secret packets ignore shape compatibility
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
+            return candidatePorts.get(0);
         }
 
-        if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
-            synchronized(outputPorts) { List<Port> shuffledPorts = new ArrayList<>(outputPorts); Collections.shuffle(shuffledPorts, globalRandom); for (Port port : shuffledPorts) { if (port != null && port.isConnected()) { Wire wire = gamePanel.findWireFromPort(port); if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) return port; } } }
-            return null;
-        }
-        List<Port> compatibleEmptyPorts = new ArrayList<>(); List<Port> nonCompatibleEmptyPorts = new ArrayList<>(); NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());
+        List<Port> compatiblePorts = new ArrayList<>();
+        List<Port> nonCompatiblePorts = new ArrayList<>();
+        NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());
         if (requiredPacketShape == null) return null;
-        synchronized(outputPorts) { List<Port> shuffledPorts = new ArrayList<>(outputPorts); Collections.shuffle(shuffledPorts, globalRandom); for (Port port : shuffledPorts) { if (port != null && port.isConnected()) { Wire wire = gamePanel.findWireFromPort(port); if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) { if (port.getShape() == requiredPacketShape) compatibleEmptyPorts.add(port); else nonCompatibleEmptyPorts.add(port); } } } }
-        if (!compatibleEmptyPorts.isEmpty()) return compatibleEmptyPorts.get(0);
-        if (!nonCompatibleEmptyPorts.isEmpty()) return nonCompatibleEmptyPorts.get(0);
+
+        for(Port port : candidatePorts) {
+            if (port.getShape() == requiredPacketShape) {
+                compatiblePorts.add(port);
+            } else {
+                nonCompatiblePorts.add(port);
+            }
+        }
+
+        if (!compatiblePorts.isEmpty()) return compatiblePorts.get(0);
+        if (!nonCompatiblePorts.isEmpty()) return nonCompatiblePorts.get(0);
         return null;
     }
     private Port findIncompatibleOutputPort(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         List<Port> incompatibleEmptyPorts = new ArrayList<>(); NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());
-        synchronized(outputPorts) { List<Port> shuffledPorts = new ArrayList<>(outputPorts); Collections.shuffle(shuffledPorts, globalRandom); for (Port port : shuffledPorts) { if (port != null && port.isConnected()) { Wire wire = gamePanel.findWireFromPort(port); if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun) && port.getShape() != requiredPacketShape) incompatibleEmptyPorts.add(port); } } }
+        synchronized(outputPorts) {
+            List<Port> shuffledPorts = new ArrayList<>(outputPorts);
+            Collections.shuffle(shuffledPorts, globalRandom);
+            for (Port port : shuffledPorts) {
+                if (port != null && port.isConnected()) {
+                    Wire wire = gamePanel.findWireFromPort(port);
+                    if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun) && port.getShape() != requiredPacketShape) {
+                        System destinationSystem = wire.getEndPort().getParentSystem();
+                        if (destinationSystem != null && !destinationSystem.isDisabled()) {
+                            incompatibleEmptyPorts.add(port);
+                        }
+                    }
+                }
+            }
+        }
         return incompatibleEmptyPorts.isEmpty() ? null : incompatibleEmptyPorts.get(0);
     }
     private List<Packet> getAllPacketsInQueues(List<System> systems) { List<Packet> queuedPackets = new ArrayList<>(); for (System s : systems) if (s != null) synchronized(s.packetQueue) { queuedPackets.addAll(s.packetQueue); } return queuedPackets; }
@@ -425,5 +508,5 @@ public class System {
     // --- Standard Overrides ---
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; System system = (System) o; return id == system.id; }
     @Override public int hashCode() { return Objects.hash(id); }
-    @Override public String toString() { return "System{id=" + id + ", type=" + systemType.name() + ", pos=(" + x + "," + y + ")" + ", Q=" + getQueueSize() + "/" + QUEUE_CAPACITY + '}'; }
+    @Override public String toString() { return "System{id=" + id + ", type=" + systemType.name() + ", pos=(" + x + "," + y + ")" + ", Q=" + getQueueSize() + "/" + QUEUE_CAPACITY + (isDisabled ? ", DISABLED" : "") + '}'; }
 }

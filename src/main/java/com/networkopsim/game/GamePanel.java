@@ -1,3 +1,4 @@
+// ===== File: GamePanel.java =====
 
 package com.networkopsim.game;
 
@@ -31,6 +32,7 @@ public class GamePanel extends JPanel {
     private static final int HUD_DISPLAY_TIME_MS = 7000;
     private static final int ATAR_DURATION_MS = 10000;
     private static final int AIRYAMAN_DURATION_MS = 5000;
+    private static final int SPEED_LIMITER_DURATION_MS = 15000; // NEW
     private static final Color BACKGROUND_COLOR = new Color(15, 15, 20);
     private static final double PACKET_LOSS_GAME_OVER_THRESHOLD = 50.0;
     private static final long TIME_SCRUB_INCREMENT_MS = 1000;
@@ -81,8 +83,10 @@ public class GamePanel extends JPanel {
 
     private volatile boolean atarActive = false;
     private volatile boolean airyamanActive = false;
+    private volatile boolean isSpeedLimiterActive = false; // NEW
     private final Timer atarTimer;
     private final Timer airyamanTimer;
+    private final Timer speedLimiterTimer; // NEW
 
     private Port selectedOutputPort = null;
     private final Point mouseDragPos = new Point();
@@ -112,6 +116,7 @@ public class GamePanel extends JPanel {
 
     private static final boolean PREDICTION_ATAR_ACTIVE = false;
     private static final boolean PREDICTION_AIRYAMAN_ACTIVE = false;
+    private static final boolean PREDICTION_SPEED_LIMITER_ACTIVE = false; // NEW
 
 
     public static class PredictionRunStats {
@@ -161,6 +166,8 @@ public class GamePanel extends JPanel {
         atarTimer.setRepeats(false);
         airyamanTimer = new Timer(AIRYAMAN_DURATION_MS, e -> deactivateAiryaman());
         airyamanTimer.setRepeats(false);
+        speedLimiterTimer = new Timer(SPEED_LIMITER_DURATION_MS, e -> deactivateSpeedLimiter()); // NEW
+        speedLimiterTimer.setRepeats(false); // NEW
         gameLoopTimer = new Timer(GAME_TICK_MS, e -> gameTick());
         gameLoopTimer.setRepeats(true);
     }
@@ -202,6 +209,8 @@ public class GamePanel extends JPanel {
         atarTimer.stop();
         deactivateAiryaman();
         airyamanTimer.stop();
+        deactivateSpeedLimiter(); // NEW
+        speedLimiterTimer.stop(); // NEW
 
         // Clear specialized system lists before populating
         antiTrojanSystems.clear();
@@ -364,6 +373,10 @@ public class GamePanel extends JPanel {
             deactivateAiryaman();
             airyamanTimer.stop();
         }
+        if (speedLimiterTimer.isRunning()) { // NEW
+            deactivateSpeedLimiter(); // NEW
+            speedLimiterTimer.stop(); // NEW
+        }
         if (!simulationStarted) {
             validateAndSetPredictionFlag();
         }
@@ -377,12 +390,14 @@ public class GamePanel extends JPanel {
             if (gameLoopTimer.isRunning()) gameLoopTimer.stop();
             if (atarTimer.isRunning()) atarTimer.stop();
             if (airyamanTimer.isRunning()) airyamanTimer.stop();
+            if (speedLimiterTimer.isRunning()) speedLimiterTimer.stop(); // NEW
             repaint();
         } else if (!pause && gamePaused) {
             gamePaused = false;
             gameLoopTimer.start();
             if (atarActive && !atarTimer.isRunning()) atarTimer.start();
             if (airyamanActive && !airyamanTimer.isRunning()) airyamanTimer.start();
+            if (isSpeedLimiterActive && !speedLimiterTimer.isRunning()) speedLimiterTimer.start(); // NEW
             repaint();
         }
     }
@@ -395,12 +410,12 @@ public class GamePanel extends JPanel {
         }
         long elapsedThisTickMs = GAME_TICK_MS;
         simulationTimeElapsedMs += elapsedThisTickMs;
-        runSimulationTickLogic(elapsedThisTickMs, false, simulationTimeElapsedMs, atarActive, airyamanActive);
+        runSimulationTickLogic(elapsedThisTickMs, false, simulationTimeElapsedMs, atarActive, airyamanActive, isSpeedLimiterActive);
         checkEndConditions();
         repaint();
     }
 
-    private void runSimulationTickLogic(long tickDurationMsForMovement, boolean isPredictionRun, long currentTotalSimTimeMs, boolean currentAtarActive, boolean currentAiryamanActive) {
+    private void runSimulationTickLogic(long tickDurationMsForMovement, boolean isPredictionRun, long currentTotalSimTimeMs, boolean currentAtarActive, boolean currentAiryamanActive, boolean currentSpeedLimiterActive) {
         // Pass the current simulation time to UIManager so System.draw can access it for cooldown bar
         if (!isPredictionRun) {
             UIManager.put("game.time.ms", currentTotalSimTimeMs);
@@ -412,6 +427,15 @@ public class GamePanel extends JPanel {
             systemsSnapshotSorted = new ArrayList<>(systems);
             systemsSnapshotSorted.sort(Comparator.comparingInt(System::getId));
         }
+
+        // NEW: Update system states (e.g., re-enabling them) before other logic
+        for (System s : systemsSnapshotSorted) {
+            if (s != null) {
+                s.updateSystemState(currentTotalSimTimeMs, this);
+            }
+        }
+
+
         for (System s : systemsSnapshotSorted) {
             if (s != null && s.getSystemType() == NetworkEnums.SystemType.SOURCE && s.hasOutputPorts()) {
                 s.attemptPacketGeneration(this, currentTotalSimTimeMs, isPredictionRun);
@@ -425,7 +449,7 @@ public class GamePanel extends JPanel {
         }
         for (Packet p : currentPacketsSnapshotSorted) {
             if (p != null && !p.isMarkedForRemoval()) {
-                p.update(this, currentAiryamanActive, isPredictionRun);
+                p.update(this, currentAiryamanActive, currentSpeedLimiterActive, isPredictionRun);
             }
         }
         processPacketBuffersInternal();
@@ -436,7 +460,7 @@ public class GamePanel extends JPanel {
         }
         processPacketBuffersInternal();
 
-        // --- NEW: Handle AntiTrojan System scanning ---
+        // --- Handle AntiTrojan System scanning ---
         List<System> antiTrojanSnapshot;
         synchronized(antiTrojanSystems) {
             antiTrojanSnapshot = new ArrayList<>(antiTrojanSystems);
@@ -827,6 +851,20 @@ public class GamePanel extends JPanel {
     public void activateAiryaman() {  if (!airyamanActive) { airyamanActive = true;} airyamanTimer.restart(); repaint(); }
     private void deactivateAiryaman() { if (airyamanActive) { airyamanActive = false; repaint(); } airyamanTimer.stop(); }
     public void activateAnahita() { List<Packet> currentSimPackets; synchronized (packets) { currentSimPackets = new ArrayList<>(packets); } for (Packet p : currentSimPackets) { if (p != null && !p.isMarkedForRemoval() && p.getNoise() > 0) p.resetNoise(); } repaint(); }
+    // --- NEW: Store Item Activators ---
+    public void activateSpeedLimiter() { if (!isSpeedLimiterActive) { isSpeedLimiterActive = true; } speedLimiterTimer.restart(); repaint(); }
+    private void deactivateSpeedLimiter() { if (isSpeedLimiterActive) { isSpeedLimiterActive = false; repaint(); } speedLimiterTimer.stop(); }
+    public void activateEmergencyBrake() {
+        synchronized(packets) {
+            for (Packet p : packets) {
+                if (p != null && !p.isMarkedForRemoval() && p.getCurrentWire() != null) {
+                    p.setCurrentSpeedMagnitude(Packet.BASE_SPEED_MAGNITUDE);
+                }
+            }
+        }
+        repaint();
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -891,7 +929,52 @@ public class GamePanel extends JPanel {
 
     private void updatePrediction() { if (simulationStarted || !networkValidatedForPrediction) { synchronized(predictedPacketStates) { predictedPacketStates.clear(); } synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); } displayedPredictionStats = new PredictionRunStats(0,0,0,0,0); repaint(); return; } runFastPredictionSimulation(this.viewedTimeMs); }
 
-    private void runFastPredictionSimulation(long targetTimeMs) { Packet.resetGlobalId(); System.resetGlobalId(); Port.resetGlobalId(); System.resetGlobalRandomSeed(PREDICTION_SEED); synchronized(systems) { List<System> sortedSystems = new ArrayList<>(systems); sortedSystems.sort(Comparator.comparingInt(System::getId)); for (System s : sortedSystems) if (s != null) s.resetForNewRun(); } synchronized(packets) { packets.clear(); } synchronized(packetsToAdd) { packetsToAdd.clear(); } synchronized(packetsToRemove) { packetsToRemove.clear(); } activelyCollidingPairs.clear(); synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); } predictionRun_totalPacketsGeneratedCount = 0; predictionRun_totalPacketsLostCount = 0; predictionRun_totalPacketUnitsGenerated = 0; predictionRun_totalPacketUnitsLost = 0; long currentInternalSimTime = 0; final long predictionTickDuration = GAME_TICK_MS; long actualTargetTimeMs = Math.min(targetTimeMs, this.maxPredictionTimeForScrubbingMs); while (currentInternalSimTime < actualTargetTimeMs) { long timeStepForTick = Math.min(predictionTickDuration, actualTargetTimeMs - currentInternalSimTime); if (timeStepForTick <= 0) break; runSimulationTickLogic(timeStepForTick, true, currentInternalSimTime, PREDICTION_ATAR_ACTIVE, PREDICTION_AIRYAMAN_ACTIVE); currentInternalSimTime += timeStepForTick; } processPacketBuffersInternal(); synchronized(predictedPacketStates) { predictedPacketStates.clear(); synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.sort(Comparator.comparingInt(Packet::getId)); } for (Packet p : tempPredictionRunGeneratedPackets) { if (p == null) continue; PredictedPacketStatus statusToSnapshot = p.getFinalStatusForPrediction(); if (statusToSnapshot != null) { predictedPacketStates.add(new PacketSnapshot(p, statusToSnapshot)); } else { if (p.getCurrentSystem() != null) { predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.QUEUED)); } else if (p.getCurrentWire() != null) { if (!p.isMarkedForRemoval()) { predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.ON_WIRE)); } else { p.setFinalStatusForPrediction(PredictedPacketStatus.LOST); predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.LOST)); } } else { predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.STALLED_AT_NODE)); } } } } this.displayedPredictionStats = new PredictionRunStats(actualTargetTimeMs, predictionRun_totalPacketsGeneratedCount, predictionRun_totalPacketsLostCount, predictionRun_totalPacketUnitsGenerated, predictionRun_totalPacketUnitsLost); synchronized(packets) { packets.clear(); } synchronized(packetsToAdd) { packetsToAdd.clear(); } synchronized(packetsToRemove) { packetsToRemove.clear(); } activelyCollidingPairs.clear(); }
+    private void runFastPredictionSimulation(long targetTimeMs) {
+        Packet.resetGlobalId(); System.resetGlobalId(); Port.resetGlobalId(); System.resetGlobalRandomSeed(PREDICTION_SEED);
+        synchronized(systems) {
+            List<System> sortedSystems = new ArrayList<>(systems);
+            sortedSystems.sort(Comparator.comparingInt(System::getId));
+            for (System s : sortedSystems) if (s != null) s.resetForNewRun();
+        }
+        synchronized(packets) { packets.clear(); }
+        synchronized(packetsToAdd) { packetsToAdd.clear(); }
+        synchronized(packetsToRemove) { packetsToRemove.clear(); }
+        activelyCollidingPairs.clear();
+        synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.clear(); }
+        predictionRun_totalPacketsGeneratedCount = 0; predictionRun_totalPacketsLostCount = 0;
+        predictionRun_totalPacketUnitsGenerated = 0; predictionRun_totalPacketUnitsLost = 0;
+        long currentInternalSimTime = 0; final long predictionTickDuration = GAME_TICK_MS;
+        long actualTargetTimeMs = Math.min(targetTimeMs, this.maxPredictionTimeForScrubbingMs);
+        while (currentInternalSimTime < actualTargetTimeMs) {
+            long timeStepForTick = Math.min(predictionTickDuration, actualTargetTimeMs - currentInternalSimTime);
+            if (timeStepForTick <= 0) break;
+            runSimulationTickLogic(timeStepForTick, true, currentInternalSimTime, PREDICTION_ATAR_ACTIVE, PREDICTION_AIRYAMAN_ACTIVE, PREDICTION_SPEED_LIMITER_ACTIVE);
+            currentInternalSimTime += timeStepForTick;
+        }
+        processPacketBuffersInternal();
+        synchronized(predictedPacketStates) {
+            predictedPacketStates.clear();
+            synchronized(tempPredictionRunGeneratedPackets) { tempPredictionRunGeneratedPackets.sort(Comparator.comparingInt(Packet::getId)); }
+            for (Packet p : tempPredictionRunGeneratedPackets) {
+                if (p == null) continue;
+                PredictedPacketStatus statusToSnapshot = p.getFinalStatusForPrediction();
+                if (statusToSnapshot != null) {
+                    predictedPacketStates.add(new PacketSnapshot(p, statusToSnapshot));
+                } else {
+                    if (p.getCurrentSystem() != null) { predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.QUEUED)); }
+                    else if (p.getCurrentWire() != null) {
+                        if (!p.isMarkedForRemoval()) { predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.ON_WIRE)); }
+                        else { p.setFinalStatusForPrediction(PredictedPacketStatus.LOST); predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.LOST)); }
+                    } else { predictedPacketStates.add(new PacketSnapshot(p, PredictedPacketStatus.STALLED_AT_NODE)); }
+                }
+            }
+        }
+        this.displayedPredictionStats = new PredictionRunStats(actualTargetTimeMs, predictionRun_totalPacketsGeneratedCount, predictionRun_totalPacketsLostCount, predictionRun_totalPacketUnitsGenerated, predictionRun_totalPacketUnitsLost);
+        synchronized(packets) { packets.clear(); }
+        synchronized(packetsToAdd) { packetsToAdd.clear(); }
+        synchronized(packetsToRemove) { packetsToRemove.clear(); }
+        activelyCollidingPairs.clear();
+    }
 
     public List<Packet> getPacketsForRendering() { List<Packet> packetsToRender = new ArrayList<>(); if (simulationStarted) { synchronized (packets) { for (Packet p : packets) if (p != null && !p.isMarkedForRemoval() && p.getCurrentSystem() == null) packetsToRender.add(p); } packetsToRender.sort(Comparator.comparingInt(Packet::getId)); } return packetsToRender; }
 
@@ -973,6 +1056,7 @@ public class GamePanel extends JPanel {
     public boolean isShowHUD() { return showHUD; }
     public boolean isAtarActive() { return atarActive; }
     public boolean isAiryamanActive() { return airyamanActive; }
+    public boolean isSpeedLimiterActive() { return isSpeedLimiterActive; } // NEW
     public long getViewedTimeMs() { return viewedTimeMs; }
     public long getMaxPredictionTimeMs() { return maxPredictionTimeForScrubbingMs; }
     public long getSimulationTimeElapsedMs() { return simulationTimeElapsedMs; }

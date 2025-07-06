@@ -1,3 +1,5 @@
+// ===== File: Packet.java =====
+
 package com.networkopsim.game;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -48,6 +50,9 @@ public class Packet {
 
     private Point2D.Double visualOffsetDirection = null;
     private int initialOffsetSidePreference = 0;
+
+    // --- NEW: Field for reversing direction ---
+    private boolean isReversing = false;
 
     // Fields for Bit/Bulk packet relationship
     private int bulkParentId = -1;
@@ -140,7 +145,12 @@ public class Packet {
             Point2D.Double directionForRotation = getVelocity();
             if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null && Math.hypot(directionForRotation.x, directionForRotation.y) > 0.01) {
                 g2d.translate(visualPosition.x, visualPosition.y);
-                g2d.rotate(Math.atan2(directionForRotation.y, directionForRotation.x));
+                // NEW: Adjust rotation if reversing
+                double angle = Math.atan2(directionForRotation.y, directionForRotation.x);
+                if (isReversing) {
+                    angle += Math.PI; // Rotate 180 degrees
+                }
+                g2d.rotate(angle);
                 path = new Path2D.Double();
                 path.moveTo(halfSize, 0); path.lineTo(-halfSize, -halfSize); path.lineTo(-halfSize, halfSize);
                 path.closePath();
@@ -260,6 +270,7 @@ public class Packet {
         this.currentWire = Objects.requireNonNull(wire, "Cannot set a null wire for packet " + id);
         this.progressOnWire = 0.0;
         this.currentSystem = null;
+        this.isReversing = false; // NEW: Ensure isReversing is false on new wire assignment
         if (this.finalStatusForPrediction == PredictedPacketStatus.QUEUED || this.finalStatusForPrediction == PredictedPacketStatus.STALLED_AT_NODE || this.finalStatusForPrediction == PredictedPacketStatus.DELIVERED || this.finalStatusForPrediction == PredictedPacketStatus.LOST) {
             this.finalStatusForPrediction = null;
         }
@@ -297,7 +308,7 @@ public class Packet {
         updateIdealPositionAndVelocity();
     }
 
-    public void update(GamePanel gamePanel, boolean isAiryamanActive, boolean isPredictionRun) {
+    public void update(GamePanel gamePanel, boolean isAiryamanActive, boolean isSpeedLimiterActive, boolean isPredictionRun) {
         if (markedForRemoval || currentSystem != null) return;
         if (currentWire == null) {
             this.velocity = new Point2D.Double(0,0); this.currentSpeedMagnitude = 0.0; this.isAccelerating = false;
@@ -315,7 +326,7 @@ public class Packet {
             }
             currentSpeedMagnitude = targetSpeedMagnitude; // Secret packets have instant speed change
             isAccelerating = false;
-        } else if (isAccelerating) {
+        } else if (isAccelerating && !isSpeedLimiterActive) { // MODIFIED: Check for speed limiter
             if (currentSpeedMagnitude < targetSpeedMagnitude) currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + TRIANGLE_ACCELERATION_RATE);
             else { currentSpeedMagnitude = targetSpeedMagnitude; isAccelerating = false; }
         } else if (this.packetType == NetworkEnums.PacketType.WOBBLE) {
@@ -326,8 +337,16 @@ public class Packet {
         }
 
         double wireLength = currentWire.getLength();
-        if (wireLength > 1e-6) progressOnWire += currentSpeedMagnitude / wireLength;
-        else progressOnWire = 1.0;
+        if (wireLength > 1e-6) {
+            // --- NEW: Handle reversing ---
+            if(isReversing) {
+                progressOnWire -= currentSpeedMagnitude / wireLength;
+            } else {
+                progressOnWire += currentSpeedMagnitude / wireLength;
+            }
+        } else {
+            progressOnWire = isReversing ? 0.0 : 1.0;
+        }
         progressOnWire = Math.max(0.0, Math.min(1.0, progressOnWire));
         updateIdealPositionAndVelocity();
 
@@ -336,23 +355,42 @@ public class Packet {
             gamePanel.packetLostInternal(this, isPredictionRun);
             return;
         }
-        if (progressOnWire >= 1.0 - 1e-9) {
-            Port endPort = currentWire.getEndPort();
-            if (endPort == null || endPort.getPosition() == null) {
-                setFinalStatusForPrediction(PredictedPacketStatus.LOST);
-                gamePanel.packetLostInternal(this, isPredictionRun);
-                return;
+
+        // --- NEW: Check for end of travel in both directions ---
+        if (!isReversing && progressOnWire >= 1.0 - 1e-9) { // Reached the end
+            handleArrival(currentWire.getEndPort(), gamePanel, isPredictionRun);
+        } else if (isReversing && progressOnWire <= 1e-9) { // Returned to the start
+            this.isReversing = false; // Stop reversing after arrival
+            handleArrival(currentWire.getStartPort(), gamePanel, isPredictionRun);
+        }
+    }
+
+    // --- NEW: Helper for handling arrival at a port ---
+    private void handleArrival(Port destinationPort, GamePanel gamePanel, boolean isPredictionRun) {
+        if (destinationPort == null || destinationPort.getPosition() == null) {
+            setFinalStatusForPrediction(PredictedPacketStatus.LOST);
+            gamePanel.packetLostInternal(this, isPredictionRun);
+            return;
+        }
+        this.idealPosition = destinationPort.getPrecisePosition();
+        System targetSystem = destinationPort.getParentSystem();
+        if (targetSystem != null) {
+            if (this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun) {
+                gamePanel.logBulkPacketWireUsage(this.currentWire);
             }
-            this.idealPosition = endPort.getPrecisePosition();
-            System targetSystem = endPort.getParentSystem();
-            if (targetSystem != null) {
-                // Log bulk packet usage before handing it to the system
-                if(this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun){
-                    gamePanel.logBulkPacketWireUsage(this.currentWire);
-                }
-                targetSystem.receivePacket(this, gamePanel, isPredictionRun);
-            }
-            else { setFinalStatusForPrediction(PredictedPacketStatus.LOST); gamePanel.packetLostInternal(this, isPredictionRun); }
+            targetSystem.receivePacket(this, gamePanel, isPredictionRun);
+        } else {
+            setFinalStatusForPrediction(PredictedPacketStatus.LOST);
+            gamePanel.packetLostInternal(this, isPredictionRun);
+        }
+    }
+
+    // --- NEW: Method to trigger reversal ---
+    public void reverseDirection(GamePanel gamePanel) {
+        if (this.isReversing) return; // Don't reverse a packet that is already reversing
+        this.isReversing = true;
+        if (!gamePanel.getGame().isMuted()) {
+            gamePanel.getGame().playSoundEffect("packet_reverse");
         }
     }
 
@@ -379,6 +417,7 @@ public class Packet {
     }
     public void setCurrentSystem(System system) {
         this.currentSystem = system;
+        this.isReversing = false; // Can't be reversing if it's in a system
         if (this.finalStatusForPrediction == PredictedPacketStatus.ON_WIRE) this.finalStatusForPrediction = null;
         if (system != null) {
             this.currentWire = null; this.progressOnWire = 0.0;
@@ -393,7 +432,12 @@ public class Packet {
         Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire);
         if (pathInfo != null) {
             this.idealPosition = pathInfo.position;
-            this.velocity = new Point2D.Double(pathInfo.direction.x * currentSpeedMagnitude, pathInfo.direction.y * currentSpeedMagnitude);
+            // NEW: Adjust velocity direction if reversing
+            if (isReversing) {
+                this.velocity = new Point2D.Double(pathInfo.direction.x * -currentSpeedMagnitude, pathInfo.direction.y * -currentSpeedMagnitude);
+            } else {
+                this.velocity = new Point2D.Double(pathInfo.direction.x * currentSpeedMagnitude, pathInfo.direction.y * currentSpeedMagnitude);
+            }
         } else {
             this.idealPosition = currentWire.getStartPort().getPrecisePosition();
             this.velocity = new Point2D.Double(0,0);
@@ -471,5 +515,14 @@ public class Packet {
     public boolean collidesWith(Packet other) { if (this == other || other == null) return false; Point2D.Double thisPos = this.getPositionDouble(); Point2D.Double otherPos = other.getPositionDouble(); if (thisPos == null || otherPos == null) return false; if (this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) return false; double distSq = thisPos.distanceSq(otherPos); double r1 = this.getDrawSize() / 2.0; double r2 = other.getDrawSize() / 2.0; double combinedRadius = r1 + r2; double collisionThreshold = combinedRadius * COLLISION_RADIUS_FACTOR; double collisionThresholdSq = collisionThreshold * collisionThreshold; return distSq < collisionThresholdSq; }
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Packet packet = (Packet) o; return id == packet.id; }
     @Override public int hashCode() { return Objects.hash(id); }
-    @Override public String toString() { String status; if (markedForRemoval) status = "REMOVED"; else if (currentSystem != null) status = "QUEUED(Sys:" + currentSystem.getId() + ")"; else if (currentWire != null) status = String.format("ON_WIRE(W:%d P:%.1f%%)", currentWire.getId(), progressOnWire * 100); else status = "IDLE/INIT"; String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null"; Point2D.Double currentVel = getVelocity(); String velStr = (currentVel != null) ? String.format("%.1f,%.1f (Mag:%.2f)", currentVel.x, currentVel.y, currentSpeedMagnitude) : "null"; return String.format("Packet{ID:%d, SHP:%s, TYP: %s, SZ:%d, N:%.1f/%d, V:%d, Ideal:(%s) Vel:(%s) Accel:%b FinalPred:%s St:%s}", id, shape, packetType, size, noise, this.size, baseCoinValue, idealPosStr, velStr, isAccelerating, (finalStatusForPrediction != null ? finalStatusForPrediction.name() : "N/A"), status); }
+    @Override public String toString() { String status; if (markedForRemoval) status = "REMOVED"; else if (currentSystem != null) status = "QUEUED(Sys:" + currentSystem.getId() + ")"; else if (currentWire != null) status = String.format("ON_WIRE(W:%d P:%.1f%%)", currentWire.getId(), progressOnWire * 100); else status = "IDLE/INIT"; String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null"; Point2D.Double currentVel = getVelocity(); String velStr = (currentVel != null) ? String.format("%.1f,%.1f (Mag:%.2f)", currentVel.x, currentVel.y, currentSpeedMagnitude) : "null"; return String.format("Packet{ID:%d, SHP:%s, TYP: %s, SZ:%d, N:%.1f/%d, V:%d, Ideal:(%s) Vel:(%s) Accel:%b Rev:%b FinalPred:%s St:%s}", id, shape, packetType, size, noise, this.size, baseCoinValue, idealPosStr, velStr, isAccelerating, isReversing, (finalStatusForPrediction != null ? finalStatusForPrediction.name() : "N/A"), status); }
+
+    // --- NEW: Getter for current speed ---
+    public double getCurrentSpeedMagnitude() {
+        return currentSpeedMagnitude;
+    }
+    // --- NEW: Setter for emergency brake ---
+    public void setCurrentSpeedMagnitude(double speed) {
+        this.currentSpeedMagnitude = speed;
+    }
 }
