@@ -4,7 +4,7 @@
 package com.networkopsim.game;
 // FILE: GameState.java
 public class GameState {
-    public static final int MAX_LEVELS = 2;
+    public static final int MAX_LEVELS = 5;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
 

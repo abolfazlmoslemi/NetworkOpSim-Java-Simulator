@@ -22,6 +22,7 @@ public class Packet {
     private static final double SECRET_SPEED_ADJUST_RATE = 0.05;
 
     private static final double COLLISION_RADIUS_FACTOR = 1.0;
+    // --- NEW FONT FOR NOISE ---
     private static final Font NOISE_FONT = new Font("Arial", Font.PLAIN, 9);
     private static final Color NOISE_TEXT_COLOR = Color.WHITE;
     private static final Color IDEAL_POSITION_MARKER_COLOR = new Color(255, 255, 255, 60);
@@ -235,7 +236,16 @@ public class Packet {
             if (noise > 0.05) { /* ... */ }
         } finally {
             if (transformed) g2d.setTransform(oldTransform);
-            if (noise > 0.05) { /* ... */ }
+            // --- NEW: Draw noise value ---
+            if (noise > 0.05) {
+                g2d.setFont(NOISE_FONT);
+                g2d.setColor(NOISE_TEXT_COLOR);
+                String noiseText = String.format("%.1f", noise);
+                FontMetrics fm = g2d.getFontMetrics();
+                int textX = (int) Math.round(visualPosition.x + halfSize + 2);
+                int textY = (int) Math.round(visualPosition.y - halfSize + fm.getAscent() / 2.0);
+                g2d.drawString(noiseText, textX, textY);
+            }
         }
     }
 
@@ -540,8 +550,6 @@ public class Packet {
         return new Point2D.Double(this.velocity.x, this.velocity.y);
     }
 
-// ===== در فایل Packet.java، این متد را جایگزین کنید =====
-
     private void updateIdealPositionAndVelocity() {
         if (currentWire == null) return;
         Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire);
@@ -550,7 +558,7 @@ public class Packet {
             double dx = pathInfo.direction.x * currentSpeedMagnitude;
             double dy = pathInfo.direction.y * currentSpeedMagnitude;
             this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy);
-        } else if (currentWire.getStartPort() != null) { // <<< خط اصلاح شده اینجاست
+        } else if (currentWire.getStartPort() != null) {
             this.idealPosition = currentWire.getStartPort().getPrecisePosition();
             this.velocity = new Point2D.Double(0,0);
         }

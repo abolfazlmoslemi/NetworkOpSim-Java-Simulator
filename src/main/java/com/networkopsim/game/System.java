@@ -213,8 +213,6 @@ public class System {
         }
     }
 
-    // ... (The rest of the System class remains the same) ...
-
     public void updateAntiTrojan(GamePanel gamePanel, boolean isPredictionRun) {
         long currentTime = gamePanel.getSimulationTimeElapsedMs();
         if (getSystemType() != NetworkEnums.SystemType.ANTITROJAN || currentTime < antiTrojanCooldownUntil) return;
@@ -238,9 +236,8 @@ public class System {
         synchronized (packetQueue) { if (packetQueue.isEmpty()) return; packetToProcess = packetQueue.peek(); }
         if (packetToProcess == null || packetToProcess.isMarkedForRemoval()) { if(packetToProcess != null) synchronized (packetQueue) { packetQueue.poll(); } return; }
 
-        // For MESSENGER packets, the shape is determined by the output port it takes
         NetworkEnums.PacketShape shapeForExit = (packetToProcess.getPacketType() == NetworkEnums.PacketType.MESSENGER)
-                ? NetworkEnums.PacketShape.CIRCLE // Assume a default or handle more complex logic
+                ? NetworkEnums.PacketShape.CIRCLE
                 : packetToProcess.getShape();
 
         Port outputPort = findAvailableOutputPort(packetToProcess, gamePanel, isPredictionRun);
@@ -254,7 +251,7 @@ public class System {
 
                     boolean compatibleExit = (sentPacket.getPacketType() == NetworkEnums.PacketType.SECRET) ||
                             (sentPacket.getPacketType() == NetworkEnums.PacketType.BULK) ||
-                            (sentPacket.getPacketType() == NetworkEnums.PacketType.MESSENGER) || // Messengers are always compatible on exit
+                            (sentPacket.getPacketType() == NetworkEnums.PacketType.MESSENGER) ||
                             (Port.getShapeEnum(sentPacket.getShape()) == outputPort.getShape());
 
                     sentPacket.setWire(outputWire, compatibleExit);
@@ -284,7 +281,6 @@ public class System {
             } else if (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) {
                 shapeToGenerate = NetworkEnums.PacketShape.CIRCLE;
             } else if (packetTypeToGenerate == NetworkEnums.PacketType.MESSENGER) {
-                // Messenger packets can originate from any port shape
                 shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
             } else {
                 shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
@@ -301,12 +297,10 @@ public class System {
         }
     }
 
-    // ... (The rest of the class, including draw(), addPort(), etc., remains the same) ...
-
     public void draw(Graphics2D g2d) {
         this.indicatorOn = areAllMyPortsConnected();
         Color bodyColor;
-        // ... (بخش تعیین رنگ bodyColor بدون تغییر است)
+
         switch(systemType) {
             case SOURCE: case SINK: bodyColor = new Color(90, 90, 90); break;
             case SPY: bodyColor = new Color(130, 60, 130); break;
@@ -324,19 +318,17 @@ public class System {
         g2d.setStroke(new BasicStroke(1));
         g2d.drawRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
 
-        // --- REVISED: Display full system name instead of initial ---
+
         String systemName = systemType.name();
-        // Adjust font size based on name length to prevent overflow
         int fontSize = (systemName.length() > 8) ? 9 : 11;
         g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
         g2d.setColor(Color.WHITE);
         FontMetrics fm = g2d.getFontMetrics();
         int textWidth = fm.stringWidth(systemName);
-        // Center the text inside the system box
+
         int textX = x + (SYSTEM_WIDTH - textWidth) / 2;
         int textY = y + (SYSTEM_HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
         g2d.drawString(systemName, textX, textY);
-        // -----------------------------------------------------------
 
         int indicatorSize = 8;
         int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
@@ -349,14 +341,51 @@ public class System {
         synchronized(inputPorts) { for (Port p : inputPorts) if(p!=null) p.draw(g2d); }
         synchronized(outputPorts) { for (Port p : outputPorts) if(p!=null) p.draw(g2d); }
 
+        // --- REVISED: Display queue size ON the system body ---
         if (!isReferenceSystem() && getQueueSize() > 0) {
-            // ... (بخش نمایش صف بدون تغییر)
+            String queueText = String.format("%d/%d", getQueueSize(), QUEUE_CAPACITY);
+            g2d.setFont(new Font("Consolas", Font.BOLD, 11));
+            fm = g2d.getFontMetrics();
+            textWidth = fm.stringWidth(queueText);
+            int bgWidth = textWidth + 4;
+            int bgHeight = fm.getHeight() - 2;
+
+            // Position it inside, bottom-right corner
+            int qx = x + SYSTEM_WIDTH - bgWidth - 3;
+            int qy = y + SYSTEM_HEIGHT - bgHeight - 3;
+
+            g2d.setColor(new Color(0, 0, 0, 180));
+            g2d.fillRoundRect(qx, qy, bgWidth, bgHeight, 5, 5);
+
+            Color queueColor;
+            if (getQueueSize() == QUEUE_CAPACITY) queueColor = Color.RED;
+            else if (getQueueSize() > QUEUE_CAPACITY / 2) queueColor = Color.ORANGE;
+            else queueColor = Color.YELLOW;
+
+            g2d.setColor(queueColor);
+            g2d.drawString(queueText, qx + 2, qy + fm.getAscent() -1);
         }
+
         if(getSystemType() == NetworkEnums.SystemType.ANTITROJAN) {
-            // ... (بخش نمایش cooldown آنتی‌تروجان بدون تغییر)
+            long currentTime = -1;
+            Object timeObj = UIManager.get("game.time.ms");
+            if (timeObj instanceof Long) currentTime = (Long) timeObj;
+            if(currentTime != -1 && currentTime < antiTrojanCooldownUntil){
+                g2d.setColor(new Color(0, 0, 0, 150));
+                g2d.fillOval(this.x + 10, this.y + 10, SYSTEM_WIDTH - 20, SYSTEM_HEIGHT - 20);
+                g2d.setColor(Color.CYAN);
+                g2d.setStroke(new BasicStroke(2));
+                double cooldownProgress = (double)(antiTrojanCooldownUntil - currentTime) / ANTITROJAN_COOLDOWN_MS;
+                g2d.drawArc(this.x + 15, this.y + 15, SYSTEM_WIDTH - 30, SYSTEM_HEIGHT - 30, 90, (int)(360 * cooldownProgress));
+            }
         }
         if (isDisabled) {
-            // ... (بخش نمایش حالت Disabled بدون تغییر)
+            g2d.setColor(new Color(255, 0, 0, 100));
+            g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+            g2d.setColor(Color.RED);
+            g2d.setStroke(new BasicStroke(3));
+            g2d.drawLine(x, y, x + SYSTEM_WIDTH, y + SYSTEM_HEIGHT);
+            g2d.drawLine(x + SYSTEM_WIDTH, y, x, y + SYSTEM_HEIGHT);
         }
     }
 
@@ -435,14 +464,12 @@ public class System {
         if (outputPort != null) { Wire outputWire = gamePanel.findWireFromPort(outputPort); if (outputWire != null) packet.setWire(outputWire, Port.getShapeEnum(packet.getShape()) == outputPort.getShape()); else queuePacket(packet, gamePanel, isPredictionRun); }
         else queuePacket(packet, gamePanel, isPredictionRun);
     }
-// ===== در فایل System.java، این متد را جایگزین کنید =====
 
     private void processOrQueuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         Port outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun);
         if (outputPort != null) {
             Wire outputWire = gamePanel.findWireFromPort(outputPort);
             if (outputWire != null) {
-                // --- REVISED: Secret packets always have an incompatible exit ---
                 boolean compatibleExit = packet.getPacketType() != NetworkEnums.PacketType.SECRET &&
                         (packet.getPacketType() == NetworkEnums.PacketType.BULK ||
                                 packet.getPacketType() == NetworkEnums.PacketType.MESSENGER ||
