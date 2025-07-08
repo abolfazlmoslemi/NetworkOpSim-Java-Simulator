@@ -629,6 +629,7 @@ public class GamePanel extends JPanel {
         activelyCollidingPairs.addAll(currentTickCollisions);
     }
 
+
     private void checkCollisionsInListInternal(List<Packet> list1, List<Packet> list2, Set<Pair<Integer, Integer>> currentTickCollisions, Set<Pair<Integer, Integer>> checkedPairsThisTick, List<Packet> fullPacketSnapshotForImpactWave, boolean currentAtarActive, boolean isPredictionRun) {
         for (Packet p1 : list1) {
             if (p1 == null || p1.isMarkedForRemoval() || p1.getCurrentSystem() != null || p1.getCurrentWire() == null)
@@ -651,6 +652,15 @@ public class GamePanel extends JPanel {
                             p1.setVisualOffsetDirectionFromForce(new Point2D.Double(p1VisPos.x - p2VisPos.x, p1VisPos.y - p2VisPos.y));
                             p2.setVisualOffsetDirectionFromForce(new Point2D.Double(p2VisPos.x - p1VisPos.x, p2VisPos.y - p1VisPos.y));
                         }
+
+                        // --- REVISED: Handle Messenger reversal on collision ---
+                        if (p1.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
+                            p1.reverseDirection(this);
+                        }
+                        if (p2.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
+                            p2.reverseDirection(this);
+                        }
+
                         if (!currentAtarActive) {
                             Point impactCenter = calculateImpactCenter(p1.getPositionDouble(), p2.getPositionDouble());
                             if (impactCenter != null) {
@@ -695,6 +705,28 @@ public class GamePanel extends JPanel {
                 }
             }
         }
+    }
+
+
+    // در انتهای کلاس GamePanel.java اضافه شود
+
+    public List<Packet> getAllActivePackets() {
+        List<Packet> allPackets = new ArrayList<>();
+        // Add packets on wires
+        synchronized(packets) {
+            allPackets.addAll(packets);
+        }
+        // Add packets in queues
+        synchronized(systems) {
+            for(System s : systems) {
+                if (s != null && !s.isReferenceSystem()) {
+                    synchronized(s.packetQueue) {
+                        allPackets.addAll(s.packetQueue);
+                    }
+                }
+            }
+        }
+        return allPackets;
     }
 
     private void handleEndOfLevelByTimeLimit() {

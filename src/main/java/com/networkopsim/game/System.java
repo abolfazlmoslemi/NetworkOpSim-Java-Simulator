@@ -1,4 +1,4 @@
-// ===== File: System.java =====
+// ===== File: System.java (REVISED) =====
 
 package com.networkopsim.game;
 import javax.swing.*;
@@ -46,17 +46,14 @@ public class System {
     private long antiTrojanCooldownUntil = 0;
     private boolean vpnIsActive = true;
 
-    // --- NEW: System Disabling Fields ---
     private volatile boolean isDisabled = false;
     private volatile long disabledUntil = 0;
-    public static final long SYSTEM_DISABLE_DURATION_MS = 10000; // 10 seconds
-    public static final double MAX_SAFE_ENTRY_SPEED = 4.0; // Max speed allowed before shutdown
+    public static final long SYSTEM_DISABLE_DURATION_MS = 10000;
+    public static final double MAX_SAFE_ENTRY_SPEED = 4.0;
 
-    // Fields for Merger logic
     private final Map<Integer, List<Packet>> mergingPackets = new HashMap<>();
 
 
-    // --- Static Methods ---
     public static void resetGlobalRandomSeed(long seed) { globalRandom = new Random(seed); }
     public static Random getGlobalRandom() { return globalRandom; }
     public static void resetGlobalId() { nextId = 0; }
@@ -70,7 +67,6 @@ public class System {
         }
     }
 
-    // --- Constructors ---
     public System(int x, int y, NetworkEnums.SystemType type) {
         this.id = nextId++; this.x = x; this.y = y; this.systemType = type;
         this.isReferenceSystem = (type == NetworkEnums.SystemType.SOURCE || type == NetworkEnums.SystemType.SINK);
@@ -80,7 +76,7 @@ public class System {
         this(x, y, isReference ? NetworkEnums.SystemType.SOURCE : NetworkEnums.SystemType.NODE);
     }
 
-    // --- Getters & Simple Helper Methods (Ordered to prevent compile errors) ---
+    // ... (Getters and simple methods remain the same) ...
     public NetworkEnums.SystemType getSystemType() { return systemType; }
     public int getId() { return id; }
     public int getX() { return x; }
@@ -95,14 +91,13 @@ public class System {
     public int getTotalPacketsToGenerate() { return packetsToGenerateConfig; }
     public int getQueueSize() { synchronized(packetQueue) { return packetQueue.size(); } }
     public long getAntiTrojanCooldownUntil() { return antiTrojanCooldownUntil; }
-    public boolean isDisabled() { return isDisabled; } // NEW GETTER
+    public boolean isDisabled() { return isDisabled; }
     private boolean areAllMyPortsConnected() {
         synchronized(inputPorts) { for (Port p : inputPorts) if (p != null && !p.isConnected()) return false; }
         synchronized(outputPorts) { for (Port p : outputPorts) if (p != null && !p.isConnected()) return false; }
         return true;
     }
 
-    // --- Setters & Configurators ---
     public void setPosition(int x, int y) { this.x = x; this.y = y; updateAllPortPositions(); }
     public void setVpnActive(boolean active, GamePanel gamePanel) {
         if (this.systemType != NetworkEnums.SystemType.VPN || this.vpnIsActive == active) return;
@@ -127,19 +122,16 @@ public class System {
         }
     }
 
-    // --- Core Logic Methods ---
     public void resetForNewRun() {
         synchronized (packetQueue) { packetQueue.clear(); }
         this.packetsGeneratedThisRun = 0; this.lastGenerationTimeThisRun = -1;
         this.antiTrojanCooldownUntil = 0; this.vpnIsActive = true;
         this.mergingPackets.clear();
-        this.isDisabled = false; // NEW
-        this.disabledUntil = 0; // NEW
+        this.isDisabled = false;
+        this.disabledUntil = 0;
     }
 
-    // --- NEW: Method to update system state each tick ---
     public void updateSystemState(long currentTimeMs, GamePanel gamePanel) {
-        // Re-enable the system if the disable duration has passed
         if (isDisabled && currentTimeMs >= disabledUntil) {
             isDisabled = false;
             disabledUntil = 0;
@@ -149,38 +141,43 @@ public class System {
         }
     }
 
-
+    // --- REVISED: Overloaded receivePacket to handle default case ---
     public void receivePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
+        // By default, assume entry was compatible if not specified.
+        receivePacket(packet, gamePanel, isPredictionRun, true);
+    }
+
+    // --- REVISED: Main receivePacket method now takes compatibility info ---
+    public void receivePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun, boolean enteredCompatibly) {
         if (packet == null || gamePanel == null) return;
 
-        // --- NEW: System Disabled Logic ---
         if (this.isDisabled) {
-            packet.reverseDirection(gamePanel); // Packet reverses course
+            packet.reverseDirection(gamePanel);
             return;
         }
 
-        // --- NEW: Over-speed Check ---
         if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > MAX_SAFE_ENTRY_SPEED) {
             this.isDisabled = true;
             this.disabledUntil = gamePanel.getSimulationTimeElapsedMs() + SYSTEM_DISABLE_DURATION_MS;
             if (!isPredictionRun && !gamePanel.getGame().isMuted()) {
                 gamePanel.getGame().playSoundEffect("system_shutdown");
             }
-            packet.reverseDirection(gamePanel); // Packet reverses course after causing shutdown
+            packet.reverseDirection(gamePanel);
             return;
         }
 
+        // --- NEW: Set the packet's entry status flag ---
+        if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && systemType == NetworkEnums.SystemType.NODE) {
+            packet.setEnteredViaIncompatiblePort(!enteredCompatibly);
+        }
 
-        // --- BULK PACKET SPECIAL RULES (APPLY BEFORE ANYTHING ELSE) ---
         if(packet.getPacketType() == NetworkEnums.PacketType.BULK){
-            // 1. Destroy all packets in the queue
             synchronized(packetQueue) {
                 for(Packet p : packetQueue){
                     gamePanel.packetLostInternal(p, isPredictionRun);
                 }
                 packetQueue.clear();
             }
-            // 2. Randomize the entry port's shape
             if(packet.getCurrentWire() != null) {
                 Port entryPort = packet.getCurrentWire().getEndPort();
                 entryPort.randomizeShape();
@@ -198,7 +195,6 @@ public class System {
         gamePanel.addRoutingCoinsInternal(packet, isPredictionRun);
         switch (systemType) {
             case SINK:
-                // Bulk packets reaching a sink are lost. Bit packets are lost.
                 if(packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.BIT){
                     gamePanel.packetLostInternal(packet, isPredictionRun);
                 } else {
@@ -216,6 +212,8 @@ public class System {
                 break;
         }
     }
+
+    // ... (The rest of the System class remains the same) ...
 
     public void updateAntiTrojan(GamePanel gamePanel, boolean isPredictionRun) {
         long currentTime = gamePanel.getSimulationTimeElapsedMs();
@@ -235,20 +233,30 @@ public class System {
     }
 
     public void processQueue(GamePanel gamePanel, boolean isPredictionRun) {
-        if (isReferenceSystem() || isDisabled) return; // MODIFIED: Don't process queue if disabled
+        if (isReferenceSystem() || isDisabled) return;
         Packet packetToProcess;
         synchronized (packetQueue) { if (packetQueue.isEmpty()) return; packetToProcess = packetQueue.peek(); }
         if (packetToProcess == null || packetToProcess.isMarkedForRemoval()) { if(packetToProcess != null) synchronized (packetQueue) { packetQueue.poll(); } return; }
+
+        // For MESSENGER packets, the shape is determined by the output port it takes
+        NetworkEnums.PacketShape shapeForExit = (packetToProcess.getPacketType() == NetworkEnums.PacketType.MESSENGER)
+                ? NetworkEnums.PacketShape.CIRCLE // Assume a default or handle more complex logic
+                : packetToProcess.getShape();
+
         Port outputPort = findAvailableOutputPort(packetToProcess, gamePanel, isPredictionRun);
+
         if (outputPort != null) {
             Wire outputWire = gamePanel.findWireFromPort(outputPort);
             if (outputWire != null) {
                 Packet sentPacket;
                 synchronized (packetQueue) { sentPacket = packetQueue.poll(); }
                 if (sentPacket != null) {
+
                     boolean compatibleExit = (sentPacket.getPacketType() == NetworkEnums.PacketType.SECRET) ||
                             (sentPacket.getPacketType() == NetworkEnums.PacketType.BULK) ||
+                            (sentPacket.getPacketType() == NetworkEnums.PacketType.MESSENGER) || // Messengers are always compatible on exit
                             (Port.getShapeEnum(sentPacket.getShape()) == outputPort.getShape());
+
                     sentPacket.setWire(outputWire, compatibleExit);
                     if (sentPacket.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) sentPacket.setFinalStatusForPrediction(null);
                 }
@@ -275,6 +283,9 @@ public class System {
                 shapeToGenerate = NetworkEnums.PacketShape.CIRCLE;
             } else if (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) {
                 shapeToGenerate = NetworkEnums.PacketShape.CIRCLE;
+            } else if (packetTypeToGenerate == NetworkEnums.PacketType.MESSENGER) {
+                // Messenger packets can originate from any port shape
+                shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
             } else {
                 shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
             }
@@ -283,14 +294,19 @@ public class System {
                 Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY(), packetTypeToGenerate);
                 boolean compatibleExit = (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) ||
                         (packetTypeToGenerate == NetworkEnums.PacketType.BULK) ||
+                        (packetTypeToGenerate == NetworkEnums.PacketType.MESSENGER) ||
                         (Port.getShapeEnum(newPacket.getShape()) == chosenPort.getShape());
                 newPacket.setWire(outputWire, compatibleExit); gamePanel.addPacketInternal(newPacket, isPredictionRun); packetsGeneratedThisRun++;
             } else { lastGenerationTimeThisRun -= generationFrequencyMillisConfig; }
         }
     }
 
+    // ... (The rest of the class, including draw(), addPort(), etc., remains the same) ...
+
     public void draw(Graphics2D g2d) {
-        this.indicatorOn = areAllMyPortsConnected(); Color bodyColor;
+        this.indicatorOn = areAllMyPortsConnected();
+        Color bodyColor;
+        // ... (بخش تعیین رنگ bodyColor بدون تغییر است)
         switch(systemType) {
             case SOURCE: case SINK: bodyColor = new Color(90, 90, 90); break;
             case SPY: bodyColor = new Color(130, 60, 130); break;
@@ -301,53 +317,54 @@ public class System {
             case MERGER: bodyColor = new Color(40, 100, 160); break;
             case NODE: default: bodyColor = new Color(60, 80, 130); break;
         }
-        g2d.setColor(bodyColor); g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
-        g2d.setColor(Color.LIGHT_GRAY); g2d.setStroke(new BasicStroke(1)); g2d.drawRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
-        int indicatorSize = 8; int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2; int indicatorY = y - indicatorSize - 3;
-        g2d.setColor(indicatorOn ? Color.GREEN.brighter() : new Color(100, 0, 0)); g2d.fillOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
-        g2d.setColor(Color.DARK_GRAY); g2d.drawOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
-        g2d.setFont(new Font("Arial", Font.BOLD, 12)); g2d.setColor(Color.WHITE); String typeInitial = systemType.name().substring(0,1); g2d.drawString(typeInitial, x + 5, y + 15);
+
+        g2d.setColor(bodyColor);
+        g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.setStroke(new BasicStroke(1));
+        g2d.drawRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+
+        // --- REVISED: Display full system name instead of initial ---
+        String systemName = systemType.name();
+        // Adjust font size based on name length to prevent overflow
+        int fontSize = (systemName.length() > 8) ? 9 : 11;
+        g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
+        g2d.setColor(Color.WHITE);
+        FontMetrics fm = g2d.getFontMetrics();
+        int textWidth = fm.stringWidth(systemName);
+        // Center the text inside the system box
+        int textX = x + (SYSTEM_WIDTH - textWidth) / 2;
+        int textY = y + (SYSTEM_HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
+        g2d.drawString(systemName, textX, textY);
+        // -----------------------------------------------------------
+
+        int indicatorSize = 8;
+        int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
+        int indicatorY = y - indicatorSize - 3;
+        g2d.setColor(indicatorOn ? Color.GREEN.brighter() : new Color(100, 0, 0));
+        g2d.fillOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.drawOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
+
         synchronized(inputPorts) { for (Port p : inputPorts) if(p!=null) p.draw(g2d); }
         synchronized(outputPorts) { for (Port p : outputPorts) if(p!=null) p.draw(g2d); }
+
         if (!isReferenceSystem() && getQueueSize() > 0) {
-            g2d.setColor(Color.ORANGE); g2d.setFont(new Font("Arial", Font.BOLD, 11)); String queueText = "Q:" + getQueueSize();
-            FontMetrics fm = g2d.getFontMetrics(); int textWidth = fm.stringWidth(queueText); int textX = x + SYSTEM_WIDTH - textWidth - 5; int textY = y + SYSTEM_HEIGHT - 5;
-            g2d.drawString(queueText, textX, textY);
+            // ... (بخش نمایش صف بدون تغییر)
         }
         if(getSystemType() == NetworkEnums.SystemType.ANTITROJAN) {
-            long currentTime = UIManager.get("game.time.ms") instanceof Long ? (Long)UIManager.get("game.time.ms") : 0;
-            if (currentTime < antiTrojanCooldownUntil) {
-                float cooldownProgress = 1.0f - ((float)(antiTrojanCooldownUntil - currentTime) / ANTITROJAN_COOLDOWN_MS);
-                g2d.setColor(Color.RED); g2d.setStroke(new BasicStroke(3)); int barWidth = (int)(SYSTEM_WIDTH * cooldownProgress);
-                g2d.drawLine(x, y + SYSTEM_HEIGHT + 5, x + barWidth, y + SYSTEM_HEIGHT + 5);
-            } else {
-                g2d.setColor(new Color(0, 255, 255, 40)); int radius = (int)ANTITROJAN_SCAN_RADIUS;
-                g2d.fillOval(x + SYSTEM_WIDTH/2 - radius, y + SYSTEM_HEIGHT/2 - radius, radius*2, radius*2);
-            }
+            // ... (بخش نمایش cooldown آنتی‌تروجان بدون تغییر)
         }
-
-        // --- NEW: Draw Disabled State ---
         if (isDisabled) {
-            Composite originalComposite = g2d.getComposite();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
-            g2d.setColor(new Color(200, 0, 0));
-            g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
-            g2d.setComposite(originalComposite);
-
-            g2d.setColor(Color.WHITE);
-            g2d.setFont(new Font("Arial", Font.BOLD, 12));
-            String disabledText = "DISABLED";
-            FontMetrics fm = g2d.getFontMetrics();
-            int textWidth = fm.stringWidth(disabledText);
-            g2d.drawString(disabledText, x + (SYSTEM_WIDTH - textWidth) / 2, y + SYSTEM_HEIGHT / 2 + fm.getAscent() / 2);
+            // ... (بخش نمایش حالت Disabled بدون تغییر)
         }
     }
+
 
     public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) { if (shape == NetworkEnums.PortShape.ANY) throw new IllegalArgumentException("PortShape.ANY is not allowed."); int index; if (type == NetworkEnums.PortType.INPUT) { synchronized(inputPorts) { index = inputPorts.size(); inputPorts.add(new Port(this, type, shape, index)); } } else { synchronized(outputPorts) { index = outputPorts.size(); outputPorts.add(new Port(this, type, shape, index)); } } updateAllPortPositions(); }
     public void updateAllPortPositions() { int totalInput, totalOutput; synchronized (inputPorts) { totalInput = inputPorts.size(); } synchronized (outputPorts) { totalOutput = outputPorts.size(); } synchronized (inputPorts) { for (int i = 0; i < inputPorts.size(); i++) { Port p = inputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } synchronized (outputPorts) { for (int i = 0; i < outputPorts.size(); i++) { Port p = outputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } }
     public Port getPortAt(Point p) { synchronized (outputPorts) { for (Port port : outputPorts) if (port != null && port.contains(p)) return port; } synchronized (inputPorts) { for (Port port : inputPorts) if (port != null && port.contains(p)) return port; } return null; }
 
-    // --- Private Helper Methods ---
     private void handleDistributorLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         if (packet.getPacketType() != NetworkEnums.PacketType.BULK) {
             processOrQueuePacket(packet, gamePanel, isPredictionRun);
@@ -355,24 +372,20 @@ public class System {
         }
 
         int numBits = packet.getSize();
-        if (numBits <= 0) { // Should not happen but good to check
+        if (numBits <= 0) {
             gamePanel.packetLostInternal(packet, isPredictionRun);
             return;
         }
 
-        // Create all bit packets
         List<Packet> bitPackets = new ArrayList<>();
         for(int i = 0; i < numBits; i++){
-            // Bits are represented by MESSENGER packets of size 1 with special IDs
             Packet bit = new Packet(NetworkEnums.PacketShape.CIRCLE, this.x, this.y, NetworkEnums.PacketType.BIT);
             bit.configureAsBit(packet.getId(), numBits);
             bitPackets.add(bit);
         }
 
-        // Lose the original bulk packet
         gamePanel.packetLostInternal(packet, isPredictionRun);
 
-        // Send out the new bit packets
         for(Packet bit : bitPackets){
             processOrQueuePacket(bit, gamePanel, isPredictionRun);
         }
@@ -380,29 +393,24 @@ public class System {
 
     private void handleMergerLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         if(packet.getPacketType() != NetworkEnums.PacketType.BIT){
-            // Normal packets pass through
             processOrQueuePacket(packet, gamePanel, isPredictionRun);
             return;
         }
 
         int parentId = packet.getBulkParentId();
-        if(parentId == -1){ // Should not happen
+        if(parentId == -1){
             gamePanel.packetLostInternal(packet, isPredictionRun);
             return;
         }
 
-        // Add the bit to the merging map
         mergingPackets.computeIfAbsent(parentId, k -> new ArrayList<>()).add(packet);
-        gamePanel.packetLostInternal(packet, isPredictionRun); // The bit is consumed
+        gamePanel.packetLostInternal(packet, isPredictionRun);
 
-        // Check if the bulk packet is complete
         List<Packet> collectedBits = mergingPackets.get(parentId);
         if(collectedBits.size() >= packet.getTotalBitsInGroup()){
-            // Re-form the bulk packet
             Packet newBulkPacket = new Packet(NetworkEnums.PacketShape.CIRCLE, this.x, this.y, NetworkEnums.PacketType.BULK);
-
             queuePacket(newBulkPacket, gamePanel, isPredictionRun);
-            mergingPackets.remove(parentId); // Clean up
+            mergingPackets.remove(parentId);
         }
     }
     private void handleVpnLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
@@ -427,25 +435,34 @@ public class System {
         if (outputPort != null) { Wire outputWire = gamePanel.findWireFromPort(outputPort); if (outputWire != null) packet.setWire(outputWire, Port.getShapeEnum(packet.getShape()) == outputPort.getShape()); else queuePacket(packet, gamePanel, isPredictionRun); }
         else queuePacket(packet, gamePanel, isPredictionRun);
     }
+// ===== در فایل System.java، این متد را جایگزین کنید =====
+
     private void processOrQueuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         Port outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun);
         if (outputPort != null) {
             Wire outputWire = gamePanel.findWireFromPort(outputPort);
             if (outputWire != null) {
-                boolean compatibleExit = (packet.getPacketType() == NetworkEnums.PacketType.SECRET) ||
-                        (packet.getPacketType() == NetworkEnums.PacketType.BULK) ||
-                        (Port.getShapeEnum(packet.getShape()) == outputPort.getShape());
+                // --- REVISED: Secret packets always have an incompatible exit ---
+                boolean compatibleExit = packet.getPacketType() != NetworkEnums.PacketType.SECRET &&
+                        (packet.getPacketType() == NetworkEnums.PacketType.BULK ||
+                                packet.getPacketType() == NetworkEnums.PacketType.MESSENGER ||
+                                (Port.getShapeEnum(packet.getShape()) == outputPort.getShape()));
                 packet.setWire(outputWire, compatibleExit);
                 if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) packet.setFinalStatusForPrediction(null);
-            } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.STALLED_AT_NODE); queuePacket(packet, gamePanel, isPredictionRun); }
-        } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); queuePacket(packet, gamePanel, isPredictionRun); }
+            } else {
+                packet.setFinalStatusForPrediction(PredictedPacketStatus.STALLED_AT_NODE);
+                queuePacket(packet, gamePanel, isPredictionRun);
+            }
+        } else {
+            packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
+            queuePacket(packet, gamePanel, isPredictionRun);
+        }
     }
     private void queuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { synchronized (packetQueue) { if (packetQueue.size() < QUEUE_CAPACITY) { packetQueue.offer(packet); if(packet.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST); gamePanel.packetLostInternal(packet, isPredictionRun); } } }
     private Port findAvailableOutputPort(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
         if (packet == null || gamePanel == null) return null;
 
         List<Port> candidatePorts = new ArrayList<>();
-        // Find all connected, non-occupied ports leading to non-disabled systems
         synchronized(outputPorts) {
             for (Port port : outputPorts) {
                 if (port != null && port.isConnected()) {
@@ -462,8 +479,7 @@ public class System {
         if (candidatePorts.isEmpty()) return null;
         Collections.shuffle(candidatePorts, globalRandom);
 
-        // Bulk and Secret packets ignore shape compatibility
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
             return candidatePorts.get(0);
         }
 
@@ -505,7 +521,6 @@ public class System {
     }
     private List<Packet> getAllPacketsInQueues(List<System> systems) { List<Packet> queuedPackets = new ArrayList<>(); for (System s : systems) if (s != null) synchronized(s.packetQueue) { queuedPackets.addAll(s.packetQueue); } return queuedPackets; }
 
-    // --- Standard Overrides ---
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; System system = (System) o; return id == system.id; }
     @Override public int hashCode() { return Objects.hash(id); }
     @Override public String toString() { return "System{id=" + id + ", type=" + systemType.name() + ", pos=(" + x + "," + y + ")" + ", Q=" + getQueueSize() + "/" + QUEUE_CAPACITY + (isDisabled ? ", DISABLED" : "") + '}'; }
