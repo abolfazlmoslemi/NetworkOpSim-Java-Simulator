@@ -630,6 +630,8 @@ public class GamePanel extends JPanel {
     }
 
 
+// ===== FILE: GamePanel.java (فقط متد اصلاح شده) =====
+
     private void checkCollisionsInListInternal(List<Packet> list1, List<Packet> list2, Set<Pair<Integer, Integer>> currentTickCollisions, Set<Pair<Integer, Integer>> checkedPairsThisTick, List<Packet> fullPacketSnapshotForImpactWave, boolean currentAtarActive, boolean isPredictionRun) {
         for (Packet p1 : list1) {
             if (p1 == null || p1.isMarkedForRemoval() || p1.getCurrentSystem() != null || p1.getCurrentWire() == null)
@@ -654,12 +656,15 @@ public class GamePanel extends JPanel {
                         }
 
                         // --- REVISED: Handle Messenger reversal on collision ---
-                        if (p1.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
+                        // ========== تغییر اصلی اینجاست ==========
+                        // فقط پیام‌رسانی که شکل دایره (بی‌نهایت) دارد برمی‌گردد
+                        if (p1.getPacketType() == NetworkEnums.PacketType.MESSENGER && p1.getShape() == NetworkEnums.PacketShape.CIRCLE) {
                             p1.reverseDirection(this);
                         }
-                        if (p2.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
+                        if (p2.getPacketType() == NetworkEnums.PacketType.MESSENGER && p2.getShape() == NetworkEnums.PacketShape.CIRCLE) {
                             p2.reverseDirection(this);
                         }
+                        // =====================================
 
                         if (!currentAtarActive) {
                             Point impactCenter = calculateImpactCenter(p1.getPositionDouble(), p2.getPositionDouble());

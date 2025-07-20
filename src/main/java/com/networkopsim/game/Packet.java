@@ -1,4 +1,4 @@
-// ===== File: Packet.java (FINAL AND COMPLETE VERSION) =====
+// ===== FILE: Packet.java (کد کامل و اصلاح شده نهایی) =====
 
 package com.networkopsim.game;
 import java.awt.*;
@@ -9,12 +9,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Packet {
-    public static final double BASE_SPEED_MAGNITUDE = 2.1;
+    // ========== مقادیر نهایی و تعدیل شده ==========
+    public static final double BASE_SPEED_MAGNITUDE = 2.0;
     public static final int BASE_DRAW_SIZE = 8;
     public static final double SQUARE_COMPATIBLE_SPEED_FACTOR = 0.5;
-    private static final double TRIANGLE_ACCELERATION_RATE = 0.06;
+    private static final double TRIANGLE_ACCELERATION_RATE = 0.018; // <<< نرخ شتاب به شدت کاهش یافت تا در مسیرهای طولانی به سرعت بالا برسد
     private static final double MESSENGER_DECELERATION_RATE = 0.04;
-    public static final double MAX_SPEED_MAGNITUDE = 4.2;
+    public static final double MAX_SPEED_MAGNITUDE = 4.1;
+    private static final double MESSENGER_INCOMPATIBLE_SPEED_BOOST = 1.5;
+    // ============================================
+
     private static final double SECRET_PACKET_SLOW_SPEED_FACTOR = 0.25;
     private static final double WOBBLE_SELF_NOISE_RATE = 0.05;
     private static final double SECRET_REPULSION_DISTANCE = 100.0;
@@ -22,7 +26,6 @@ public class Packet {
     private static final double SECRET_SPEED_ADJUST_RATE = 0.05;
 
     private static final double COLLISION_RADIUS_FACTOR = 1.0;
-    // --- NEW FONT FOR NOISE ---
     private static final Font NOISE_FONT = new Font("Arial", Font.PLAIN, 9);
     private static final Color NOISE_TEXT_COLOR = Color.WHITE;
     private static final Color IDEAL_POSITION_MARKER_COLOR = new Color(255, 255, 255, 60);
@@ -75,29 +78,32 @@ public class Packet {
         this.idealPosition = new Point2D.Double(startX, startY);
         this.velocity = new Point2D.Double(0, 0);
 
-        switch (type) {
-            case SECRET:
-                this.size = 4; this.baseCoinValue = 3; break;
-            case BULK:
-                this.size = 8; this.baseCoinValue = 8; break;
-            case WOBBLE:
-                this.size = 10; this.baseCoinValue = 10; break;
-            case BIT:
-                this.size = 1; this.baseCoinValue = 0; break;
-            case MESSENGER:
-                this.size = 1; this.baseCoinValue = 1; break;
-            case NORMAL:
-            case TROJAN:
-            case PROTECTED:
-            default:
-                if (shape == NetworkEnums.PacketShape.SQUARE) {
-                    this.size = 2; this.baseCoinValue = 2;
-                } else if (shape == NetworkEnums.PacketShape.TRIANGLE) {
-                    this.size = 3; this.baseCoinValue = 3;
-                } else {
-                    this.size = 1; this.baseCoinValue = 1;
-                }
-                break;
+        if (this.packetType == NetworkEnums.PacketType.MESSENGER) {
+            this.size = 1;
+            this.baseCoinValue = 1;
+        } else {
+            switch (type) {
+                case SECRET:
+                    this.size = 4; this.baseCoinValue = 3; break;
+                case BULK:
+                    this.size = 8; this.baseCoinValue = 8; break;
+                case WOBBLE:
+                    this.size = 10; this.baseCoinValue = 10; break;
+                case BIT:
+                    this.size = 1; this.baseCoinValue = 0; break;
+                case NORMAL:
+                case TROJAN:
+                case PROTECTED:
+                default:
+                    if (shape == NetworkEnums.PacketShape.SQUARE) {
+                        this.size = 2; this.baseCoinValue = 2;
+                    } else if (shape == NetworkEnums.PacketShape.TRIANGLE) {
+                        this.size = 3; this.baseCoinValue = 3;
+                    } else {
+                        this.size = 1; this.baseCoinValue = 1;
+                    }
+                    break;
+            }
         }
 
         this.originalSize = this.size;
@@ -134,82 +140,71 @@ public class Packet {
         boolean transformed = false;
 
         try {
-            // --- REVISED: Centralized drawing logic based on PacketType for accurate shapes ---
-            switch (packetType) {
-                case PROTECTED:
-                    // Draw Lock Shape
-                    g2d.setColor(new Color(218, 165, 32, 220)); // Gold color
-                    g2d.fillRect(drawX + 2, drawY + drawSize/3, drawSize - 4, drawSize*2/3 - 2);
-                    g2d.setStroke(new BasicStroke(2));
-                    g2d.drawArc(drawX + 2, drawY, drawSize - 4, drawSize*2/3, 0, 180);
-                    g2d.setColor(Color.BLACK);
-                    g2d.setStroke(new BasicStroke(1));
-                    g2d.drawRect(drawX + 2, drawY + drawSize/3, drawSize - 4, drawSize*2/3 - 2);
-                    break;
-
-                case MESSENGER:
-                    // Draw Infinity Shape
-                    g2d.setColor(new Color(0x9013FE));
-                    g2d.setStroke(new BasicStroke(2.5f));
-                    int infinityWidth = drawSize;
-                    int infinityHeight = drawSize / 2;
-                    int centerX = (int)Math.round(visualPosition.x);
-                    int centerY = (int)Math.round(visualPosition.y);
-                    g2d.drawArc(centerX - infinityWidth / 2, centerY - infinityHeight / 2, infinityWidth / 2, infinityHeight, 90, 180);
-                    g2d.drawArc(centerX, centerY - infinityHeight / 2, infinityWidth / 2, infinityHeight, 270, 180);
-                    break;
-
-                case BULK:
-                    // Draw Hexagonal Shape
-                    path = createHexagon(visualPosition.x, visualPosition.y, halfSize);
-                    g2d.setColor(new Color(0x4a90e2));
-                    g2d.fill(path);
-                    g2d.setColor(Color.CYAN.darker());
-                    g2d.setStroke(new BasicStroke(1.5f));
-                    g2d.draw(path);
-                    break;
-
-                case WOBBLE:
-                    // Draw 3D Wireframe Cube Shape
-                    drawWireframeCube(g2d, visualPosition.x, visualPosition.y, drawSize);
-                    break;
-
-                default:
-                    // Default drawing for other types based on their original shape (SQUARE, TRIANGLE, CIRCLE)
-                    Color packetColor = (packetType == NetworkEnums.PacketType.SECRET) ?
-                            (isUpgradedSecret ? new Color(200, 200, 210) : new Color(50, 70, 120)) :
-                            Port.getColorFromShape(shape);
-                    if (packetType == NetworkEnums.PacketType.BIT) packetColor = new Color(Color.HSBtoRGB((this.bulkParentId * 0.27f) % 1.0f, 0.7f, 0.95f));
-                    g2d.setColor(packetColor);
-
-                    Point2D.Double directionForRotation = getVelocity();
-                    if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null && Math.hypot(directionForRotation.x, directionForRotation.y) > 0.01) {
-                        g2d.translate(visualPosition.x, visualPosition.y);
-                        double angle = Math.atan2(directionForRotation.y, directionForRotation.x) + (isReversing ? Math.PI : 0);
-                        g2d.rotate(angle);
-                        path = new Path2D.Double();
-                        path.moveTo(halfSize, 0); path.lineTo(-halfSize, -halfSize); path.lineTo(-halfSize, halfSize);
-                        path.closePath();
+            if (packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) {
+                g2d.setColor(new Color(0x9013FE));
+                g2d.setStroke(new BasicStroke(2.5f));
+                int infinityWidth = drawSize;
+                int infinityHeight = drawSize / 2;
+                int centerX = (int)Math.round(visualPosition.x);
+                int centerY = (int)Math.round(visualPosition.y);
+                g2d.drawArc(centerX - infinityWidth / 2, centerY - infinityHeight / 2, infinityWidth / 2, infinityHeight, 90, 180);
+                g2d.drawArc(centerX, centerY - infinityHeight / 2, infinityWidth / 2, infinityHeight, 270, 180);
+            } else {
+                switch (packetType) {
+                    case PROTECTED:
+                        g2d.setColor(new Color(218, 165, 32, 220));
+                        g2d.fillRect(drawX + 2, drawY + drawSize/3, drawSize - 4, drawSize*2/3 - 2);
+                        g2d.setStroke(new BasicStroke(2));
+                        g2d.drawArc(drawX + 2, drawY, drawSize - 4, drawSize*2/3, 0, 180);
+                        g2d.setColor(Color.BLACK);
+                        g2d.setStroke(new BasicStroke(1));
+                        g2d.drawRect(drawX + 2, drawY + drawSize/3, drawSize - 4, drawSize*2/3 - 2);
+                        break;
+                    case BULK:
+                        path = createHexagon(visualPosition.x, visualPosition.y, halfSize);
+                        g2d.setColor(new Color(0x4a90e2));
                         g2d.fill(path);
-                        transformed = true;
-                    } else {
-                        switch (shape) {
-                            case SQUARE: g2d.fillRect(drawX, drawY, drawSize, drawSize); break;
-                            case CIRCLE: g2d.fillOval(drawX, drawY, drawSize, drawSize); break;
-                            case TRIANGLE:
-                                path = new Path2D.Double();
-                                path.moveTo(visualPosition.x, drawY); path.lineTo(drawX + drawSize, drawY + drawSize); path.lineTo(drawX, drawY + drawSize);
-                                path.closePath();
-                                g2d.fill(path);
-                                break;
+                        g2d.setColor(Color.CYAN.darker());
+                        g2d.setStroke(new BasicStroke(1.5f));
+                        g2d.draw(path);
+                        break;
+                    case WOBBLE:
+                        drawWireframeCube(g2d, visualPosition.x, visualPosition.y, drawSize);
+                        break;
+                    default:
+                        Color packetColor = (packetType == NetworkEnums.PacketType.SECRET) ?
+                                (isUpgradedSecret ? new Color(200, 200, 210) : new Color(50, 70, 120)) :
+                                Port.getColorFromShape(shape);
+                        if (packetType == NetworkEnums.PacketType.BIT) packetColor = new Color(Color.HSBtoRGB((this.bulkParentId * 0.27f) % 1.0f, 0.7f, 0.95f));
+                        if (packetType == NetworkEnums.PacketType.MESSENGER) packetColor = Port.getColorFromShape(shape);
+                        g2d.setColor(packetColor);
+                        Point2D.Double directionForRotation = getVelocity();
+                        if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null && Math.hypot(directionForRotation.x, directionForRotation.y) > 0.01) {
+                            g2d.translate(visualPosition.x, visualPosition.y);
+                            double angle = Math.atan2(directionForRotation.y, directionForRotation.x) + (isReversing ? Math.PI : 0);
+                            g2d.rotate(angle);
+                            path = new Path2D.Double();
+                            path.moveTo(halfSize, 0); path.lineTo(-halfSize, -halfSize); path.lineTo(-halfSize, halfSize);
+                            path.closePath();
+                            g2d.fill(path);
+                            transformed = true;
+                        } else {
+                            switch (shape) {
+                                case SQUARE: g2d.fillRect(drawX, drawY, drawSize, drawSize); break;
+                                case CIRCLE: g2d.fillOval(drawX, drawY, drawSize, drawSize); break;
+                                case TRIANGLE:
+                                    path = new Path2D.Double();
+                                    path.moveTo(visualPosition.x, drawY); path.lineTo(drawX + drawSize, drawY + drawSize); path.lineTo(drawX, drawY + drawSize);
+                                    path.closePath();
+                                    g2d.fill(path);
+                                    break;
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
             }
-
-            // --- Overlays (Trojan, Secret, Bit) ---
             Stroke defaultStroke = g2d.getStroke();
-            if (packetType != NetworkEnums.PacketType.PROTECTED && packetType != NetworkEnums.PacketType.MESSENGER && packetType != NetworkEnums.PacketType.BULK && packetType != NetworkEnums.PacketType.WOBBLE) {
+            if (packetType != NetworkEnums.PacketType.PROTECTED && packetType != NetworkEnums.PacketType.BULK && packetType != NetworkEnums.PacketType.WOBBLE && !(packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE)) {
                 switch (packetType) {
                     case TROJAN:
                         g2d.setColor(new Color(255, 50, 50, 200));
@@ -231,12 +226,8 @@ public class Packet {
                 }
             }
             g2d.setStroke(defaultStroke);
-
-            // --- Noise Visualization ---
-            if (noise > 0.05) { /* ... */ }
         } finally {
             if (transformed) g2d.setTransform(oldTransform);
-            // --- NEW: Draw noise value ---
             if (noise > 0.05) {
                 g2d.setFont(NOISE_FONT);
                 g2d.setColor(NOISE_TEXT_COLOR);
@@ -249,7 +240,6 @@ public class Packet {
         }
     }
 
-    // --- Helper methods for drawing complex shapes ---
     private Path2D createHexagon(double centerX, double centerY, double radius) {
         Path2D hexagon = new Path2D.Double();
         for (int i = 0; i < 6; i++) {
@@ -265,35 +255,22 @@ public class Packet {
         hexagon.closePath();
         return hexagon;
     }
-
     private void drawWireframeCube(Graphics2D g2d, double cx, double cy, double size) {
         double halfSize = size / 2.0;
         double offset = halfSize / 2.0;
-
-        // Front face
         double x1 = cx - halfSize, y1 = cy - halfSize;
         double x2 = cx + halfSize, y2 = cy + halfSize;
-
-        // Back face
         double x3 = x1 + offset, y3 = y1 - offset;
         double x4 = x2 + offset, y4 = y2 - offset;
-
         g2d.setColor(new Color(200, 200, 220));
         g2d.setStroke(new BasicStroke(1.5f));
-
-        // Draw back face
         g2d.drawRect((int)x3, (int)y3, (int)(x4 - x3), (int)(y4 - y3));
-
-        // Draw front face
         g2d.drawRect((int)x1, (int)y1, (int)(x2 - x1), (int)(y2 - y1));
-
-        // Connect faces
         g2d.drawLine((int)x1, (int)y1, (int)x3, (int)y3);
         g2d.drawLine((int)x2, (int)y1, (int)x4, (int)y3);
         g2d.drawLine((int)x1, (int)y2, (int)x3, (int)y4);
         g2d.drawLine((int)x2, (int)y2, (int)x4, (int)y4);
     }
-
 
     public void update(GamePanel gamePanel, boolean isAiryamanActive, boolean isSpeedLimiterActive, boolean isPredictionRun) {
         if (markedForRemoval || currentSystem != null) return;
@@ -341,13 +318,11 @@ public class Packet {
             handleArrival(currentWire.getStartPort(), gamePanel, isPredictionRun);
         }
     }
-
     private void handleUpgradedSecretMovement(GamePanel gamePanel) {
         List<Packet> otherPackets = gamePanel.getAllActivePackets();
         Packet closestPacket = null;
         double minDistanceSq = Double.MAX_VALUE;
         Point2D.Double myPos = this.getPositionDouble();
-
         for (Packet other : otherPackets) {
             if (other == this || other.isMarkedForRemoval()) continue;
             double distSq = myPos.distanceSq(other.getPositionDouble());
@@ -356,7 +331,6 @@ public class Packet {
                 closestPacket = other;
             }
         }
-
         if (closestPacket != null) {
             double minDistance = Math.sqrt(minDistanceSq);
             if (minDistance < SECRET_REPULSION_DISTANCE) targetSpeedMagnitude = BASE_SPEED_MAGNITUDE * 0.5;
@@ -365,11 +339,9 @@ public class Packet {
         } else {
             targetSpeedMagnitude = BASE_SPEED_MAGNITUDE;
         }
-
         if (currentSpeedMagnitude < targetSpeedMagnitude) currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + SECRET_SPEED_ADJUST_RATE);
         else if (currentSpeedMagnitude > targetSpeedMagnitude) currentSpeedMagnitude = Math.max(targetSpeedMagnitude, currentSpeedMagnitude - SECRET_SPEED_ADJUST_RATE);
     }
-
     private void handleArrival(Port destinationPort, GamePanel gamePanel, boolean isPredictionRun) {
         if (destinationPort == null || destinationPort.getParentSystem() == null) {
             gamePanel.packetLostInternal(this, isPredictionRun);
@@ -377,16 +349,13 @@ public class Packet {
         }
         this.idealPosition = destinationPort.getPrecisePosition();
         System targetSystem = destinationPort.getParentSystem();
-
         if (this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun) {
             gamePanel.logBulkPacketWireUsage(this.currentWire);
         }
-
         boolean enteredCompatibly = packetType == NetworkEnums.PacketType.MESSENGER ||
                 packetType == NetworkEnums.PacketType.PROTECTED ||
                 packetType == NetworkEnums.PacketType.SECRET ||
                 (Port.getShapeEnum(this.shape) == destinationPort.getShape());
-
         targetSystem.receivePacket(this, gamePanel, isPredictionRun, enteredCompatibly);
     }
 
@@ -438,7 +407,7 @@ public class Packet {
                     break;
                 case MESSENGER:
                     if (this.enteredViaIncompatiblePort) {
-                        initialSpeed = BASE_SPEED_MAGNITUDE * 2.0;
+                        initialSpeed = BASE_SPEED_MAGNITUDE * MESSENGER_INCOMPATIBLE_SPEED_BOOST;
                         targetSpeedMagnitude = initialSpeed;
                     } else if (compatiblePortExit) {
                         initialSpeed = BASE_SPEED_MAGNITUDE;
@@ -470,39 +439,10 @@ public class Packet {
         updateIdealPositionAndVelocity();
     }
 
-    public void transformToProtected() {
-        this.originalPacketType = this.packetType;
-        this.originalSize = this.size;
-        this.originalBaseCoinValue = this.baseCoinValue;
-        this.packetType = NetworkEnums.PacketType.PROTECTED;
-        this.size = this.originalSize * 2;
-        this.baseCoinValue = 5;
-        this.protectedMovementMode = null;
-    }
-
-    public void upgradeSecretPacket() {
-        if (this.packetType == NetworkEnums.PacketType.SECRET && !this.isUpgradedSecret) {
-            this.isUpgradedSecret = true;
-            this.size = 6;
-            this.baseCoinValue = 4;
-        }
-    }
-
-    public void revertToOriginalType() {
-        this.packetType = this.originalPacketType;
-        this.size = this.originalSize;
-        this.baseCoinValue = this.originalBaseCoinValue;
-        this.protectedMovementMode = null;
-    }
-
-    public void reverseDirection(GamePanel gamePanel) {
-        if (this.isReversing) return;
-        this.isReversing = true;
-        this.isAccelerating = false;
-        this.isDecelerating = false;
-        if (!gamePanel.getGame().isMuted()) gamePanel.getGame().playSoundEffect("packet_reverse");
-    }
-
+    public void transformToProtected() { this.originalPacketType = this.packetType; this.originalSize = this.size; this.originalBaseCoinValue = this.baseCoinValue; this.packetType = NetworkEnums.PacketType.PROTECTED; this.size = this.originalSize * 2; this.baseCoinValue = 5; this.protectedMovementMode = null; }
+    public void upgradeSecretPacket() { if (this.packetType == NetworkEnums.PacketType.SECRET && !this.isUpgradedSecret) { this.isUpgradedSecret = true; this.size = 6; this.baseCoinValue = 4; } }
+    public void revertToOriginalType() { this.packetType = this.originalPacketType; this.size = this.originalSize; this.baseCoinValue = this.originalBaseCoinValue; this.protectedMovementMode = null; }
+    public void reverseDirection(GamePanel gamePanel) { if (this.isReversing) return; this.isReversing = true; this.isAccelerating = false; this.isDecelerating = false; if (!gamePanel.getGame().isMuted()) gamePanel.getGame().playSoundEffect("packet_reverse"); }
     public void setEnteredViaIncompatiblePort(boolean status) { this.enteredViaIncompatiblePort = status; }
     public NetworkEnums.PacketType getPacketType() { return packetType; }
     public void setPacketType(NetworkEnums.PacketType type) { this.packetType = type; }
@@ -519,140 +459,23 @@ public class Packet {
     public boolean isMarkedForRemoval() { return markedForRemoval; }
     public void markForRemoval() { this.markedForRemoval = true; }
     public System getCurrentSystem() { return currentSystem; }
-    public void setCurrentSystem(System system) {
-        this.currentSystem = system;
-        this.isReversing = false;
-        this.isAccelerating = false;
-        this.isDecelerating = false;
-        this.currentWire = null;
-        this.progressOnWire = 0.0;
-        this.currentSpeedMagnitude = 0.0;
-        if (system != null) this.idealPosition = new Point2D.Double(system.getPosition().x, system.getPosition().y);
-    }
+    public void setCurrentSystem(System system) { this.currentSystem = system; this.isReversing = false; this.isAccelerating = false; this.isDecelerating = false; this.currentWire = null; this.progressOnWire = 0.0; this.currentSpeedMagnitude = 0.0; if (system != null) this.idealPosition = new Point2D.Double(system.getPosition().x, system.getPosition().y); }
     public int getDrawSize() { return BASE_DRAW_SIZE + (size * 2); }
     public void addNoise(double amount) { if (amount > 0 && !markedForRemoval) this.noise = Math.min(this.size, this.noise + amount); }
     public void resetNoise() { if (!markedForRemoval) this.noise = 0.0; }
     public double getCurrentSpeedMagnitude() { return currentSpeedMagnitude; }
     public void setCurrentSpeedMagnitude(double speed) { this.currentSpeedMagnitude = speed; }
-
-    public void configureAsBit(int parentId, int totalBits) {
-        if(this.packetType == NetworkEnums.PacketType.BIT){
-            this.bulkParentId = parentId;
-            this.totalBitsInGroup = totalBits;
-        }
-    }
+    public void configureAsBit(int parentId, int totalBits) { if(this.packetType == NetworkEnums.PacketType.BIT){ this.bulkParentId = parentId; this.totalBitsInGroup = totalBits; } }
     public int getBulkParentId() { return bulkParentId; }
     public int getTotalBitsInGroup() { return totalBitsInGroup; }
     public PredictedPacketStatus getFinalStatusForPrediction() { return this.finalStatusForPrediction; }
     public void setFinalStatusForPrediction(PredictedPacketStatus status) { this.finalStatusForPrediction = status; }
-    public Point2D.Double getVelocity() {
-        if (this.velocity == null) return new Point2D.Double(0,0);
-        return new Point2D.Double(this.velocity.x, this.velocity.y);
-    }
-
-    private void updateIdealPositionAndVelocity() {
-        if (currentWire == null) return;
-        Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire);
-        if (pathInfo != null) {
-            this.idealPosition = pathInfo.position;
-            double dx = pathInfo.direction.x * currentSpeedMagnitude;
-            double dy = pathInfo.direction.y * currentSpeedMagnitude;
-            this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy);
-        } else if (currentWire.getStartPort() != null) {
-            this.idealPosition = currentWire.getStartPort().getPrecisePosition();
-            this.velocity = new Point2D.Double(0,0);
-        }
-    }
-
-    public void setVisualOffsetDirectionFromForce(Point2D.Double forceDirection) {
-        if (currentWire == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; }
-        Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire);
-        if (pathInfo == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; }
-        Point2D.Double wireDir = pathInfo.direction;
-        if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) {
-            if (this.visualOffsetDirection == null) {
-                this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
-                if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; }
-                double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y);
-                if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); }
-            }
-            return;
-        }
-        Point2D.Double perp1 = new Point2D.Double(-wireDir.y, wireDir.x);
-        double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y);
-        if (Math.abs(dotProductWithPerp1) < 1e-6) {
-            if (this.visualOffsetDirection == null) {
-                this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
-                if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; }
-            }
-        } else if (dotProductWithPerp1 > 0) this.visualOffsetDirection = perp1;
-        else this.visualOffsetDirection = new Point2D.Double(-perp1.x, -perp1.y);
-        double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y);
-        if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag;
-        } else {
-            this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
-            if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; }
-            double m = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y);
-            if (m > 1e-6) { this.visualOffsetDirection.x /= m; this.visualOffsetDirection.y /= m; } else { this.visualOffsetDirection = new Point2D.Double(0,1); }
-        }
-    }
-
-    private Point2D.Double calculateCurrentVisualOffset() {
-        if (noise == 0 || currentWire == null) return new Point2D.Double(0, 0);
-        if (this.visualOffsetDirection == null) {
-            Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire);
-            if (pathInfo == null) return new Point2D.Double(0,0);
-            Point2D.Double wireDir = pathInfo.direction;
-            this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x);
-            if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; }
-            double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y);
-            if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); }
-        }
-        double halfDrawSize = getDrawSize() / 2.0; double maxPossibleOffsetToVertex = 0;
-        if (shape == NetworkEnums.PacketShape.SQUARE) maxPossibleOffsetToVertex = halfDrawSize * Math.sqrt(2);
-        else if (shape == NetworkEnums.PacketShape.TRIANGLE) maxPossibleOffsetToVertex = halfDrawSize * 1.15;
-        else maxPossibleOffsetToVertex = halfDrawSize;
-        double noiseRatio = Math.min(noise / (double)this.size, 1.0);
-        double currentOffsetMagnitude = maxPossibleOffsetToVertex * noiseRatio;
-        return new Point2D.Double(this.visualOffsetDirection.x * currentOffsetMagnitude, this.visualOffsetDirection.y * currentOffsetMagnitude);
-    }
-
-    public boolean collidesWith(Packet other) {
-        if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) return false;
-        Point2D.Double thisPos = this.getPositionDouble();
-        Point2D.Double otherPos = other.getPositionDouble();
-        if (thisPos == null || otherPos == null) return false;
-        double distSq = thisPos.distanceSq(otherPos);
-        double r1 = this.getDrawSize() / 2.0;
-        double r2 = other.getDrawSize() / 2.0;
-        double combinedRadius = r1 + r2;
-        double collisionThreshold = combinedRadius * COLLISION_RADIUS_FACTOR;
-        return distSq < (collisionThreshold * collisionThreshold);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Packet packet = (Packet) o;
-        return id == packet.id;
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-    @Override
-    public String toString() {
-        String status;
-        if (markedForRemoval) status = "REMOVED";
-        else if (currentSystem != null) status = "QUEUED(Sys:" + currentSystem.getId() + ")";
-        else if (currentWire != null) status = String.format("ON_WIRE(W:%d P:%.1f%%)", currentWire.getId(), progressOnWire * 100);
-        else status = "IDLE/INIT";
-        String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null";
-        Point2D.Double currentVel = getVelocity();
-        String velStr = (currentVel != null) ? String.format("%.1f,%.1f (Mag:%.2f)", currentVel.x, currentVel.y, currentSpeedMagnitude) : "null";
-        return String.format("Packet{ID:%d, SHP:%s, TYP: %s, SZ:%d, N:%.1f/%d, V:%d, Ideal:(%s) Vel:(%s) Accel:%b Decel:%b Rev:%b FinalPred:%s St:%s}",
-                id, shape, packetType, size, noise, this.size, baseCoinValue, idealPosStr, velStr, isAccelerating, isDecelerating, isReversing,
-                (finalStatusForPrediction != null ? finalStatusForPrediction.name() : "N/A"), status);
-    }
+    public Point2D.Double getVelocity() { if (this.velocity == null) return new Point2D.Double(0,0); return new Point2D.Double(this.velocity.x, this.velocity.y); }
+    private void updateIdealPositionAndVelocity() { if (currentWire == null) return; Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire); if (pathInfo != null) { this.idealPosition = pathInfo.position; double dx = pathInfo.direction.x * currentSpeedMagnitude; double dy = pathInfo.direction.y * currentSpeedMagnitude; this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy); } else if (currentWire.getStartPort() != null) { this.idealPosition = currentWire.getStartPort().getPrecisePosition(); this.velocity = new Point2D.Double(0,0); } }
+    public void setVisualOffsetDirectionFromForce(Point2D.Double forceDirection) { if (currentWire == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Point2D.Double wireDir = pathInfo.direction; if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } return; } Point2D.Double perp1 = new Point2D.Double(-wireDir.y, wireDir.x); double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y); if (Math.abs(dotProductWithPerp1) < 1e-6) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } } } else if (dotProductWithPerp1 > 0) this.visualOffsetDirection = perp1; else this.visualOffsetDirection = new Point2D.Double(-perp1.x, -perp1.y); double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double m = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (m > 1e-6) { this.visualOffsetDirection.x /= m; this.visualOffsetDirection.y /= m; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } }
+    private Point2D.Double calculateCurrentVisualOffset() { if (noise == 0 || currentWire == null) return new Point2D.Double(0, 0); if (this.visualOffsetDirection == null) { Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) return new Point2D.Double(0,0); Point2D.Double wireDir = pathInfo.direction; this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } double halfDrawSize = getDrawSize() / 2.0; double maxPossibleOffsetToVertex = 0; if (shape == NetworkEnums.PacketShape.SQUARE) maxPossibleOffsetToVertex = halfDrawSize * Math.sqrt(2); else if (shape == NetworkEnums.PacketShape.TRIANGLE) maxPossibleOffsetToVertex = halfDrawSize * 1.15; else maxPossibleOffsetToVertex = halfDrawSize; double noiseRatio = Math.min(noise / (double)this.size, 1.0); double currentOffsetMagnitude = maxPossibleOffsetToVertex * noiseRatio; return new Point2D.Double(this.visualOffsetDirection.x * currentOffsetMagnitude, this.visualOffsetDirection.y * currentOffsetMagnitude); }
+    public boolean collidesWith(Packet other) { if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) return false; Point2D.Double thisPos = this.getPositionDouble(); Point2D.Double otherPos = other.getPositionDouble(); if (thisPos == null || otherPos == null) return false; double distSq = thisPos.distanceSq(otherPos); double r1 = this.getDrawSize() / 2.0; double r2 = other.getDrawSize() / 2.0; double combinedRadius = r1 + r2; double collisionThreshold = combinedRadius * COLLISION_RADIUS_FACTOR; return distSq < (collisionThreshold * collisionThreshold); }
+    @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Packet packet = (Packet) o; return id == packet.id; }
+    @Override public int hashCode() { return Objects.hash(id); }
+    @Override public String toString() { String status; if (markedForRemoval) status = "REMOVED"; else if (currentSystem != null) status = "QUEUED(Sys:" + currentSystem.getId() + ")"; else if (currentWire != null) status = String.format("ON_WIRE(W:%d P:%.1f%%)", currentWire.getId(), progressOnWire * 100); else status = "IDLE/INIT"; String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null"; Point2D.Double currentVel = getVelocity(); String velStr = (currentVel != null) ? String.format("%.1f,%.1f (Mag:%.2f)", currentVel.x, currentVel.y, currentSpeedMagnitude) : "null"; return String.format("Packet{ID:%d, SHP:%s, TYP: %s, SZ:%d, N:%.1f/%d, V:%d, Ideal:(%s) Vel:(%s) Accel:%b Decel:%b Rev:%b FinalPred:%s St:%s}", id, shape, packetType, size, noise, this.size, baseCoinValue, idealPosStr, velStr, isAccelerating, isDecelerating, isReversing, (finalStatusForPrediction != null ? finalStatusForPrediction.name() : "N/A"), status); }
 }
