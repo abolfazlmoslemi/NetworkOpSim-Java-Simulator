@@ -1,5 +1,6 @@
-// ===== FILE: Packet.java (کد کامل و اصلاح شده نهایی با تمام تغییرات بصری) =====
-
+// ================================================================================
+// FILE: Packet.java (کد کامل و نهایی با قابلیت‌های جدید)
+// ================================================================================
 package com.networkopsim.game;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Packet {
-    // ========== مقادیر نهایی و تعدیل شده ==========
     public static final double BASE_SPEED_MAGNITUDE = 2.0;
     public static final int BASE_DRAW_SIZE = 8;
     public static final double SQUARE_COMPATIBLE_SPEED_FACTOR = 0.5;
@@ -17,14 +17,11 @@ public class Packet {
     private static final double MESSENGER_DECELERATION_RATE = 0.04;
     public static final double MAX_SPEED_MAGNITUDE = 4.1;
     private static final double MESSENGER_INCOMPATIBLE_SPEED_BOOST = 1.5;
-    // ============================================
-
     private static final double SECRET_PACKET_SLOW_SPEED_FACTOR = 0.25;
     private static final double WOBBLE_SELF_NOISE_RATE = 0.05;
     private static final double SECRET_REPULSION_DISTANCE = 100.0;
     private static final double SECRET_ATTRACTION_DISTANCE = 250.0;
     private static final double SECRET_SPEED_ADJUST_RATE = 0.05;
-
     private static final double COLLISION_RADIUS_FACTOR = 1.0;
     private static final Font NOISE_FONT = new Font("Arial", Font.PLAIN, 9);
     private static final Color NOISE_TEXT_COLOR = Color.WHITE;
@@ -32,12 +29,14 @@ public class Packet {
     private static final int IDEAL_POSITION_MARKER_SIZE = 4;
     private static int nextPacketId = 0;
 
+    // ثابت جدید برای Eliphas
+    private static final double ELIPHAS_REALIGNMENT_FACTOR = 0.05; // 5% of offset is removed each tick
+
     private final int id;
     private final NetworkEnums.PacketShape shape;
     private NetworkEnums.PacketType packetType;
     private Point2D.Double idealPosition;
     private Point2D.Double velocity;
-
     private int size;
     private int baseCoinValue;
     private NetworkEnums.PacketType originalPacketType;
@@ -46,7 +45,6 @@ public class Packet {
     private boolean isUpgradedSecret = false;
     private double noise = 0.0;
     private boolean markedForRemoval = false;
-
     private Wire currentWire = null;
     private System currentSystem = null;
     private double progressOnWire = 0.0;
@@ -56,19 +54,16 @@ public class Packet {
     private boolean isDecelerating = false;
     private boolean isReversing = false;
     private boolean enteredViaIncompatiblePort = false;
-
     private Point2D.Double visualOffsetDirection = null;
+    private double visualOffsetMagnitude = 0.0; // فیلد جدید برای کنترل مستقل انحراف
     private int initialOffsetSidePreference = 0;
     private PredictedPacketStatus finalStatusForPrediction = null;
-
     private int bulkParentId = -1;
     private int totalBitsInGroup = 0;
     private enum ProtectedMovementMode { LIKE_SQUARE, LIKE_TRIANGLE, LIKE_MESSENGER }
     private ProtectedMovementMode protectedMovementMode = null;
 
-    public static void resetGlobalId() {
-        nextPacketId = 0;
-    }
+    public static void resetGlobalId() { nextPacketId = 0; }
 
     public Packet(NetworkEnums.PacketShape shape, double startX, double startY, NetworkEnums.PacketType type) {
         this.id = nextPacketId++;
@@ -78,34 +73,20 @@ public class Packet {
         this.idealPosition = new Point2D.Double(startX, startY);
         this.velocity = new Point2D.Double(0, 0);
 
-        if (this.packetType == NetworkEnums.PacketType.MESSENGER) {
-            this.size = 1;
-            this.baseCoinValue = 1;
-        } else {
+        if (this.packetType == NetworkEnums.PacketType.MESSENGER) { this.size = 1; this.baseCoinValue = 1; }
+        else {
             switch (type) {
-                case SECRET:
-                    this.size = 4; this.baseCoinValue = 3; break;
-                case BULK:
-                    this.size = 8; this.baseCoinValue = 8; break;
-                case WOBBLE:
-                    this.size = 10; this.baseCoinValue = 10; break;
-                case BIT:
-                    this.size = 1; this.baseCoinValue = 0; break;
-                case NORMAL:
-                case TROJAN:
-                case PROTECTED:
-                default:
-                    if (shape == NetworkEnums.PacketShape.SQUARE) {
-                        this.size = 2; this.baseCoinValue = 2;
-                    } else if (shape == NetworkEnums.PacketShape.TRIANGLE) {
-                        this.size = 3; this.baseCoinValue = 3;
-                    } else {
-                        this.size = 1; this.baseCoinValue = 1;
-                    }
+                case SECRET: this.size = 4; this.baseCoinValue = 3; break;
+                case BULK: this.size = 8; this.baseCoinValue = 8; break;
+                case WOBBLE: this.size = 10; this.baseCoinValue = 10; break;
+                case BIT: this.size = 1; this.baseCoinValue = 0; break;
+                case NORMAL: case TROJAN: case PROTECTED: default:
+                    if (shape == NetworkEnums.PacketShape.SQUARE) { this.size = 2; this.baseCoinValue = 2; }
+                    else if (shape == NetworkEnums.PacketShape.TRIANGLE) { this.size = 3; this.baseCoinValue = 3; }
+                    else { this.size = 1; this.baseCoinValue = 1; }
                     break;
             }
         }
-
         this.originalSize = this.size;
         this.originalBaseCoinValue = this.baseCoinValue;
         this.initialOffsetSidePreference = this.id % 2;
@@ -114,7 +95,6 @@ public class Packet {
     public Packet(NetworkEnums.PacketShape shape, double startX, double startY) {
         this(shape, startX, startY, NetworkEnums.PacketType.NORMAL);
     }
-
 
     public void draw(Graphics2D g2d) {
         if (markedForRemoval || currentSystem != null || idealPosition == null) return;
@@ -143,8 +123,7 @@ public class Packet {
             if (packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) {
                 double centerX = visualPosition.x;
                 double centerY = visualPosition.y;
-                // ===== تغییر اصلی اینجاست: مقیاس دو برابر شد =====
-                double scale = getDrawSize() * 1.8; // قبلا 0.9 بود
+                double scale = getDrawSize() * 1.8;
 
                 Path2D.Double leftPolygon = new Path2D.Double();
                 leftPolygon.moveTo(centerX - 0.45 * scale, centerY + 0.15 * scale);
@@ -403,11 +382,7 @@ public class Packet {
             double angle = Math.toRadians(60 * i);
             double x = centerX + radius * Math.cos(angle);
             double y = centerY + radius * Math.sin(angle);
-            if (i == 0) {
-                hexagon.moveTo(x, y);
-            } else {
-                hexagon.lineTo(x, y);
-            }
+            if (i == 0) { hexagon.moveTo(x, y); } else { hexagon.lineTo(x, y); }
         }
         hexagon.closePath();
         return hexagon;
@@ -421,12 +396,10 @@ public class Packet {
         }
 
         if (this.packetType == NetworkEnums.PacketType.SECRET) {
-            if (isUpgradedSecret) {
-                handleUpgradedSecretMovement(gamePanel);
-            } else {
+            if (isUpgradedSecret) { handleUpgradedSecretMovement(gamePanel); }
+            else {
                 System destSystem = currentWire.getEndPort().getParentSystem();
-                targetSpeedMagnitude = (destSystem != null && destSystem.getQueueSize() > 0) ?
-                        BASE_SPEED_MAGNITUDE * SECRET_PACKET_SLOW_SPEED_FACTOR : BASE_SPEED_MAGNITUDE;
+                targetSpeedMagnitude = (destSystem != null && destSystem.getQueueSize() > 0) ? BASE_SPEED_MAGNITUDE * SECRET_PACKET_SLOW_SPEED_FACTOR : BASE_SPEED_MAGNITUDE;
                 currentSpeedMagnitude = targetSpeedMagnitude;
                 isAccelerating = false;
             }
@@ -441,11 +414,8 @@ public class Packet {
         }
 
         double wireLength = currentWire.getLength();
-        if (wireLength > 1e-6) {
-            progressOnWire += (isReversing ? -1 : 1) * currentSpeedMagnitude / wireLength;
-        } else {
-            progressOnWire = isReversing ? 0.0 : 1.0;
-        }
+        if (wireLength > 1e-6) { progressOnWire += (isReversing ? -1 : 1) * currentSpeedMagnitude / wireLength; }
+        else { progressOnWire = isReversing ? 0.0 : 1.0; }
         progressOnWire = Math.max(0.0, Math.min(1.0, progressOnWire));
         updateIdealPositionAndVelocity();
 
@@ -459,6 +429,7 @@ public class Packet {
             handleArrival(currentWire.getStartPort(), gamePanel, isPredictionRun);
         }
     }
+
     private void handleUpgradedSecretMovement(GamePanel gamePanel) {
         List<Packet> otherPackets = gamePanel.getAllActivePackets();
         Packet closestPacket = null;
@@ -467,10 +438,7 @@ public class Packet {
         for (Packet other : otherPackets) {
             if (other == this || other.isMarkedForRemoval()) continue;
             double distSq = myPos.distanceSq(other.getPositionDouble());
-            if (distSq < minDistanceSq) {
-                minDistanceSq = distSq;
-                closestPacket = other;
-            }
+            if (distSq < minDistanceSq) { minDistanceSq = distSq; closestPacket = other; }
         }
         if (closestPacket != null) {
             double minDistance = Math.sqrt(minDistanceSq);
@@ -483,6 +451,7 @@ public class Packet {
         if (currentSpeedMagnitude < targetSpeedMagnitude) currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + SECRET_SPEED_ADJUST_RATE);
         else if (currentSpeedMagnitude > targetSpeedMagnitude) currentSpeedMagnitude = Math.max(targetSpeedMagnitude, currentSpeedMagnitude - SECRET_SPEED_ADJUST_RATE);
     }
+
     private void handleArrival(Port destinationPort, GamePanel gamePanel, boolean isPredictionRun) {
         if (destinationPort == null || destinationPort.getParentSystem() == null) {
             gamePanel.packetLostInternal(this, isPredictionRun);
@@ -580,6 +549,59 @@ public class Packet {
         updateIdealPositionAndVelocity();
     }
 
+    public void addNoise(double amount) {
+        if (amount > 0 && !markedForRemoval) {
+            this.noise = Math.min(this.size, this.noise + amount);
+            updateVisualOffsetMagnitude();
+        }
+    }
+
+    public void resetNoise() {
+        if (!markedForRemoval) {
+            this.noise = 0.0;
+            updateVisualOffsetMagnitude();
+        }
+    }
+
+    private Point2D.Double calculateCurrentVisualOffset() {
+        if (visualOffsetMagnitude == 0 || currentWire == null) return new Point2D.Double(0, 0);
+        if (this.visualOffsetDirection == null) {
+            setVisualOffsetDirectionFromForce(null);
+        }
+        return new Point2D.Double(this.visualOffsetDirection.x * visualOffsetMagnitude, this.visualOffsetDirection.y * visualOffsetMagnitude);
+    }
+
+    private void updateVisualOffsetMagnitude() {
+        if (noise <= 0) {
+            visualOffsetMagnitude = 0;
+            return;
+        }
+        double halfDrawSize = getDrawSize() / 2.0;
+        double maxPossibleOffsetToVertex = 0;
+        if (shape == NetworkEnums.PacketShape.SQUARE) maxPossibleOffsetToVertex = halfDrawSize * Math.sqrt(2);
+        else if (shape == NetworkEnums.PacketShape.TRIANGLE) maxPossibleOffsetToVertex = halfDrawSize * 1.15;
+        else maxPossibleOffsetToVertex = halfDrawSize;
+
+        double noiseRatio = Math.min(noise / (double)this.size, 1.0);
+        this.visualOffsetMagnitude = maxPossibleOffsetToVertex * noiseRatio;
+    }
+
+    public void nullifyAcceleration() {
+        if (isAccelerating) {
+            isAccelerating = false;
+            targetSpeedMagnitude = currentSpeedMagnitude;
+        }
+    }
+
+    public void realignToWire() {
+        if (visualOffsetMagnitude > 0) {
+            visualOffsetMagnitude *= (1.0 - ELIPHAS_REALIGNMENT_FACTOR);
+            if (visualOffsetMagnitude < 0.01) {
+                visualOffsetMagnitude = 0;
+            }
+        }
+    }
+
     public void transformToProtected() { this.originalPacketType = this.packetType; this.originalSize = this.size; this.originalBaseCoinValue = this.baseCoinValue; this.packetType = NetworkEnums.PacketType.PROTECTED; this.size = this.originalSize * 2; this.baseCoinValue = 5; this.protectedMovementMode = null; }
     public void upgradeSecretPacket() { if (this.packetType == NetworkEnums.PacketType.SECRET && !this.isUpgradedSecret) { this.isUpgradedSecret = true; this.size = 6; this.baseCoinValue = 4; } }
     public void revertToOriginalType() { this.packetType = this.originalPacketType; this.size = this.originalSize; this.baseCoinValue = this.originalBaseCoinValue; this.protectedMovementMode = null; }
@@ -602,8 +624,6 @@ public class Packet {
     public System getCurrentSystem() { return currentSystem; }
     public void setCurrentSystem(System system) { this.currentSystem = system; this.isReversing = false; this.isAccelerating = false; this.isDecelerating = false; this.currentWire = null; this.progressOnWire = 0.0; this.currentSpeedMagnitude = 0.0; if (system != null) this.idealPosition = new Point2D.Double(system.getPosition().x, system.getPosition().y); }
     public int getDrawSize() { return BASE_DRAW_SIZE + (size * 2); }
-    public void addNoise(double amount) { if (amount > 0 && !markedForRemoval) this.noise = Math.min(this.size, this.noise + amount); }
-    public void resetNoise() { if (!markedForRemoval) this.noise = 0.0; }
     public double getCurrentSpeedMagnitude() { return currentSpeedMagnitude; }
     public void setCurrentSpeedMagnitude(double speed) { this.currentSpeedMagnitude = speed; }
     public void configureAsBit(int parentId, int totalBits) { if(this.packetType == NetworkEnums.PacketType.BIT){ this.bulkParentId = parentId; this.totalBitsInGroup = totalBits; } }
@@ -614,7 +634,6 @@ public class Packet {
     public Point2D.Double getVelocity() { if (this.velocity == null) return new Point2D.Double(0,0); return new Point2D.Double(this.velocity.x, this.velocity.y); }
     private void updateIdealPositionAndVelocity() { if (currentWire == null) return; Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire); if (pathInfo != null) { this.idealPosition = pathInfo.position; double dx = pathInfo.direction.x * currentSpeedMagnitude; double dy = pathInfo.direction.y * currentSpeedMagnitude; this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy); } else if (currentWire.getStartPort() != null) { this.idealPosition = currentWire.getStartPort().getPrecisePosition(); this.velocity = new Point2D.Double(0,0); } }
     public void setVisualOffsetDirectionFromForce(Point2D.Double forceDirection) { if (currentWire == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Point2D.Double wireDir = pathInfo.direction; if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } return; } Point2D.Double perp1 = new Point2D.Double(-wireDir.y, wireDir.x); double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y); if (Math.abs(dotProductWithPerp1) < 1e-6) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } } } else if (dotProductWithPerp1 > 0) this.visualOffsetDirection = perp1; else this.visualOffsetDirection = new Point2D.Double(-perp1.x, -perp1.y); double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double m = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (m > 1e-6) { this.visualOffsetDirection.x /= m; this.visualOffsetDirection.y /= m; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } }
-    private Point2D.Double calculateCurrentVisualOffset() { if (noise == 0 || currentWire == null) return new Point2D.Double(0, 0); if (this.visualOffsetDirection == null) { Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) return new Point2D.Double(0,0); Point2D.Double wireDir = pathInfo.direction; this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } double halfDrawSize = getDrawSize() / 2.0; double maxPossibleOffsetToVertex = 0; if (shape == NetworkEnums.PacketShape.SQUARE) maxPossibleOffsetToVertex = halfDrawSize * Math.sqrt(2); else if (shape == NetworkEnums.PacketShape.TRIANGLE) maxPossibleOffsetToVertex = halfDrawSize * 1.15; else maxPossibleOffsetToVertex = halfDrawSize; double noiseRatio = Math.min(noise / (double)this.size, 1.0); double currentOffsetMagnitude = maxPossibleOffsetToVertex * noiseRatio; return new Point2D.Double(this.visualOffsetDirection.x * currentOffsetMagnitude, this.visualOffsetDirection.y * currentOffsetMagnitude); }
     public boolean collidesWith(Packet other) { if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) return false; Point2D.Double thisPos = this.getPositionDouble(); Point2D.Double otherPos = other.getPositionDouble(); if (thisPos == null || otherPos == null) return false; double distSq = thisPos.distanceSq(otherPos); double r1 = this.getDrawSize() / 2.0; double r2 = other.getDrawSize() / 2.0; double combinedRadius = r1 + r2; double collisionThreshold = combinedRadius * COLLISION_RADIUS_FACTOR; return distSq < (collisionThreshold * collisionThreshold); }
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Packet packet = (Packet) o; return id == packet.id; }
     @Override public int hashCode() { return Objects.hash(id); }

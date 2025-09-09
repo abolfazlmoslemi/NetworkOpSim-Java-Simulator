@@ -1,5 +1,5 @@
 // ================================================================================
-// FILE: System.java (کد کامل و نهایی)
+// FILE: System.java (کد کامل و نهایی با متد setPosition)
 // ================================================================================
 package com.networkopsim.game;
 import javax.swing.*;
@@ -102,7 +102,14 @@ public class System {
         return true;
     }
     public void setPacketShapeToGenerate(NetworkEnums.PacketShape shape) { this.packetShapeToGenerate = shape; }
-    public void setPosition(int x, int y) { this.x = x; this.y = y; updateAllPortPositions(); }
+
+    // ===== متد جدید برای جابجایی سیستم (Scroll of Sisyphus) =====
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        updateAllPortPositions();
+    }
+
     public void setVpnActive(boolean active, GamePanel gamePanel) {
         if (this.systemType != NetworkEnums.SystemType.VPN || this.vpnIsActive == active) return;
         this.vpnIsActive = active;
@@ -285,7 +292,6 @@ public class System {
             }
         }
     }
-
     public void draw(Graphics2D g2d) {
         this.indicatorOn = areAllMyPortsConnected();
         Color bodyColor;
@@ -315,26 +321,20 @@ public class System {
         int textY = y + (SYSTEM_HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
         g2d.drawString(systemName, textX, textY);
 
-        // ===== تغییر اصلی: نمایش متن زیر سورس‌های خاص به جای آیکون =====
         if (systemType == NetworkEnums.SystemType.SOURCE) {
             String labelText = null;
-            if (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) {
-                labelText = "SECRET";
-            } else if (packetTypeToGenerate == NetworkEnums.PacketType.BULK) {
-                labelText = "BULK";
-            }
-
+            if (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) { labelText = "SECRET"; }
+            else if (packetTypeToGenerate == NetworkEnums.PacketType.BULK) { labelText = "BULK"; }
             if (labelText != null) {
                 g2d.setFont(new Font("Consolas", Font.BOLD, 12));
                 g2d.setColor(Color.ORANGE);
                 FontMetrics labelFm = g2d.getFontMetrics();
                 int labelWidth = labelFm.stringWidth(labelText);
                 int labelX = x + (SYSTEM_WIDTH - labelWidth) / 2;
-                int labelY = y + SYSTEM_HEIGHT + labelFm.getAscent(); // دقیقا زیر سیستم
+                int labelY = y + SYSTEM_HEIGHT + labelFm.getAscent();
                 g2d.drawString(labelText, labelX, labelY);
             }
         }
-        // ==============================================================
 
         int indicatorSize = 8;
         int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
@@ -385,7 +385,6 @@ public class System {
             g2d.drawLine(x + SYSTEM_WIDTH, y, x, y + SYSTEM_HEIGHT);
         }
     }
-
     public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) { if (shape == NetworkEnums.PortShape.ANY) throw new IllegalArgumentException("PortShape.ANY is not allowed."); int index; if (type == NetworkEnums.PortType.INPUT) { synchronized(inputPorts) { index = inputPorts.size(); inputPorts.add(new Port(this, type, shape, index)); } } else { synchronized(outputPorts) { index = outputPorts.size(); outputPorts.add(new Port(this, type, shape, index)); } } updateAllPortPositions(); }
     public void updateAllPortPositions() { int totalInput, totalOutput; synchronized (inputPorts) { totalInput = inputPorts.size(); } synchronized (outputPorts) { totalOutput = outputPorts.size(); } synchronized (inputPorts) { for (int i = 0; i < inputPorts.size(); i++) { Port p = inputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } synchronized (outputPorts) { for (int i = 0; i < outputPorts.size(); i++) { Port p = outputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } }
     public Port getPortAt(Point p) { synchronized (outputPorts) { for (Port port : outputPorts) if (port != null && port.contains(p)) return port; } synchronized (inputPorts) { for (Port port : inputPorts) if (port != null && port.contains(p)) return port; } return null; }

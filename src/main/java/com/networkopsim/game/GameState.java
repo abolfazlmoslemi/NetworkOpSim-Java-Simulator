@@ -1,5 +1,5 @@
 // ================================================================================
-// FILE: GameState.java (کد کامل و اصلاح شده)
+// FILE: GameState.java (کد کامل و اصلاح شده با متد جدید)
 // ================================================================================
 package com.networkopsim.game;
 
@@ -16,12 +16,9 @@ public class GameState {
     private int currentSelectedLevel = 1;
 
     public GameState() {
-        // ===== تغییر اصلی اینجاست: باز کردن تمام مراحل از ابتدا =====
-        // در یک حلقه تمام مقادیر آرایه unlockedLevels را true می‌کنیم.
         for (int i = 0; i < unlockedLevels.length; i++) {
             unlockedLevels[i] = true;
         }
-        // ==========================================================
         currentSelectedLevel = 1;
     }
 
@@ -83,6 +80,17 @@ public class GameState {
         this.remainingWireLength = this.maxWireLengthPerLevel;
         java.lang.System.out.println("GameState: Max wire length for level set to: " + this.maxWireLengthPerLevel + ". Remaining wire also reset to this value.");
     }
+
+    // ===== متد جدید برای رفع خطا =====
+    /**
+     * Directly sets the remaining wire length. Used for complex state reversions
+     * like cancelling a system move with the Scroll of Sisyphus.
+     * @param length The new value for the remaining wire length.
+     */
+    public void setRemainingWireLength(int length) {
+        this.remainingWireLength = length;
+    }
+    // ===================================
 
     public int getMaxWireLengthForLevel() { return maxWireLengthPerLevel; }
 

@@ -1,11 +1,12 @@
-package com.networkopsim.game;// FILE: GameInputHandler.java
+// ================================================================================
+// FILE: GameInputHandler.java (کد کامل و نهایی با مدیریت ورودی‌های جدید)
+// ================================================================================
+package com.networkopsim.game;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-// import java.util.ArrayList; // Not used
-// import java.util.List; // Not used
 import java.util.Objects;
-// import java.awt.geom.Line2D; // Not used
 
 public class GameInputHandler implements KeyListener, MouseListener, MouseMotionListener {
     private final GamePanel gamePanel;
@@ -17,8 +18,13 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         this.game = Objects.requireNonNull(game, "NetworkGame cannot be null");
         this.keyBindings = Objects.requireNonNull(game.getKeyBindings(), "KeyBindings cannot be null");
     }
-    @Override public void keyTyped(KeyEvent e) {  }
-    @Override public void keyReleased(KeyEvent e) {  }
+
+    @Override
+    public void keyTyped(KeyEvent e) {  }
+
+    @Override
+    public void keyReleased(KeyEvent e) {  }
+
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -50,6 +56,12 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
                 e.consume();
             }
         } else {
+            // منطق بازی در حال اجرا
+            if (gamePanel.getCurrentInteractiveMode() != GamePanel.InteractiveMode.NONE) {
+                // اگر در حالت تعاملی هستیم، کلیدهای دیگر را نادیده بگیر
+                e.consume();
+                return;
+            }
             if (action == KeyBindings.GameAction.PAUSE_RESUME_GAME) {
                 gamePanel.pauseGame(!gamePanel.isGamePaused());
                 e.consume();
@@ -69,7 +81,14 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             }
         }
     }
+
     private void handleEscapeKey() {
+        if (gamePanel.getCurrentInteractiveMode() != GamePanel.InteractiveMode.NONE) {
+            gamePanel.cancelAllInteractiveModes();
+            game.showTemporaryMessage("Action Canceled", Color.ORANGE, 1500);
+            gamePanel.pauseGame(true); // بعد از لغو، بازی را متوقف کن
+            return;
+        }
         if (gamePanel.isWireDrawingMode()) {
             gamePanel.cancelWiring();
             gamePanel.requestFocusInWindow();
@@ -99,8 +118,13 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             game.returnToMenu();
         }
     }
-    @Override public void mouseClicked(MouseEvent e) {  }
-    @Override public void mouseEntered(MouseEvent e) {  }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {  }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {  }
+
     @Override
     public void mouseExited(MouseEvent e) {
         if (gamePanel.isWireDrawingMode()) {
@@ -109,46 +133,82 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         if (gamePanel.isRelayPointDragMode()) {
             gamePanel.cancelRelayPointDrag();
         }
+        if (gamePanel.getCurrentInteractiveMode() == GamePanel.InteractiveMode.SISYPHUS_DRAG && gamePanel.getSisyphusDraggedSystem() != null) {
+            gamePanel.stopSisyphusDrag();
+        }
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
-        if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) {
-            return;
-        }
+        if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) return;
+
         Point pressPoint = e.getPoint();
         gamePanel.requestFocusInWindow();
 
+        GamePanel.InteractiveMode mode = gamePanel.getCurrentInteractiveMode();
+
+        if (mode != GamePanel.InteractiveMode.NONE) {
+            if (SwingUtilities.isRightMouseButton(e)) {
+                gamePanel.cancelAllInteractiveModes();
+                game.showTemporaryMessage("Action Canceled", Color.ORANGE, 1500);
+                gamePanel.pauseGame(true);
+                return;
+            }
+
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                switch (mode) {
+                    case AERGIA_PLACEMENT:
+                    case ELIPHAS_PLACEMENT:
+                        Wire clickedWire = gamePanel.findWireAt(pressPoint, 5.0);
+                        if (clickedWire != null) {
+                            if (mode == GamePanel.InteractiveMode.AERGIA_PLACEMENT) {
+                                gamePanel.placeAergiaEffect(clickedWire, pressPoint);
+                            } else {
+                                gamePanel.placeEliphasEffect(clickedWire, pressPoint);
+                            }
+                        } else {
+                            if (!game.isMuted()) game.playSoundEffect("error");
+                            game.showTemporaryMessage("You must click on a wire.", Color.RED, 2000);
+                        }
+                        break;
+
+                    case SISYPHUS_DRAG:
+                        System clickedSystem = gamePanel.findSystemAt(pressPoint);
+                        if (clickedSystem != null && !clickedSystem.isReferenceSystem()) {
+                            gamePanel.startSisyphusDrag(clickedSystem, pressPoint);
+                        } else {
+                            if (!game.isMuted()) game.playSoundEffect("error");
+                            game.showTemporaryMessage("Click on a non-reference system (e.g., Node, Spy).", Color.RED, 2500);
+                        }
+                        break;
+                }
+            }
+            return;
+        }
+
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (gamePanel.isSimulationStarted()) return;
+            if (gamePanel.isWireDrawingMode()) return;
 
-            if (gamePanel.isWireDrawingMode()) return; // Already wiring, ignore other presses
-
-            // Priority 1: Press on a relay point to start dragging it
             Wire.RelayPoint relayToDrag = gamePanel.findRelayPointAt(pressPoint);
             if (relayToDrag != null) {
                 gamePanel.startRelayPointDrag(relayToDrag);
                 return;
             }
 
-            // Priority 2: Press on a port to start wiring
             Port clickedPort = gamePanel.findPortAt(pressPoint);
-            if (clickedPort != null &&
-                    clickedPort.getType() == NetworkEnums.PortType.OUTPUT &&
-                    !clickedPort.isConnected())
-            {
+            if (clickedPort != null && clickedPort.getType() == NetworkEnums.PortType.OUTPUT && !clickedPort.isConnected()) {
                 gamePanel.startWiringMode(clickedPort, pressPoint);
                 gamePanel.updateWiringPreview(pressPoint);
                 return;
             }
 
-            // Priority 3: Press on a wire to add a relay point
-            Wire wireToAddRelay = gamePanel.findWireAt(pressPoint, 5.0); // Smaller threshold for adding point
+            Wire wireToAddRelay = gamePanel.findWireAt(pressPoint, 5.0);
             if (wireToAddRelay != null) {
                 gamePanel.addRelayPointRequest(wireToAddRelay, pressPoint);
             }
 
-        }
-        else if (SwingUtilities.isRightMouseButton(e)) {
+        } else if (SwingUtilities.isRightMouseButton(e)) {
             if (gamePanel.isWireDrawingMode()) {
                 gamePanel.cancelWiring();
                 return;
@@ -159,27 +219,30 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             }
 
             if (!gamePanel.isSimulationStarted()) {
-                // Priority 1: Right-click on a relay point to delete it
                 Wire.RelayPoint relayToDelete = gamePanel.findRelayPointAt(pressPoint);
                 if (relayToDelete != null) {
                     gamePanel.deleteRelayPointRequest(relayToDelete);
                     return;
                 }
 
-                // Priority 2: Right-click on a wire to delete the whole wire
                 Wire wireToDelete = gamePanel.findWireAt(pressPoint, 10.0);
                 if (wireToDelete != null) {
                     gamePanel.deleteWireRequest(wireToDelete);
                 }
-            }
-            else if (gamePanel.isSimulationStarted()){
+            } else {
                 if(!game.isMuted()) game.playSoundEffect("error");
             }
         }
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) {
+        if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) return;
+
+        if (gamePanel.getCurrentInteractiveMode() == GamePanel.InteractiveMode.SISYPHUS_DRAG && gamePanel.getSisyphusDraggedSystem() != null) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                gamePanel.stopSisyphusDrag();
+            }
             return;
         }
 
@@ -208,8 +271,6 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
                                                 releasePort.isConnected())) ) {
                             if (!game.isMuted()) game.playSoundEffect("error");
                         }
-                    } else if (!connectionMade && releasePort == null) {
-                        // No sound for releasing in empty space
                     }
                 }
                 gamePanel.cancelWiring();
@@ -218,8 +279,16 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
             }
         }
     }
+
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (gamePanel.getCurrentInteractiveMode() == GamePanel.InteractiveMode.SISYPHUS_DRAG && gamePanel.getSisyphusDraggedSystem() != null) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                gamePanel.updateSisyphusDrag(e.getPoint());
+            }
+            return;
+        }
+
         if (gamePanel.isGameOver() || gamePanel.isLevelComplete() || gamePanel.isSimulationStarted()) {
             return;
         }
@@ -237,11 +306,15 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if (gamePanel.getCurrentInteractiveMode() == GamePanel.InteractiveMode.SISYPHUS_DRAG && gamePanel.getSisyphusDraggedSystem() != null) {
+            return;
+        }
+
         if (gamePanel.isWireDrawingMode()
                 || gamePanel.isRelayPointDragMode()
                 || gamePanel.isGameOver()
                 || gamePanel.isLevelComplete()
-                || (gamePanel.isSimulationStarted() && gamePanel.isGamePaused()))
+                || (gamePanel.isSimulationStarted() && gamePanel.isGamePaused() && gamePanel.getCurrentInteractiveMode() == GamePanel.InteractiveMode.NONE))
         {
             if (!gamePanel.isWireDrawingMode() && !gamePanel.isRelayPointDragMode()) gamePanel.setCursor(Cursor.getDefaultCursor());
             gamePanel.clearAllHoverStates();
@@ -250,39 +323,66 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         }
 
         Point currentPoint = e.getPoint();
-        gamePanel.clearAllHoverStates(); // Clear previous hover states before checking new ones
+        gamePanel.clearAllHoverStates();
 
-        Port portUnderMouse = gamePanel.findPortAt(currentPoint);
-        Wire.RelayPoint relayUnderMouse = gamePanel.findRelayPointAt(currentPoint);
-        Wire wireUnderMouse = (relayUnderMouse == null) ? gamePanel.findWireAt(currentPoint, 5.0) : null;
-
+        GamePanel.InteractiveMode mode = gamePanel.getCurrentInteractiveMode();
         Cursor currentCursor = Cursor.getDefaultCursor();
         String tooltipText = null;
 
-        if (relayUnderMouse != null) {
-            relayUnderMouse.setHovered(true);
-            currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
-            tooltipText = "Relay Point (Left-Click to Drag, Right-Click to Delete)";
-        }
-        else if (portUnderMouse != null) {
-            tooltipText = generatePortTooltip(portUnderMouse);
-            if (!gamePanel.isSimulationStarted()) {
-                if (!portUnderMouse.isConnected()) {
-                    currentCursor = (portUnderMouse.getType() == NetworkEnums.PortType.OUTPUT) ?
-                            Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR) :
-                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        if (mode != GamePanel.InteractiveMode.NONE) {
+            currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            switch (mode) {
+                case AERGIA_PLACEMENT:
+                    tooltipText = "Aergia: Click a wire to place. Right-click to cancel.";
+                    if (gamePanel.findWireAt(currentPoint, 5.0) != null) {
+                        currentCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+                    }
+                    break;
+                case ELIPHAS_PLACEMENT:
+                    tooltipText = "Eliphas: Click a wire to place. Right-click to cancel.";
+                    if (gamePanel.findWireAt(currentPoint, 5.0) != null) {
+                        currentCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+                    }
+                    break;
+                case SISYPHUS_DRAG:
+                    tooltipText = "Sisyphus: Click a non-reference system to move. Right-click to cancel.";
+                    System sys = gamePanel.findSystemAt(currentPoint);
+                    if (sys != null && !sys.isReferenceSystem()) {
+                        currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+                    }
+                    break;
+            }
+        } else {
+            Port portUnderMouse = gamePanel.findPortAt(currentPoint);
+            Wire.RelayPoint relayUnderMouse = gamePanel.findRelayPointAt(currentPoint);
+            Wire wireUnderMouse = (relayUnderMouse == null) ? gamePanel.findWireAt(currentPoint, 5.0) : null;
+
+            if (relayUnderMouse != null) {
+                relayUnderMouse.setHovered(true);
+                currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+                tooltipText = "Relay Point (Left-Click to Drag, Right-Click to Delete)";
+            }
+            else if (portUnderMouse != null) {
+                tooltipText = generatePortTooltip(portUnderMouse);
+                if (!gamePanel.isSimulationStarted()) {
+                    if (!portUnderMouse.isConnected()) {
+                        currentCursor = (portUnderMouse.getType() == NetworkEnums.PortType.OUTPUT) ?
+                                Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR) :
+                                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                    }
+                }
+            }
+            else if (wireUnderMouse != null) {
+                if (!gamePanel.isSimulationStarted()) {
+                    currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                    tooltipText = "Wire " + wireUnderMouse.getId() + " (Left-Click to Add Relay, Right-Click to Delete)";
                 }
             }
         }
-        else if (wireUnderMouse != null) {
-            if (!gamePanel.isSimulationStarted()) {
-                currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-                tooltipText = "Wire " + wireUnderMouse.getId() + " (Left-Click to Add Relay, Right-Click to Delete)";
-            }
-        }
+
         gamePanel.setCursor(currentCursor);
         gamePanel.setToolTipText(tooltipText);
-        gamePanel.repaint(); // Repaint to show hover effect
+        gamePanel.repaint();
     }
 
     private String generatePortTooltip(Port port) {
