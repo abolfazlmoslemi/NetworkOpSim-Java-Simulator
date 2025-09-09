@@ -1,4 +1,4 @@
-// ===== FILE: Packet.java (کد کامل و اصلاح شده نهایی) =====
+// ===== FILE: Packet.java (کد کامل و اصلاح شده نهایی با تمام تغییرات بصری) =====
 
 package com.networkopsim.game;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class Packet {
     public static final double BASE_SPEED_MAGNITUDE = 2.0;
     public static final int BASE_DRAW_SIZE = 8;
     public static final double SQUARE_COMPATIBLE_SPEED_FACTOR = 0.5;
-    private static final double TRIANGLE_ACCELERATION_RATE = 0.018; // <<< نرخ شتاب به شدت کاهش یافت تا در مسیرهای طولانی به سرعت بالا برسد
+    private static final double TRIANGLE_ACCELERATION_RATE = 0.018;
     private static final double MESSENGER_DECELERATION_RATE = 0.04;
     public static final double MAX_SPEED_MAGNITUDE = 4.1;
     private static final double MESSENGER_INCOMPATIBLE_SPEED_BOOST = 1.5;
@@ -141,43 +141,205 @@ public class Packet {
 
         try {
             if (packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) {
-                g2d.setColor(new Color(0x9013FE));
-                g2d.setStroke(new BasicStroke(2.5f));
-                int infinityWidth = drawSize;
-                int infinityHeight = drawSize / 2;
-                int centerX = (int)Math.round(visualPosition.x);
-                int centerY = (int)Math.round(visualPosition.y);
-                g2d.drawArc(centerX - infinityWidth / 2, centerY - infinityHeight / 2, infinityWidth / 2, infinityHeight, 90, 180);
-                g2d.drawArc(centerX, centerY - infinityHeight / 2, infinityWidth / 2, infinityHeight, 270, 180);
+                double centerX = visualPosition.x;
+                double centerY = visualPosition.y;
+                // ===== تغییر اصلی اینجاست: مقیاس دو برابر شد =====
+                double scale = getDrawSize() * 1.8; // قبلا 0.9 بود
+
+                Path2D.Double leftPolygon = new Path2D.Double();
+                leftPolygon.moveTo(centerX - 0.45 * scale, centerY + 0.15 * scale);
+                leftPolygon.lineTo(centerX - 0.20 * scale, centerY + 0.35 * scale);
+                leftPolygon.lineTo(centerX + 0.05 * scale, centerY + 0.15 * scale);
+                leftPolygon.lineTo(centerX + 0.05 * scale, centerY - 0.15 * scale);
+                leftPolygon.lineTo(centerX - 0.20 * scale, centerY - 0.35 * scale);
+                leftPolygon.lineTo(centerX - 0.45 * scale, centerY - 0.15 * scale);
+                leftPolygon.closePath();
+
+                Path2D.Double rightPolygon = new Path2D.Double();
+                rightPolygon.moveTo(centerX + 0.45 * scale, centerY - 0.15 * scale);
+                rightPolygon.lineTo(centerX + 0.20 * scale, centerY - 0.35 * scale);
+                rightPolygon.lineTo(centerX - 0.05 * scale, centerY - 0.15 * scale);
+                rightPolygon.lineTo(centerX - 0.05 * scale, centerY + 0.15 * scale);
+                rightPolygon.lineTo(centerX + 0.20 * scale, centerY + 0.35 * scale);
+                rightPolygon.lineTo(centerX + 0.45 * scale, centerY + 0.15 * scale);
+                rightPolygon.closePath();
+
+                g2d.setColor(Color.WHITE);
+                g2d.fill(leftPolygon);
+                g2d.fill(rightPolygon);
             } else {
                 switch (packetType) {
                     case PROTECTED:
-                        g2d.setColor(new Color(218, 165, 32, 220));
-                        g2d.fillRect(drawX + 2, drawY + drawSize/3, drawSize - 4, drawSize*2/3 - 2);
-                        g2d.setStroke(new BasicStroke(2));
-                        g2d.drawArc(drawX + 2, drawY, drawSize - 4, drawSize*2/3, 0, 180);
+                        Color mainBodyColor = new Color(205, 120, 50);
+                        Color shackleColor = new Color(240, 190, 100);
+                        Color shadowLineColor = new Color(160, 90, 40);
+                        Color keyholeColor = Color.BLACK;
+
+                        int bodyWidth = (int) (drawSize * 0.8);
+                        int bodyX = drawX + (drawSize - bodyWidth) / 2;
+                        int bodyY = drawY + (int) (drawSize * 0.3);
+                        int bodyHeight = (int) (drawSize * 0.7);
+
+                        int shackleWidth = (int) (drawSize * 0.6);
+                        int shackleX = drawX + (drawSize - shackleWidth) / 2;
+                        int shackleThickness = (int) (Math.max(2, drawSize * 0.15));
+                        int shackleHeight = (int) (drawSize * 0.4);
+
+                        g2d.setColor(shackleColor);
+                        g2d.fillRect(shackleX, drawY, shackleWidth, shackleThickness);
+                        g2d.fillRect(shackleX, drawY, shackleThickness, shackleHeight);
+                        g2d.fillRect(shackleX + shackleWidth - shackleThickness, drawY, shackleThickness, shackleHeight);
+
+                        g2d.setColor(mainBodyColor);
+                        g2d.fillRect(bodyX, bodyY, bodyWidth, bodyHeight);
+
+                        g2d.setColor(shadowLineColor);
+                        int lineWidth = (int) (Math.max(1, bodyWidth * 0.1));
+                        int lineX1 = bodyX + (int) (bodyWidth * 0.2);
+                        int lineX2 = bodyX + (int) (bodyWidth * 0.8) - lineWidth;
+                        g2d.fillRect(lineX1, bodyY, lineWidth, bodyHeight);
+                        g2d.fillRect(lineX2, bodyY, lineWidth, bodyHeight);
+
+                        g2d.setColor(keyholeColor);
+                        int keyholeCircleDiameter = (int) (drawSize * 0.25);
+                        int keyholeCircleX = drawX + (drawSize - keyholeCircleDiameter) / 2;
+                        int keyholeCircleY = bodyY + (int) (bodyHeight * 0.15);
+                        g2d.fillOval(keyholeCircleX, keyholeCircleY, keyholeCircleDiameter, keyholeCircleDiameter);
+
+                        int keyholeStemTopY = keyholeCircleY + keyholeCircleDiameter / 2;
+                        int keyholeStemWidthTop = (int) (drawSize * 0.1);
+                        int keyholeStemWidthBottom = (int) (drawSize * 0.25);
+                        int keyholeStemHeight = (int) (bodyHeight * 0.5);
+                        int keyholeStemBottomY = keyholeStemTopY + keyholeStemHeight;
+                        int centerX = drawX + drawSize / 2;
+
+                        int[] xPoints = { centerX - keyholeStemWidthTop / 2, centerX + keyholeStemWidthTop / 2, centerX + keyholeStemWidthBottom / 2, centerX - keyholeStemWidthBottom / 2 };
+                        int[] yPoints = { keyholeStemTopY, keyholeStemTopY, keyholeStemBottomY, keyholeStemBottomY };
+                        g2d.fillPolygon(xPoints, yPoints, 4);
+                        break;
+                    case SECRET:
+                        Color[] blueCamoPalette = { new Color(30, 40, 80), new Color(60, 80, 130), new Color(110, 120, 150) };
+                        Color[] grayCamoPalette = { new Color(50, 50, 50), new Color(100, 100, 100), new Color(150, 150, 150) };
+                        Color[] selectedPalette = isUpgradedSecret ? grayCamoPalette : blueCamoPalette;
+
+                        Shape oldClip = g2d.getClip();
+                        g2d.setClip(new java.awt.geom.Ellipse2D.Double(drawX, drawY, drawSize, drawSize));
+
+                        int pixelSize = Math.max(2, drawSize / 6);
+                        java.util.Random rand = System.getGlobalRandom();
+
+                        for (int py = drawY; py < drawY + drawSize; py += pixelSize) {
+                            for (int px = drawX; px < drawX + drawSize; px += pixelSize) {
+                                g2d.setColor(selectedPalette[rand.nextInt(selectedPalette.length)]);
+                                g2d.fillRect(px, py, pixelSize, pixelSize);
+                            }
+                        }
+
+                        g2d.setClip(oldClip);
                         g2d.setColor(Color.BLACK);
-                        g2d.setStroke(new BasicStroke(1));
-                        g2d.drawRect(drawX + 2, drawY + drawSize/3, drawSize - 4, drawSize*2/3 - 2);
+                        g2d.setStroke(new BasicStroke(1.0f));
+                        g2d.drawOval(drawX, drawY, drawSize, drawSize);
                         break;
                     case BULK:
-                        path = createHexagon(visualPosition.x, visualPosition.y, halfSize);
-                        g2d.setColor(new Color(0x4a90e2));
-                        g2d.fill(path);
-                        g2d.setColor(Color.CYAN.darker());
+                        Color darkBlue = new Color(20, 40, 100);
+                        Color midBlue = new Color(40, 80, 160);
+                        Color lightBlue = new Color(80, 140, 220);
+                        Color outlineColor = new Color(200, 220, 255, 150);
+
+                        double radius = getDrawSize() / 3.5;
+                        double h_offset = radius * 1.5;
+                        double v_offset = radius * Math.sqrt(3.0) / 2.0;
+
+                        Point2D.Double[] centers = new Point2D.Double[] {
+                                new Point2D.Double(0, -v_offset * 2),
+                                new Point2D.Double(-h_offset / 2, -v_offset),
+                                new Point2D.Double(h_offset / 2, -v_offset),
+                                new Point2D.Double(-h_offset, 0),
+                                new Point2D.Double(0, 0),
+                                new Point2D.Double(h_offset, 0),
+                                new Point2D.Double(-h_offset / 2, v_offset),
+                                new Point2D.Double(h_offset / 2, v_offset),
+                                new Point2D.Double(0, v_offset * 2)
+                        };
+
                         g2d.setStroke(new BasicStroke(1.5f));
-                        g2d.draw(path);
+
+                        for (Point2D.Double centerOffset : centers) {
+                            double currentX = visualPosition.x + centerOffset.x;
+                            double currentY = visualPosition.y + centerOffset.y;
+
+                            Color fillColor;
+                            if (centerOffset.y < -v_offset * 1.5) {
+                                fillColor = darkBlue;
+                            } else if (centerOffset.y > v_offset * 1.5) {
+                                fillColor = lightBlue;
+                            } else {
+                                fillColor = midBlue;
+                            }
+
+                            Path2D hexagonPath = createHexagon(currentX, currentY, radius);
+
+                            g2d.setColor(fillColor);
+                            g2d.fill(hexagonPath);
+
+                            g2d.setColor(outlineColor);
+                            g2d.draw(hexagonPath);
+                        }
                         break;
                     case WOBBLE:
-                        drawWireframeCube(g2d, visualPosition.x, visualPosition.y, drawSize);
+                        Color darkNodeColor = new Color(15, 60, 115);
+                        Color midNodeColor = new Color(40, 100, 150);
+                        Color lightNodeColor = new Color(130, 180, 210);
+                        Color lightLineColor = new Color(130, 180, 210, 150);
+
+                        double scale_wobble = drawSize * 0.5;
+                        double nodeRadius = Math.max(1.5, drawSize * 0.08);
+
+                        Point[] nodes = new Point[13];
+                        nodes[0] = new Point((int)visualPosition.x, (int)visualPosition.y);
+                        for (int i = 0; i < 6; i++) {
+                            double angle = Math.toRadians(60 * i);
+                            nodes[i + 1] = new Point((int)(visualPosition.x + scale_wobble * Math.cos(angle)), (int)(visualPosition.y + scale_wobble * Math.sin(angle)));
+                        }
+                        for (int i = 0; i < 6; i++) {
+                            double angle = Math.toRadians(60 * i + 30);
+                            nodes[i + 7] = new Point((int)(visualPosition.x + scale_wobble * 2 * Math.cos(angle)), (int)(visualPosition.y + scale_wobble * 2 * Math.sin(angle)));
+                        }
+
+                        int[][] connections = { {0,1}, {0,2}, {0,3}, {0,4}, {0,5}, {0,6}, {1,2}, {2,3}, {3,4}, {4,5}, {5,6}, {6,1}, {1,7}, {1,8}, {2,8}, {2,9}, {3,9}, {3,10}, {4,10}, {4,11}, {5,11}, {5,12}, {6,12}, {6,7}, {7,8}, {8,9}, {9,10}, {10,11}, {11,12}, {12,7} };
+
+                        g2d.setStroke(new BasicStroke(Math.max(1.0f, drawSize * 0.04f), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{2f, 2f}, 0.0f));
+                        g2d.setColor(lightLineColor);
+                        for (int[] conn : connections) {
+                            g2d.drawLine(nodes[conn[0]].x, nodes[conn[0]].y, nodes[conn[1]].x, nodes[conn[1]].y);
+                        }
+
+                        int nodeDiameter = (int)(nodeRadius * 2);
+                        g2d.setColor(darkNodeColor);
+                        for(int i = 7; i <= 12; i++) g2d.fillOval(nodes[i].x - (int)nodeRadius, nodes[i].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+                        g2d.fillOval(nodes[2].x - (int)nodeRadius, nodes[2].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+                        g2d.fillOval(nodes[5].x - (int)nodeRadius, nodes[5].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+
+                        g2d.setColor(lightNodeColor);
+                        g2d.fillOval(nodes[1].x - (int)nodeRadius, nodes[1].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+                        g2d.fillOval(nodes[3].x - (int)nodeRadius, nodes[3].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+                        g2d.fillOval(nodes[4].x - (int)nodeRadius, nodes[4].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+                        g2d.fillOval(nodes[6].x - (int)nodeRadius, nodes[6].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
+
+                        int arcNodeDiameter = (int)(nodeRadius * 3);
+                        g2d.setColor(midNodeColor);
+                        g2d.fillArc(nodes[0].x - arcNodeDiameter/2, nodes[0].y - arcNodeDiameter/2, arcNodeDiameter, arcNodeDiameter, 45, 270);
+                        g2d.fillArc(nodes[1].x - arcNodeDiameter/2, nodes[1].y - arcNodeDiameter/2, arcNodeDiameter, arcNodeDiameter, 225, 270);
+                        g2d.fillArc(nodes[3].x - arcNodeDiameter/2, nodes[3].y - arcNodeDiameter/2, arcNodeDiameter, arcNodeDiameter, 345, 270);
+                        g2d.fillArc(nodes[4].x - arcNodeDiameter/2, nodes[4].y - arcNodeDiameter/2, arcNodeDiameter, arcNodeDiameter, 45, 270);
+                        g2d.fillArc(nodes[6].x - arcNodeDiameter/2, nodes[6].y - arcNodeDiameter/2, arcNodeDiameter, arcNodeDiameter, 165, 270);
                         break;
                     default:
-                        Color packetColor = (packetType == NetworkEnums.PacketType.SECRET) ?
-                                (isUpgradedSecret ? new Color(200, 200, 210) : new Color(50, 70, 120)) :
-                                Port.getColorFromShape(shape);
+                        Color packetColor = Port.getColorFromShape(shape);
                         if (packetType == NetworkEnums.PacketType.BIT) packetColor = new Color(Color.HSBtoRGB((this.bulkParentId * 0.27f) % 1.0f, 0.7f, 0.95f));
                         if (packetType == NetworkEnums.PacketType.MESSENGER) packetColor = Port.getColorFromShape(shape);
                         g2d.setColor(packetColor);
+
                         Point2D.Double directionForRotation = getVelocity();
                         if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null && Math.hypot(directionForRotation.x, directionForRotation.y) > 0.01) {
                             g2d.translate(visualPosition.x, visualPosition.y);
@@ -203,19 +365,14 @@ public class Packet {
                         break;
                 }
             }
+
             Stroke defaultStroke = g2d.getStroke();
-            if (packetType != NetworkEnums.PacketType.PROTECTED && packetType != NetworkEnums.PacketType.BULK && packetType != NetworkEnums.PacketType.WOBBLE && !(packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE)) {
+            if (packetType != NetworkEnums.PacketType.PROTECTED && packetType != NetworkEnums.PacketType.BULK && packetType != NetworkEnums.PacketType.WOBBLE && !(packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) && packetType != NetworkEnums.PacketType.SECRET) {
                 switch (packetType) {
                     case TROJAN:
                         g2d.setColor(new Color(255, 50, 50, 200));
                         g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{3f, 3f}, 0.0f));
                         if (transformed && path != null) g2d.draw(path); else if (shape == NetworkEnums.PacketShape.SQUARE) g2d.drawRect(drawX, drawY, drawSize, drawSize); else g2d.drawOval(drawX, drawY, drawSize, drawSize);
-                        break;
-                    case SECRET:
-                        g2d.setColor(isUpgradedSecret ? new Color(200, 200, 210, 220) : new Color(170, 190, 255, 220));
-                        g2d.setStroke(new BasicStroke(1.0f));
-                        g2d.setFont(new Font("Arial", Font.BOLD, 9));
-                        if (transformed) g2d.drawString("S", -3, 3); else g2d.drawString("S", drawX + 2, drawY + 9);
                         break;
                     case BIT:
                         g2d.setColor(new Color(255, 255, 255, 180));
@@ -254,22 +411,6 @@ public class Packet {
         }
         hexagon.closePath();
         return hexagon;
-    }
-    private void drawWireframeCube(Graphics2D g2d, double cx, double cy, double size) {
-        double halfSize = size / 2.0;
-        double offset = halfSize / 2.0;
-        double x1 = cx - halfSize, y1 = cy - halfSize;
-        double x2 = cx + halfSize, y2 = cy + halfSize;
-        double x3 = x1 + offset, y3 = y1 - offset;
-        double x4 = x2 + offset, y4 = y2 - offset;
-        g2d.setColor(new Color(200, 200, 220));
-        g2d.setStroke(new BasicStroke(1.5f));
-        g2d.drawRect((int)x3, (int)y3, (int)(x4 - x3), (int)(y4 - y3));
-        g2d.drawRect((int)x1, (int)y1, (int)(x2 - x1), (int)(y2 - y1));
-        g2d.drawLine((int)x1, (int)y1, (int)x3, (int)y3);
-        g2d.drawLine((int)x2, (int)y1, (int)x4, (int)y3);
-        g2d.drawLine((int)x1, (int)y2, (int)x3, (int)y4);
-        g2d.drawLine((int)x2, (int)y2, (int)x4, (int)y4);
     }
 
     public void update(GamePanel gamePanel, boolean isAiryamanActive, boolean isSpeedLimiterActive, boolean isPredictionRun) {

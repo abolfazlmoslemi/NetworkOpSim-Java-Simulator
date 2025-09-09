@@ -1,8 +1,10 @@
-// ===== FILE: System.java (کد کامل و اصلاح شده نهایی) =====
-
+// ================================================================================
+// FILE: System.java (کد کامل و نهایی)
+// ================================================================================
 package com.networkopsim.game;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.ArrayList;
@@ -192,26 +194,20 @@ public class System {
         packet.setCurrentSystem(this);
         gamePanel.addRoutingCoinsInternal(packet, isPredictionRun);
 
-        // ========== تغییر اصلی و نهایی اینجاست ==========
         switch (systemType) {
             case SINK:
                 if(packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.BIT){
                     gamePanel.packetLostInternal(packet, isPredictionRun);
                 } else {
                     gamePanel.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
-                    // پخش صدای موفقیت
                     if (!isPredictionRun && !gamePanel.getGame().isMuted()) {
                         gamePanel.getGame().playSoundEffect("delivery_success");
                     }
                 }
                 break;
             case SOURCE:
-                // بسته‌هایی که به سورس برمی‌گردند دیگر "از دست رفته" نیستند.
-                // آن‌ها را مانند بسته‌های تحویل داده شده حذف می‌کنیم تا آمار خراب نشود.
                 gamePanel.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
-                // بدون پخش صدای خطا
                 break;
-            // ============================================
             case SPY: handleSpyLogic(packet, gamePanel, isPredictionRun); break;
             case CORRUPTOR: handleCorruptorLogic(packet, gamePanel, isPredictionRun); break;
             case VPN: handleVpnLogic(packet, gamePanel, isPredictionRun); break;
@@ -289,6 +285,7 @@ public class System {
             }
         }
     }
+
     public void draw(Graphics2D g2d) {
         this.indicatorOn = areAllMyPortsConnected();
         Color bodyColor;
@@ -307,6 +304,7 @@ public class System {
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.setStroke(new BasicStroke(1));
         g2d.drawRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+
         String systemName = systemType.name();
         int fontSize = (systemName.length() > 8) ? 9 : 11;
         g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
@@ -316,6 +314,28 @@ public class System {
         int textX = x + (SYSTEM_WIDTH - textWidth) / 2;
         int textY = y + (SYSTEM_HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
         g2d.drawString(systemName, textX, textY);
+
+        // ===== تغییر اصلی: نمایش متن زیر سورس‌های خاص به جای آیکون =====
+        if (systemType == NetworkEnums.SystemType.SOURCE) {
+            String labelText = null;
+            if (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) {
+                labelText = "SECRET";
+            } else if (packetTypeToGenerate == NetworkEnums.PacketType.BULK) {
+                labelText = "BULK";
+            }
+
+            if (labelText != null) {
+                g2d.setFont(new Font("Consolas", Font.BOLD, 12));
+                g2d.setColor(Color.ORANGE);
+                FontMetrics labelFm = g2d.getFontMetrics();
+                int labelWidth = labelFm.stringWidth(labelText);
+                int labelX = x + (SYSTEM_WIDTH - labelWidth) / 2;
+                int labelY = y + SYSTEM_HEIGHT + labelFm.getAscent(); // دقیقا زیر سیستم
+                g2d.drawString(labelText, labelX, labelY);
+            }
+        }
+        // ==============================================================
+
         int indicatorSize = 8;
         int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
         int indicatorY = y - indicatorSize - 3;
@@ -365,6 +385,7 @@ public class System {
             g2d.drawLine(x + SYSTEM_WIDTH, y, x, y + SYSTEM_HEIGHT);
         }
     }
+
     public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) { if (shape == NetworkEnums.PortShape.ANY) throw new IllegalArgumentException("PortShape.ANY is not allowed."); int index; if (type == NetworkEnums.PortType.INPUT) { synchronized(inputPorts) { index = inputPorts.size(); inputPorts.add(new Port(this, type, shape, index)); } } else { synchronized(outputPorts) { index = outputPorts.size(); outputPorts.add(new Port(this, type, shape, index)); } } updateAllPortPositions(); }
     public void updateAllPortPositions() { int totalInput, totalOutput; synchronized (inputPorts) { totalInput = inputPorts.size(); } synchronized (outputPorts) { totalOutput = outputPorts.size(); } synchronized (inputPorts) { for (int i = 0; i < inputPorts.size(); i++) { Port p = inputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } synchronized (outputPorts) { for (int i = 0; i < outputPorts.size(); i++) { Port p = outputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } }
     public Port getPortAt(Point p) { synchronized (outputPorts) { for (Port port : outputPorts) if (port != null && port.contains(p)) return port; } synchronized (inputPorts) { for (Port port : inputPorts) if (port != null && port.contains(p)) return port; } return null; }
