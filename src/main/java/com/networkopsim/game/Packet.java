@@ -1,9 +1,10 @@
 // ================================================================================
-// FILE: Packet.java (کد کامل و نهایی - اصلاح شده)
+// FILE: Packet.java (کد کامل و نهایی با تشخیص برخورد دقیق چندضلعی)
 // ================================================================================
 package com.networkopsim.game;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
@@ -25,13 +26,45 @@ public class Packet implements Serializable {
     private static final double SECRET_REPULSION_DISTANCE = 100.0;
     private static final double SECRET_ATTRACTION_DISTANCE = 250.0;
     private static final double SECRET_SPEED_ADJUST_RATE = 0.05;
-    private static final double COLLISION_RADIUS_FACTOR = 1.0;
     private static final Font NOISE_FONT = new Font("Arial", Font.PLAIN, 9);
     private static final Color NOISE_TEXT_COLOR = Color.WHITE;
     private static final Color IDEAL_POSITION_MARKER_COLOR = new Color(255, 255, 255, 60);
     private static final int IDEAL_POSITION_MARKER_SIZE = 4;
     private static int nextPacketId = 0;
     private static final double ELIPHAS_REALIGNMENT_FACTOR = 0.05;
+
+    // --- بخش جدید: تعریف Hitbox های پایه برای اشکال مختلف ---
+    private static final Path2D.Double BASE_SQUARE_HITBOX;
+    private static final Path2D.Double BASE_TRIANGLE_HITBOX;
+    private static final Path2D.Double BASE_CIRCLE_HITBOX; // هشت‌ضلعی برای تقریب دایره
+
+    static {
+        // تعریف مربع واحد (از -0.5 تا 0.5)
+        BASE_SQUARE_HITBOX = new Path2D.Double();
+        BASE_SQUARE_HITBOX.moveTo(-0.5, -0.5);
+        BASE_SQUARE_HITBOX.lineTo(0.5, -0.5);
+        BASE_SQUARE_HITBOX.lineTo(0.5, 0.5);
+        BASE_SQUARE_HITBOX.lineTo(-0.5, 0.5);
+        BASE_SQUARE_HITBOX.closePath();
+
+        // تعریف مثلث واحد (نوک تیز به سمت راست)
+        BASE_TRIANGLE_HITBOX = new Path2D.Double();
+        BASE_TRIANGLE_HITBOX.moveTo(0.5, 0);
+        BASE_TRIANGLE_HITBOX.lineTo(-0.5, -0.5);
+        BASE_TRIANGLE_HITBOX.lineTo(-0.5, 0.5);
+        BASE_TRIANGLE_HITBOX.closePath();
+
+        // تعریف دایره واحد با تقریب هشت‌ضلعی
+        BASE_CIRCLE_HITBOX = new Path2D.Double();
+        int sides = 8; // هشت‌ضلعی تقریب خوبی است
+        BASE_CIRCLE_HITBOX.moveTo(0.5, 0);
+        for (int i = 1; i < sides; i++) {
+            double angle = 2 * Math.PI * i / sides;
+            BASE_CIRCLE_HITBOX.lineTo(0.5 * Math.cos(angle), 0.5 * Math.sin(angle));
+        }
+        BASE_CIRCLE_HITBOX.closePath();
+    }
+    // ---------------------------------------------------------
 
     private final int id;
     private final NetworkEnums.PacketShape shape;
@@ -65,6 +98,7 @@ public class Packet implements Serializable {
     private int totalBitsInGroup = 0;
     private enum ProtectedMovementMode { LIKE_SQUARE, LIKE_TRIANGLE, LIKE_MESSENGER }
     private ProtectedMovementMode protectedMovementMode = null;
+    private transient Path2D.Double hitbox; // فیلد جدید برای نگهداری چندضلعی برخورد
 
     public static void resetGlobalId() {
         nextPacketId = 0;
@@ -109,6 +143,7 @@ public class Packet implements Serializable {
         this.originalSize = this.size;
         this.originalBaseCoinValue = this.baseCoinValue;
         this.initialOffsetSidePreference = this.id % 2;
+        updateHitbox(); // ساخت hitbox اولیه
     }
 
     public Packet(NetworkEnums.PacketShape shape, double startX, double startY) {
@@ -437,6 +472,7 @@ public class Packet implements Serializable {
         else { progressOnWire = isReversing ? 0.0 : 1.0; }
         progressOnWire = Math.max(0.0, Math.min(1.0, progressOnWire));
         updateIdealPositionAndVelocity();
+        updateHitbox(); // بروزرسانی hitbox در هر فریم
 
         if (!markedForRemoval && noise >= this.size) {
             gamePanel.packetLostInternal(this, isPredictionRun);
@@ -568,6 +604,7 @@ public class Packet implements Serializable {
         this.currentSpeedMagnitude = initialSpeed;
         this.enteredViaIncompatiblePort = false;
         updateIdealPositionAndVelocity();
+        updateHitbox(); // بروزرسانی hitbox هنگام قرار گرفتن روی سیم
     }
 
     public void addNoise(double amount) {
@@ -668,7 +705,67 @@ public class Packet implements Serializable {
     public Point2D.Double getVelocity() { if (this.velocity == null) return new Point2D.Double(0,0); return new Point2D.Double(this.velocity.x, this.velocity.y); }
     private void updateIdealPositionAndVelocity() { if (currentWire == null) return; Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire); if (pathInfo != null) { this.idealPosition = pathInfo.position; double dx = pathInfo.direction.x * currentSpeedMagnitude; double dy = pathInfo.direction.y * currentSpeedMagnitude; this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy); } else if (currentWire.getStartPort() != null) { this.idealPosition = currentWire.getStartPort().getPrecisePosition(); this.velocity = new Point2D.Double(0,0); } }
     public void setVisualOffsetDirectionFromForce(Point2D.Double forceDirection) { if (currentWire == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Point2D.Double wireDir = pathInfo.direction; if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } return; } Point2D.Double perp1 = new Point2D.Double(-wireDir.y, wireDir.x); double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y); if (Math.abs(dotProductWithPerp1) < 1e-6) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } } } else if (dotProductWithPerp1 > 0) this.visualOffsetDirection = perp1; else this.visualOffsetDirection = new Point2D.Double(-perp1.x, -perp1.y); double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double m = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (m > 1e-6) { this.visualOffsetDirection.x /= m; this.visualOffsetDirection.y /= m; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } }
-    public boolean collidesWith(Packet other) { if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) return false; Point2D.Double thisPos = this.getPositionDouble(); Point2D.Double otherPos = other.getPositionDouble(); if (thisPos == null || otherPos == null) return false; double distSq = thisPos.distanceSq(otherPos); double r1 = this.getDrawSize() / 2.0; double r2 = other.getDrawSize() / 2.0; double combinedRadius = r1 + r2; double collisionThreshold = combinedRadius * COLLISION_RADIUS_FACTOR; return distSq < (collisionThreshold * collisionThreshold); }
+
+    /**
+     * متد بازنویسی شده برای تشخیص برخورد دقیق چندضلعی.
+     */
+    public boolean collidesWith(Packet other) {
+        if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) {
+            return false;
+        }
+
+        // اطمینان از اینکه hitbox ها وجود دارند
+        if (this.hitbox == null) this.updateHitbox();
+        if (other.hitbox == null) other.updateHitbox();
+        if (this.hitbox == null || other.hitbox == null) return false;
+
+        // استفاده از کلاس Area برای بررسی برخورد
+        Area area1 = new Area(this.hitbox);
+        Area area2 = new Area(other.hitbox);
+
+        // محاسبه اشتراک دو ناحیه
+        area1.intersect(area2);
+
+        // اگر ناحیه اشتراک خالی نباشد، یعنی برخورد رخ داده است
+        return !area1.isEmpty();
+    }
+
+    /**
+     * متد جدید برای بروزرسانی hitbox بر اساس موقعیت، اندازه و چرخش فعلی.
+     */
+    public void updateHitbox() {
+        Path2D.Double baseShape;
+        switch (this.shape) {
+            case SQUARE:   baseShape = BASE_SQUARE_HITBOX;   break;
+            case TRIANGLE: baseShape = BASE_TRIANGLE_HITBOX; break;
+            case CIRCLE:
+            default:       baseShape = BASE_CIRCLE_HITBOX;   break;
+        }
+
+        AffineTransform tx = new AffineTransform();
+        Point2D.Double visualPos = getPositionDouble(); // از موقعیت بصری (با آفست) برای برخورد استفاده می‌شود
+        double currentDrawSize = getDrawSize();
+
+        // 1. انتقال به موقعیت فعلی
+        tx.translate(visualPos.x, visualPos.y);
+
+        // 2. چرخش (مخصوصاً برای مثلث‌ها)
+        if (this.shape == NetworkEnums.PacketShape.TRIANGLE) {
+            Point2D.Double direction = getVelocity();
+            if (direction != null && (Math.abs(direction.x) > 0.01 || Math.abs(direction.y) > 0.01)) {
+                double angle = Math.atan2(direction.y, direction.x);
+                if (isReversing) angle += Math.PI;
+                tx.rotate(angle);
+            }
+        }
+
+        // 3. مقیاس‌دهی به اندازه صحیح
+        tx.scale(currentDrawSize, currentDrawSize);
+
+        // اعمال تبدیل و ساخت hitbox نهایی
+        this.hitbox = (Path2D.Double) baseShape.createTransformedShape(tx);
+    }
+
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Packet packet = (Packet) o; return id == packet.id; }
     @Override public int hashCode() { return Objects.hash(id); }
     @Override public String toString() { String status; if (markedForRemoval) status = "REMOVED"; else if (currentSystem != null) status = "QUEUED(Sys:" + currentSystem.getId() + ")"; else if (currentWire != null) status = String.format("ON_WIRE(W:%d P:%.1f%%)", currentWire.getId(), progressOnWire * 100); else status = "IDLE/INIT"; String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null"; Point2D.Double currentVel = getVelocity(); String velStr = (currentVel != null) ? String.format("%.1f,%.1f (Mag:%.2f)", currentVel.x, currentVel.y, currentSpeedMagnitude) : "null"; return String.format("Packet{ID:%d, SHP:%s, TYP: %s, SZ:%d, N:%.1f/%d, V:%d, Ideal:(%s) Vel:(%s) Accel:%b Decel:%b Rev:%b FinalPred:%s St:%s}", id, shape, packetType, size, noise, this.size, baseCoinValue, idealPosStr, velStr, isAccelerating, isDecelerating, isReversing, (finalStatusForPrediction != null ? finalStatusForPrediction.name() : "N/A"), status); }
@@ -680,5 +777,10 @@ public class Packet implements Serializable {
         if (this.currentWireId != -1) {
             this.currentWire = wireMap.get(this.currentWireId);
         }
+        // بازسازی hitbox پس از بارگذاری از فایل
+        if (this.currentWire != null) {
+            updateIdealPositionAndVelocity();
+        }
+        updateHitbox();
     }
 }
