@@ -3,7 +3,10 @@
 // ================================================================================
 package com.networkopsim.game;
 
-public class GameState {
+import java.io.Serializable; // اضافه شود
+
+public class GameState implements Serializable {
+    private static final long serialVersionUID = 1L; // اضافه شود
     public static final int MAX_LEVELS = 5;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];

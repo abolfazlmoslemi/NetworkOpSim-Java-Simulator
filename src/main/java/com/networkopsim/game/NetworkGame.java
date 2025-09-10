@@ -1,5 +1,6 @@
-// ===== File: NetworkGame.java =====
-
+// ================================================================================
+// FILE: NetworkGame.java (کد کامل و نهایی با سیستم ذخیره و بارگذاری)
+// ================================================================================
 package com.networkopsim.game;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -27,10 +28,8 @@ public class NetworkGame extends JFrame {
     private boolean isMuted = false;
     private Clip backgroundMusic;
     private boolean backgroundMusicWasPlaying = false;
-
     private CardLayout cardLayout;
     private JPanel mainPanelContainer;
-
     private static final double VOLUME_POWER_FACTOR = 1.8;
     private static final float MIN_AUDIBLE_DB_TARGET = -50.0f;
     private static final float SILENCE_DB = -80.0f;
@@ -39,7 +38,6 @@ public class NetworkGame extends JFrame {
         public final String message;
         public final Color color;
         public final long displayUntilTimestamp;
-
         public TemporaryMessage(String message, Color color, long displayUntilTimestamp) {
             this.message = message;
             this.color = color;
@@ -48,7 +46,6 @@ public class NetworkGame extends JFrame {
     }
     private TemporaryMessage currentTemporaryMessage = null;
     private Timer temporaryMessageTimer;
-
 
     public NetworkGame() {
         setTitle("Network Operator Simulator");
@@ -80,6 +77,9 @@ public class NetworkGame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         menuPanel.requestFocusInWindow();
+
+        // بررسی وجود فایل ذخیره در هنگام شروع بازی
+        checkForExistingSave();
     }
 
     private void handleExitRequest() {
@@ -139,15 +139,12 @@ public class NetworkGame extends JFrame {
         if (clip == null || !clip.isOpen() || !clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             return;
         }
-
         try {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             float minDbPossible = gainControl.getMinimum();
             float maxDbPossible = gainControl.getMaximum();
-
             float clampedLinearVolume = Math.max(0.0f, Math.min(1.0f, linearVolume));
             float targetDb;
-
             if (clampedLinearVolume <= 0.001f) {
                 targetDb = SILENCE_DB;
             } else {
@@ -156,9 +153,7 @@ public class NetworkGame extends JFrame {
                 float rangeDb = effectiveMaxDb - MIN_AUDIBLE_DB_TARGET;
                 targetDb = MIN_AUDIBLE_DB_TARGET + (rangeDb * perceptuallyScaledVolume);
             }
-
             targetDb = Math.max(minDbPossible, Math.min(targetDb, maxDbPossible));
-
             if (clampedLinearVolume <= 0.001f) {
                 if (minDbPossible <= SILENCE_DB) {
                     targetDb = SILENCE_DB;
@@ -167,9 +162,6 @@ public class NetworkGame extends JFrame {
                 }
             }
             gainControl.setValue(targetDb);
-
-        } catch (IllegalArgumentException e) {
-            // Error handling
         } catch (Exception e) {
             // Error handling
         }
@@ -177,7 +169,6 @@ public class NetworkGame extends JFrame {
 
     public void playSoundEffect(String soundName) {
         if (isMuted) return;
-
         new Thread(() -> {
             Clip clip = null;
             AudioInputStream audioStream = null;
@@ -186,21 +177,17 @@ public class NetworkGame extends JFrame {
             try {
                 String soundPath = "/assets/sounds/" + soundName + ".wav";
                 soundFileStream = getClass().getResourceAsStream(soundPath);
-
                 if (soundFileStream == null) {
                     java.lang.System.err.println("Warning: Sound effect not found: " + soundPath);
                     return;
                 }
-
                 bufferedIn = new BufferedInputStream(soundFileStream);
                 audioStream = AudioSystem.getAudioInputStream(bufferedIn);
                 clip = AudioSystem.getClip();
-
                 final Clip finalClip = clip;
                 final AudioInputStream finalAudioStream = audioStream;
                 final InputStream finalBufferedIn = bufferedIn;
                 final InputStream finalSoundFileStream = soundFileStream;
-
                 clip.addLineListener(event -> {
                     if (event.getType() == LineEvent.Type.STOP) {
                         if (finalClip != null && finalClip.isOpen()) finalClip.close();
@@ -209,16 +196,9 @@ public class NetworkGame extends JFrame {
                         try { if (finalSoundFileStream != null) finalSoundFileStream.close(); } catch (IOException ioe) { /* ignore */ }
                     }
                 });
-
                 clip.open(audioStream);
                 setVolume(clip, masterVolume);
                 clip.start();
-
-            } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-                if (clip != null && clip.isOpen()) clip.close();
-                try { if (audioStream != null) audioStream.close(); } catch (IOException ioe) {/* ignore */}
-                try { if (bufferedIn != null) bufferedIn.close(); } catch (IOException ioe) {/* ignore */}
-                try { if (soundFileStream != null) soundFileStream.close(); } catch (IOException ioe) {/* ignore */}
             } catch (Exception e) {
                 if (clip != null && clip.isOpen()) clip.close();
                 try { if (audioStream != null) audioStream.close(); } catch (IOException ioe) {/* ignore */}
@@ -309,6 +289,10 @@ public class NetworkGame extends JFrame {
         if (gamePanelWasVisible && gamePanel != null && (gamePanel.isGameRunning() || gamePanel.isGamePaused())) {
             gamePanel.stopSimulation();
         }
+
+        // پاک کردن فایل ذخیره هنگام خروج عادی از مرحله
+        GameStateManager.deleteSaveFile();
+
         if (menuPanel == null) return;
         cardLayout.show(mainPanelContainer, "MainMenu");
         menuPanel.updateStartButtonLevel(currentLevel);
@@ -333,7 +317,7 @@ public class NetworkGame extends JFrame {
         try {
             storeDialog.updateCoinsDisplay(gameState.getCoins());
             storeDialog.setLocationRelativeTo(this);
-            storeDialog.setVisible(true); // This call now handles its own UI updates
+            storeDialog.setVisible(true);
             if (gamePanel.isShowing()) {
                 SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
             }
@@ -429,6 +413,28 @@ public class NetworkGame extends JFrame {
             else if (menuPanel != null && menuPanel.isShowing()) menuPanel.repaint();
             else if (settingsPanel != null && settingsPanel.isShowing()) settingsPanel.repaint();
             else if (levelSelectionPanel != null && levelSelectionPanel.isShowing()) levelSelectionPanel.repaint();
+        }
+    }
+
+    private void checkForExistingSave() {
+        GameStateManager.SaveData saveData = GameStateManager.loadGameState();
+        if (saveData != null) {
+            int choice = JOptionPane.showConfirmDialog(
+                    this,
+                    "An unfinished game was found. Do you want to resume it?",
+                    "Resume Game?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (choice == JOptionPane.YES_OPTION) {
+                // بارگذاری بازی
+                cardLayout.show(mainPanelContainer, "GamePanel");
+                gamePanel.loadFromSaveData(saveData);
+            } else {
+                // حذف فایل ذخیره
+                GameStateManager.deleteSaveFile();
+            }
         }
     }
 

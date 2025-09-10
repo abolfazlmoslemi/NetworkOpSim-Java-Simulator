@@ -1,20 +1,23 @@
+// ================================================================================
+// FILE: Port.java (کد کامل و نهایی - اصلاح شده)
+// ================================================================================
+package com.networkopsim.game;
 
-        package com.networkopsim.game;
-import com.networkopsim.game.NetworkEnums;
-import com.networkopsim.game.System;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D; // IMPORT ENSURED
+import java.awt.geom.Point2D;
+import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-public class Port {
+public class Port implements Serializable {
+    private static final long serialVersionUID = 1L;
     public static final int PORT_SIZE = 10;
     private NetworkEnums.PortType type;
     private NetworkEnums.PortShape shape;
-    private final System parentSystem;
+    private transient System parentSystem;
+    private final int parentSystemId;
     private final int index;
     private Point position;
     private boolean isConnected = false;
@@ -24,6 +27,7 @@ public class Port {
     public Port(System parent, NetworkEnums.PortType type, NetworkEnums.PortShape shape, int index) {
         this.id = nextId++;
         this.parentSystem = Objects.requireNonNull(parent, "Port parent system cannot be null");
+        this.parentSystemId = parent.getId();
         this.type = Objects.requireNonNull(type, "Port type cannot be null");
         this.shape = Objects.requireNonNull(shape, "Port shape cannot be null");
         this.index = index;
@@ -37,7 +41,6 @@ public class Port {
         int pick = rand.nextInt(NetworkEnums.PortShape.values().length - 1); // Exclude ANY
         this.shape = NetworkEnums.PortShape.values()[pick];
     }
-
 
     public static void resetGlobalId() {
         nextId = 0;
@@ -70,7 +73,7 @@ public class Port {
         switch (shape) {
             case SQUARE:   return Color.CYAN;
             case TRIANGLE: return Color.YELLOW;
-            case CIRCLE:   return new Color(0x4a90e2); // Use a distinct color for bulk/wobble
+            case CIRCLE:   return new Color(0x4a90e2);
             default:       return Color.WHITE;
         }
     }
@@ -152,6 +155,10 @@ public class Port {
         return bounds.contains(p);
     }
 
+    public void rebuildTransientReferences(Map<Integer, System> systemMap) {
+        this.parentSystem = systemMap.get(this.parentSystemId);
+    }
+
     public int getId() { return id; }
     public NetworkEnums.PortType getType() { return type; }
     public NetworkEnums.PortShape getShape() { return shape; }
@@ -162,7 +169,6 @@ public class Port {
     public boolean isConnected() { return isConnected; }
     public int getIndex() { return index; }
     public void setConnected(boolean connected) { isConnected = connected; }
-
     public Point2D.Double getPrecisePosition() {
         return (position != null) ? new Point2D.Double(position.x, position.y) : new Point2D.Double(0,0);
     }

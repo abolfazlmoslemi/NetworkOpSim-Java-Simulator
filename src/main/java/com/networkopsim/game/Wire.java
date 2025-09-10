@@ -1,21 +1,24 @@
-// ==== Wire.java ====
-
+// ================================================================================
+// FILE: Wire.java (کد کامل و نهایی - اصلاح شده)
+// ================================================================================
 package com.networkopsim.game;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Wire {
+public class Wire implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static int nextId = 0;
     public static final int MAX_RELAY_POINTS = 3;
     public static final int RELAY_POINT_SIZE = 8;
     public static final int RELAY_CLICK_RADIUS = 12;
     public static final int MAX_BULK_TRAVERSALS = 3;
-
 
     private final int id;
     private final Port startPort;
@@ -24,11 +27,11 @@ public class Wire {
     private double length;
     private int bulkPacketTraversals = 0;
 
-
-    public static class RelayPoint {
-        private final Wire parentWire;
+    public static class RelayPoint implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private transient Wire parentWire;
         private Point2D.Double position;
-        private final Point2D.Double lastGoodPosition; // For drag cancellation
+        private final Point2D.Double lastGoodPosition;
         private boolean isHovered = false;
         private boolean isDragged = false;
 
@@ -50,7 +53,7 @@ public class Wire {
             int x = (int)Math.round(position.x - drawSize / 2.0);
             int y = (int)Math.round(position.y - drawSize / 2.0);
 
-            if (isDragged) g2d.setColor(new Color(255, 165, 0)); // Orange
+            if (isDragged) g2d.setColor(new Color(255, 165, 0));
             else if (isHovered) g2d.setColor(Color.YELLOW);
             else g2d.setColor(Color.CYAN);
             g2d.fillOval(x, y, drawSize, drawSize);
@@ -61,6 +64,10 @@ public class Wire {
         }
         public boolean contains(Point p) {
             return p != null && position.distanceSq(p) < (RELAY_CLICK_RADIUS * RELAY_CLICK_RADIUS);
+        }
+
+        public void setParentWire(Wire parent) {
+            this.parentWire = parent;
         }
     }
 
@@ -115,7 +122,6 @@ public class Wire {
             g2d.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
         }
 
-        // Draw traversal count for bulk packets
         if (bulkPacketTraversals > 0) {
             Point midPoint = new Point((int)((path.get(0).x + path.get(path.size()-1).x)/2), (int)((path.get(0).y + path.get(path.size()-1).y)/2));
             String traversalText = bulkPacketTraversals + "/" + MAX_BULK_TRAVERSALS;
@@ -167,13 +173,6 @@ public class Wire {
         }
     }
 
-    public void removeLastRelayPoint() {
-        if (!relayPoints.isEmpty()) {
-            relayPoints.remove(relayPoints.size() - 1);
-            recalculateLength();
-        }
-    }
-
     public void removeRelayPoint(RelayPoint relayPoint) {
         if (relayPoints.remove(relayPoint)) {
             recalculateLength();
@@ -199,10 +198,6 @@ public class Wire {
         return bulkPacketTraversals >= MAX_BULK_TRAVERSALS;
     }
 
-    public int getBulkPacketTraversalCount() {
-        return bulkPacketTraversals;
-    }
-
     public int getId() { return id; }
     public Port getStartPort() { return startPort; }
     public Port getEndPort() { return endPort; }
@@ -212,6 +207,14 @@ public class Wire {
     public void destroy() {
         if (startPort != null) startPort.setConnected(false);
         if (endPort != null) endPort.setConnected(false);
+    }
+
+    public void rebuildTransientReferences(Map<Integer, System> systemMap) {
+        startPort.rebuildTransientReferences(systemMap);
+        endPort.rebuildTransientReferences(systemMap);
+        for(RelayPoint rp : relayPoints) {
+            rp.setParentWire(this);
+        }
     }
 
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Wire wire = (Wire) o; return id == wire.id; }

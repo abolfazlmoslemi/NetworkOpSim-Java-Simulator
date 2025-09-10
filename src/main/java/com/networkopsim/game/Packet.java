@@ -1,15 +1,18 @@
 // ================================================================================
-// FILE: Packet.java (کد کامل و نهایی با قابلیت‌های جدید)
+// FILE: Packet.java (کد کامل و نهایی - اصلاح شده)
 // ================================================================================
 package com.networkopsim.game;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class Packet {
+public class Packet implements Serializable {
+    private static final long serialVersionUID = 1L;
     public static final double BASE_SPEED_MAGNITUDE = 2.0;
     public static final int BASE_DRAW_SIZE = 8;
     public static final double SQUARE_COMPATIBLE_SPEED_FACTOR = 0.5;
@@ -28,9 +31,7 @@ public class Packet {
     private static final Color IDEAL_POSITION_MARKER_COLOR = new Color(255, 255, 255, 60);
     private static final int IDEAL_POSITION_MARKER_SIZE = 4;
     private static int nextPacketId = 0;
-
-    // ثابت جدید برای Eliphas
-    private static final double ELIPHAS_REALIGNMENT_FACTOR = 0.05; // 5% of offset is removed each tick
+    private static final double ELIPHAS_REALIGNMENT_FACTOR = 0.05;
 
     private final int id;
     private final NetworkEnums.PacketShape shape;
@@ -45,8 +46,10 @@ public class Packet {
     private boolean isUpgradedSecret = false;
     private double noise = 0.0;
     private boolean markedForRemoval = false;
-    private Wire currentWire = null;
-    private System currentSystem = null;
+    private transient Wire currentWire;
+    private transient System currentSystem;
+    private int currentWireId = -1;
+    private int currentSystemId = -1;
     private double progressOnWire = 0.0;
     private double currentSpeedMagnitude = 0.0;
     private double targetSpeedMagnitude = 0.0;
@@ -55,7 +58,7 @@ public class Packet {
     private boolean isReversing = false;
     private boolean enteredViaIncompatiblePort = false;
     private Point2D.Double visualOffsetDirection = null;
-    private double visualOffsetMagnitude = 0.0; // فیلد جدید برای کنترل مستقل انحراف
+    private double visualOffsetMagnitude = 0.0;
     private int initialOffsetSidePreference = 0;
     private PredictedPacketStatus finalStatusForPrediction = null;
     private int bulkParentId = -1;
@@ -63,7 +66,9 @@ public class Packet {
     private enum ProtectedMovementMode { LIKE_SQUARE, LIKE_TRIANGLE, LIKE_MESSENGER }
     private ProtectedMovementMode protectedMovementMode = null;
 
-    public static void resetGlobalId() { nextPacketId = 0; }
+    public static void resetGlobalId() {
+        nextPacketId = 0;
+    }
 
     public Packet(NetworkEnums.PacketShape shape, double startX, double startY, NetworkEnums.PacketType type) {
         this.id = nextPacketId++;
@@ -73,20 +78,34 @@ public class Packet {
         this.idealPosition = new Point2D.Double(startX, startY);
         this.velocity = new Point2D.Double(0, 0);
 
-        if (this.packetType == NetworkEnums.PacketType.MESSENGER) { this.size = 1; this.baseCoinValue = 1; }
-        else {
+        if (this.packetType == NetworkEnums.PacketType.MESSENGER) {
+            this.size = 1;
+            this.baseCoinValue = 1;
+        } else {
             switch (type) {
-                case SECRET: this.size = 4; this.baseCoinValue = 3; break;
-                case BULK: this.size = 8; this.baseCoinValue = 8; break;
-                case WOBBLE: this.size = 10; this.baseCoinValue = 10; break;
-                case BIT: this.size = 1; this.baseCoinValue = 0; break;
-                case NORMAL: case TROJAN: case PROTECTED: default:
-                    if (shape == NetworkEnums.PacketShape.SQUARE) { this.size = 2; this.baseCoinValue = 2; }
-                    else if (shape == NetworkEnums.PacketShape.TRIANGLE) { this.size = 3; this.baseCoinValue = 3; }
-                    else { this.size = 1; this.baseCoinValue = 1; }
+                case SECRET:
+                    this.size = 4; this.baseCoinValue = 3; break;
+                case BULK:
+                    this.size = 8; this.baseCoinValue = 8; break;
+                case WOBBLE:
+                    this.size = 10; this.baseCoinValue = 10; break;
+                case BIT:
+                    this.size = 1; this.baseCoinValue = 0; break;
+                case NORMAL:
+                case TROJAN:
+                case PROTECTED:
+                default:
+                    if (shape == NetworkEnums.PacketShape.SQUARE) {
+                        this.size = 2; this.baseCoinValue = 2;
+                    } else if (shape == NetworkEnums.PacketShape.TRIANGLE) {
+                        this.size = 3; this.baseCoinValue = 3;
+                    } else {
+                        this.size = 1; this.baseCoinValue = 1;
+                    }
                     break;
             }
         }
+
         this.originalSize = this.size;
         this.originalBaseCoinValue = this.baseCoinValue;
         this.initialOffsetSidePreference = this.id % 2;
@@ -471,8 +490,10 @@ public class Packet {
 
     public void setWire(Wire wire, boolean compatiblePortExit) {
         this.currentWire = Objects.requireNonNull(wire, "Cannot set a null wire for packet " + id);
-        this.progressOnWire = 0.0;
+        this.currentWireId = wire.getId();
         this.currentSystem = null;
+        this.currentSystemId = -1;
+        this.progressOnWire = 0.0;
         this.isReversing = false;
         this.isDecelerating = false;
         this.isAccelerating = false;
@@ -622,7 +643,20 @@ public class Packet {
     public boolean isMarkedForRemoval() { return markedForRemoval; }
     public void markForRemoval() { this.markedForRemoval = true; }
     public System getCurrentSystem() { return currentSystem; }
-    public void setCurrentSystem(System system) { this.currentSystem = system; this.isReversing = false; this.isAccelerating = false; this.isDecelerating = false; this.currentWire = null; this.progressOnWire = 0.0; this.currentSpeedMagnitude = 0.0; if (system != null) this.idealPosition = new Point2D.Double(system.getPosition().x, system.getPosition().y); }
+    public void setCurrentSystem(System system) {
+        this.currentSystem = system;
+        this.currentSystemId = (system != null) ? system.getId() : -1;
+        this.currentWire = null;
+        this.currentWireId = -1;
+        this.isReversing = false;
+        this.isAccelerating = false;
+        this.isDecelerating = false;
+        this.progressOnWire = 0.0;
+        this.currentSpeedMagnitude = 0.0;
+        if (system != null) {
+            this.idealPosition = new Point2D.Double(system.getPosition().x, system.getPosition().y);
+        }
+    }
     public int getDrawSize() { return BASE_DRAW_SIZE + (size * 2); }
     public double getCurrentSpeedMagnitude() { return currentSpeedMagnitude; }
     public void setCurrentSpeedMagnitude(double speed) { this.currentSpeedMagnitude = speed; }
@@ -638,4 +672,13 @@ public class Packet {
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Packet packet = (Packet) o; return id == packet.id; }
     @Override public int hashCode() { return Objects.hash(id); }
     @Override public String toString() { String status; if (markedForRemoval) status = "REMOVED"; else if (currentSystem != null) status = "QUEUED(Sys:" + currentSystem.getId() + ")"; else if (currentWire != null) status = String.format("ON_WIRE(W:%d P:%.1f%%)", currentWire.getId(), progressOnWire * 100); else status = "IDLE/INIT"; String idealPosStr = (idealPosition != null) ? String.format("%.1f,%.1f", idealPosition.x, idealPosition.y) : "null"; Point2D.Double currentVel = getVelocity(); String velStr = (currentVel != null) ? String.format("%.1f,%.1f (Mag:%.2f)", currentVel.x, currentVel.y, currentSpeedMagnitude) : "null"; return String.format("Packet{ID:%d, SHP:%s, TYP: %s, SZ:%d, N:%.1f/%d, V:%d, Ideal:(%s) Vel:(%s) Accel:%b Decel:%b Rev:%b FinalPred:%s St:%s}", id, shape, packetType, size, noise, this.size, baseCoinValue, idealPosStr, velStr, isAccelerating, isDecelerating, isReversing, (finalStatusForPrediction != null ? finalStatusForPrediction.name() : "N/A"), status); }
+
+    public void rebuildTransientReferences(Map<Integer, System> systemMap, Map<Integer, Wire> wireMap) {
+        if (this.currentSystemId != -1) {
+            this.currentSystem = systemMap.get(this.currentSystemId);
+        }
+        if (this.currentWireId != -1) {
+            this.currentWire = wireMap.get(this.currentWireId);
+        }
+    }
 }

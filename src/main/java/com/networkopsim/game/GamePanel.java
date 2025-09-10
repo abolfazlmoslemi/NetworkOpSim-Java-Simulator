@@ -1,11 +1,12 @@
 // ================================================================================
-// FILE: GamePanel.java (کد کامل و نهایی با قابلیت‌های جدید)
+// FILE: GamePanel.java (کد کامل و نهایی با سیستم ذخیره و بارگذاری)
 // ================================================================================
 package com.networkopsim.game;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,10 +18,10 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.awt.geom.Point2D;
 import java.awt.geom.Line2D;
-import java.util.Iterator;
 
 public class GamePanel extends JPanel {
-    private static class Pair<T, U> {
+    private static class Pair<T, U> implements Serializable {
+        private static final long serialVersionUID = 1L;
         final T first;
         final U second;
         Pair(T first, U second) { this.first = first; this.second = second; }
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel {
         ELIPHAS_PLACEMENT
     }
 
+    private static final int AUTOSAVE_INTERVAL_MS = 10000;
     private static final int GAME_TICK_MS = 16;
     private static final int HUD_DISPLAY_TIME_MS = 7000;
     private static final int ATAR_DURATION_MS = 10000;
@@ -54,7 +56,6 @@ public class GamePanel extends JPanel {
     private static final long LEVEL_1_TIME_LIMIT_MS = 2 * 60 * 1000;
     private static final long LEVEL_2_TIME_LIMIT_MS = 4 * 60 * 1000;
     private static final int RELAY_COST = 1;
-
     private static final long AERGIA_DURATION_MS = 20000;
     private static final long AERGIA_COOLDOWN_MS = 10000;
     private static final double AERGIA_EFFECT_RADIUS = 30.0;
@@ -63,7 +64,7 @@ public class GamePanel extends JPanel {
     private static final double SISYPHUS_DRAG_RADIUS = 150.0;
 
     private final NetworkGame game;
-    private final GameState gameState;
+    private GameState gameState;
     private final GameRenderer gameRenderer;
     private final GameInputHandler gameInputHandler;
     private volatile boolean gameRunning = false;
@@ -73,6 +74,7 @@ public class GamePanel extends JPanel {
     private volatile boolean gameOver = false;
     private int currentLevel = 1;
     private final Timer gameLoopTimer;
+    private Timer autosaveTimer;
     private volatile long viewedTimeMs = 0;
     private final List<PacketSnapshot> predictedPacketStates = Collections.synchronizedList(new ArrayList<>());
     private volatile PredictionRunStats displayedPredictionStats = new PredictionRunStats(0,0,0,0,0);
@@ -122,10 +124,11 @@ public class GamePanel extends JPanel {
     private int sisyphusPreDragWireLength = 0;
     private boolean sisyphusMoveIsValid = true;
 
-    public static class ActiveWireEffect {
+    public static class ActiveWireEffect implements Serializable {
+        private static final long serialVersionUID = 1L;
         public final InteractiveMode type;
         public final Point2D.Double position;
-        public final Wire parentWire;
+        public final transient Wire parentWire;
         public final long expiryTime;
         public ActiveWireEffect(InteractiveMode type, Point2D.Double pos, Wire wire, long expiry) {
             this.type = type; this.position = pos; this.parentWire = wire; this.expiryTime = expiry;
@@ -173,6 +176,18 @@ public class GamePanel extends JPanel {
         speedLimiterTimer.setRepeats(false);
         gameLoopTimer = new Timer(GAME_TICK_MS, e -> gameTick());
         gameLoopTimer.setRepeats(true);
+
+        autosaveTimer = new Timer(AUTOSAVE_INTERVAL_MS, e -> {
+            if (gameRunning && !gamePaused && simulationStarted && !levelComplete && !gameOver) {
+                synchronized(this) {
+                    boolean wasPaused = gamePaused;
+                    pauseGame(true);
+                    GameStateManager.saveGameState(this);
+                    pauseGame(wasPaused);
+                }
+            }
+        });
+        autosaveTimer.setRepeats(true);
     }
 
     public void initializeLevel(int level) {
@@ -256,7 +271,93 @@ public class GamePanel extends JPanel {
         synchronized (predictedPacketStates) { predictedPacketStates.clear(); }
         displayedPredictionStats = new PredictionRunStats(0, 0, 0, 0, 0);
         gameLoopTimer.start();
+        autosaveTimer.start();
         repaint();
+    }
+
+    public void stopSimulation() {
+        gameRunning = false;
+        gamePaused = false;
+        if (gameLoopTimer.isRunning()) gameLoopTimer.stop();
+        if (autosaveTimer.isRunning()) autosaveTimer.stop();
+        if (atarTimer.isRunning()) { deactivateAtar(); atarTimer.stop(); }
+        if (airyamanTimer.isRunning()) { deactivateAiryaman(); airyamanTimer.stop(); }
+        if (speedLimiterTimer.isRunning()) { deactivateSpeedLimiter(); speedLimiterTimer.stop(); }
+
+        if (levelComplete || gameOver) {
+            GameStateManager.deleteSaveFile();
+        }
+
+        if (!simulationStarted) { validateAndSetPredictionFlag(); }
+        repaint();
+    }
+
+    public void loadFromSaveData(GameStateManager.SaveData saveData) {
+        stopSimulation();
+
+        this.gameState = saveData.gameState;
+        this.gameRenderer.setGameState(this.gameState);
+        this.simulationTimeElapsedMs = saveData.simulationTimeElapsedMs;
+
+        synchronized(systems) {
+            systems.clear();
+            systems.addAll(saveData.systems);
+        }
+        synchronized(wires) {
+            wires.clear();
+            wires.addAll(saveData.wires);
+        }
+        synchronized(packets) {
+            packets.clear();
+            packets.addAll(saveData.packets);
+        }
+
+        rebuildTransientReferences();
+
+        simulationStarted = true;
+        gameRunning = true;
+        gamePaused = true;
+
+        game.showTemporaryMessage("Game Loaded. Resuming in 3 seconds...", Color.GREEN, 3000);
+
+        Timer resumeTimer = new Timer(3000, e -> {
+            pauseGame(false);
+            gameLoopTimer.start();
+            autosaveTimer.start();
+        });
+        resumeTimer.setRepeats(false);
+        resumeTimer.start();
+
+        repaint();
+        requestFocusInWindow();
+    }
+
+    private void rebuildTransientReferences() {
+        Map<Integer, System> systemMap = new HashMap<>();
+        synchronized(systems) {
+            for (System s : systems) {
+                systemMap.put(s.getId(), s);
+            }
+        }
+
+        synchronized(wires) {
+            for (Wire w : wires) {
+                w.rebuildTransientReferences(systemMap);
+            }
+        }
+
+        Map<Integer, Wire> wireMap = new HashMap<>();
+        synchronized(wires) {
+            for (Wire w : wires) {
+                wireMap.put(w.getId(), w);
+            }
+        }
+
+        synchronized(packets) {
+            for (Packet p : packets) {
+                p.rebuildTransientReferences(systemMap, wireMap);
+            }
+        }
     }
 
     private String getNetworkValidationErrorMessage() {
@@ -300,17 +401,6 @@ public class GamePanel extends JPanel {
         }
         this.networkValidatedForPrediction = newStateIsValid;
         updatePrediction();
-        repaint();
-    }
-
-    public void stopSimulation() {
-        gameRunning = false;
-        gamePaused = false;
-        if (gameLoopTimer.isRunning()) gameLoopTimer.stop();
-        if (atarTimer.isRunning()) { deactivateAtar(); atarTimer.stop(); }
-        if (airyamanTimer.isRunning()) { deactivateAiryaman(); airyamanTimer.stop(); }
-        if (speedLimiterTimer.isRunning()) { deactivateSpeedLimiter(); speedLimiterTimer.stop(); }
-        if (!simulationStarted) { validateAndSetPredictionFlag(); }
         repaint();
     }
 
@@ -1036,4 +1126,45 @@ public class GamePanel extends JPanel {
     public double getSisyphusDragRadius() { return SISYPHUS_DRAG_RADIUS; }
     public boolean isSisyphusMoveValid() { return sisyphusMoveIsValid; }
     public NetworkGame getGame() { return game; }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Serializable> T deepCopy(T original) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(original);
+            oos.flush();
+            oos.close();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (T) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<System> getSystemsDeepCopy() {
+        synchronized(systems) {
+            return deepCopy((Serializable & List<System>) new ArrayList<>(systems));
+        }
+    }
+
+    public List<Wire> getWiresDeepCopy() {
+        synchronized(wires) {
+            return deepCopy((Serializable & List<Wire>) new ArrayList<>(wires));
+        }
+    }
+
+    public List<Packet> getPacketsDeepCopy() {
+        List<Packet> allPackets = new ArrayList<>();
+        synchronized(packets) { allPackets.addAll(packets); }
+        synchronized(packetsToAdd) { allPackets.addAll(packetsToAdd); }
+        return deepCopy((Serializable & List<Packet>) allPackets);
+    }
+
+    public GameState getGameStateDeepCopy() {
+        return deepCopy(this.gameState);
+    }
 }

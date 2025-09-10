@@ -17,8 +17,10 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class System {
-    // --- Fields ---
+import java.io.Serializable; // اضافه شود
+
+public class System implements Serializable {
+    private static final long serialVersionUID = 1L; // اضافه شود
     public static final int SYSTEM_WIDTH = 80;
     public static final int SYSTEM_HEIGHT = 60;
     private static final int QUEUE_CAPACITY = 5;

@@ -1,5 +1,5 @@
 // ================================================================================
-// FILE: GameRenderer.java (کد کامل و نهایی با رندر قابلیت‌های جدید)
+// FILE: GameRenderer.java (کد کامل و نهایی - اصلاح شده)
 // ================================================================================
 package com.networkopsim.game;
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GameRenderer {
     private final GamePanel gamePanel;
-    private final GameState gameState;
+    private GameState gameState;
     private final KeyBindings keyBindings;
     private static final Stroke WIRING_LINE_STROKE = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
             10.0f, new float[]{9f, 5f}, 0.0f);
@@ -72,6 +72,10 @@ public class GameRenderer {
         this.gamePanel = gamePanel;
         this.gameState = gameState;
         this.keyBindings = gamePanel.getGame().getKeyBindings();
+    }
+
+    public void setGameState(GameState newGameState) {
+        this.gameState = newGameState;
     }
 
     public void render(Graphics g) {
