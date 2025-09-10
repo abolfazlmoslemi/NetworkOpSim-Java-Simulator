@@ -1,8 +1,10 @@
 // ================================================================================
-// FILE: GamePanel.java (کد کامل و نهایی با سیستم ذخیره و بارگذاری)
+// FILE: GamePanel.java (کد کامل و نهایی با سیستم لاگ)
 // ================================================================================
 package com.networkopsim.game;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,6 +22,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Line2D;
 
 public class GamePanel extends JPanel {
+    private static final Logger logger = LoggerFactory.getLogger(GamePanel.class);
+
     private static class Pair<T, U> implements Serializable {
         private static final long serialVersionUID = 1L;
         final T first;
@@ -62,6 +66,7 @@ public class GamePanel extends JPanel {
     private static final long ELIPHAS_DURATION_MS = 30000;
     private static final double ELIPHAS_EFFECT_RADIUS = 40.0;
     private static final double SISYPHUS_DRAG_RADIUS = 150.0;
+    private static final double IMPACT_WAVE_TORQUE_FACTOR = 5.0;
 
     private final NetworkGame game;
     private GameState gameState;
@@ -180,6 +185,7 @@ public class GamePanel extends JPanel {
         autosaveTimer = new Timer(AUTOSAVE_INTERVAL_MS, e -> {
             if (gameRunning && !gamePaused && simulationStarted && !levelComplete && !gameOver) {
                 synchronized(this) {
+                    logger.debug("Autosave triggered.");
                     boolean wasPaused = gamePaused;
                     pauseGame(true);
                     GameStateManager.saveGameState(this);
@@ -191,9 +197,14 @@ public class GamePanel extends JPanel {
     }
 
     public void initializeLevel(int level) {
+        logger.info("Initializing level {}.", level);
         stopSimulation();
         LevelLoader.LevelLayout layout = LevelLoader.loadLevel(level, gameState, game);
-        if (layout == null) { game.returnToMenu(); return; }
+        if (layout == null) {
+            logger.error("Failed to load level layout for level {}. Returning to menu.", level);
+            game.returnToMenu();
+            return;
+        }
         gameState.resetForNewLevel();
         this.currentLevel = layout.levelNumber;
         this.networkValidatedForPrediction = false;
@@ -225,6 +236,7 @@ public class GamePanel extends JPanel {
         showHUD = true; hudTimer.restart();
         repaint();
         SwingUtilities.invokeLater(this::requestFocusInWindow);
+        logger.info("Level {} initialized successfully with {} systems and {} wires.", level, systems.size(), wires.size());
     }
 
     private void clearLevelElements() {
@@ -242,11 +254,18 @@ public class GamePanel extends JPanel {
     }
 
     public void attemptStartSimulation() {
-        if (simulationStarted && gamePaused) { pauseGame(false); return; }
+        if (simulationStarted && gamePaused) {
+            logger.info("Resuming simulation from paused state.");
+            pauseGame(false);
+            return;
+        }
         if (simulationStarted || gameOver || levelComplete) return;
+
+        logger.info("Attempting to start simulation for level {}.", currentLevel);
         validateAndSetPredictionFlag();
         String validationMessage = getNetworkValidationErrorMessage();
         if (validationMessage != null) {
+            logger.warn("Network validation failed: {}", validationMessage);
             if (!game.isMuted()) game.playSoundEffect("error");
             JOptionPane.showMessageDialog(this, "Network Validation Failed:\n" + validationMessage, "Network Not Ready", JOptionPane.WARNING_MESSAGE);
             return;
@@ -273,9 +292,12 @@ public class GamePanel extends JPanel {
         gameLoopTimer.start();
         autosaveTimer.start();
         repaint();
+        logger.info("Simulation started successfully.");
     }
 
     public void stopSimulation() {
+        if (!gameRunning && !simulationStarted) return;
+        logger.info("Stopping simulation. Game Over: {}, Level Complete: {}.", gameOver, levelComplete);
         gameRunning = false;
         gamePaused = false;
         if (gameLoopTimer.isRunning()) gameLoopTimer.stop();
@@ -293,6 +315,7 @@ public class GamePanel extends JPanel {
     }
 
     public void loadFromSaveData(GameStateManager.SaveData saveData) {
+        logger.info("Loading game state from saved data. Simulation time: {}ms", saveData.simulationTimeElapsedMs);
         stopSimulation();
 
         this.gameState = saveData.gameState;
@@ -321,6 +344,7 @@ public class GamePanel extends JPanel {
         game.showTemporaryMessage("Game Loaded. Resuming in 3 seconds...", Color.GREEN, 3000);
 
         Timer resumeTimer = new Timer(3000, e -> {
+            logger.info("Resuming loaded game automatically.");
             pauseGame(false);
             gameLoopTimer.start();
             autosaveTimer.start();
@@ -397,6 +421,7 @@ public class GamePanel extends JPanel {
         String errorMessage = getNetworkValidationErrorMessage();
         boolean newStateIsValid = (errorMessage == null);
         if (this.networkValidatedForPrediction != newStateIsValid && newStateIsValid) {
+            logger.info("Network is now fully connected and valid for prediction.");
             game.showTemporaryMessage("Network is fully connected and ready!", new Color(0, 150, 0), 2500);
         }
         this.networkValidatedForPrediction = newStateIsValid;
@@ -407,6 +432,7 @@ public class GamePanel extends JPanel {
     public void pauseGame(boolean pause) {
         if (!simulationStarted || gameOver || levelComplete) return;
         if (pause && !gamePaused) {
+            logger.info("Game paused.");
             gamePaused = true;
             if (gameLoopTimer.isRunning()) gameLoopTimer.stop();
             if (atarTimer.isRunning()) atarTimer.stop();
@@ -414,6 +440,7 @@ public class GamePanel extends JPanel {
             if (speedLimiterTimer.isRunning()) speedLimiterTimer.stop();
             repaint();
         } else if (!pause && gamePaused) {
+            logger.info("Game resumed.");
             gamePaused = false;
             gameLoopTimer.start();
             if (atarActive && !atarTimer.isRunning()) atarTimer.start();
@@ -481,6 +508,7 @@ public class GamePanel extends JPanel {
             synchronized(wires) {
                 for (Wire w : wiresToRemove) {
                     if (wires.remove(w)) {
+                        logger.warn("Wire {} destroyed due to excessive BULK packet traversals.", w.getId());
                         w.destroy();
                         if (!game.isMuted()) game.playSoundEffect("wire_disconnect");
                     }
@@ -510,6 +538,7 @@ public class GamePanel extends JPanel {
 
     public void addPacketInternal(Packet packet, boolean isPredictionRun) {
         if (packet != null) {
+            if (!isPredictionRun) logger.debug("Generated new packet: {}", packet);
             synchronized (packetsToAdd) { packetsToAdd.add(packet); }
             if (isPredictionRun) {
                 predictionRun_totalPacketsGeneratedCount++;
@@ -521,6 +550,7 @@ public class GamePanel extends JPanel {
 
     public void packetLostInternal(Packet packet, boolean isPredictionRun) {
         if (packet != null && !packet.isMarkedForRemoval()) {
+            if (!isPredictionRun) logger.warn("Packet Lost: {}", packet);
             packet.markForRemoval();
             packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST);
             synchronized (packetsToRemove) { packetsToRemove.add(packet); }
@@ -536,6 +566,7 @@ public class GamePanel extends JPanel {
 
     public void packetSuccessfullyDeliveredInternal(Packet packet, boolean isPredictionRun) {
         if (packet != null && !packet.isMarkedForRemoval()) {
+            if (!isPredictionRun) logger.info("Packet Delivered Successfully: {}", packet);
             packet.markForRemoval();
             packet.setFinalStatusForPrediction(PredictedPacketStatus.DELIVERED);
             synchronized (packetsToRemove) { packetsToRemove.add(packet); }
@@ -589,7 +620,10 @@ public class GamePanel extends JPanel {
                 if (p1.collidesWith(p2)) {
                     currentTickCollisions.add(currentPair);
                     if (!activelyCollidingPairs.contains(currentPair)) {
-                        if (!isPredictionRun && !game.isMuted()) game.playSoundEffect("collision");
+                        if (!isPredictionRun) {
+                            logger.info("Collision detected between Packet ID {} and Packet ID {}", p1.getId(), p2.getId());
+                            if (!game.isMuted()) game.playSoundEffect("collision");
+                        }
                         p1.addNoise(DIRECT_COLLISION_NOISE_PER_PACKET);
                         p2.addNoise(DIRECT_COLLISION_NOISE_PER_PACKET);
                         Point2D.Double p1VisPos = p1.getPositionDouble();
@@ -602,7 +636,10 @@ public class GamePanel extends JPanel {
                         if (p2.getPacketType() == NetworkEnums.PacketType.MESSENGER && p2.getShape() == NetworkEnums.PacketShape.CIRCLE) { p2.reverseDirection(this); }
                         if (!currentAtarActive) {
                             Point impactCenter = calculateImpactCenter(p1.getPositionDouble(), p2.getPositionDouble());
-                            if (impactCenter != null) { handleImpactWaveNoiseInternal(impactCenter, fullPacketSnapshotForImpactWave, p1, p2); }
+                            if (impactCenter != null) {
+                                if (!isPredictionRun) logger.debug("Impact wave generated at ({}, {}) due to collision.", impactCenter.x, impactCenter.y);
+                                handleImpactWaveNoiseInternal(impactCenter, fullPacketSnapshotForImpactWave, p1, p2);
+                            }
                         }
                     }
                 }
@@ -633,8 +670,11 @@ public class GamePanel extends JPanel {
                 double noiseAmount = IMPACT_WAVE_MAX_NOISE * (1.0 - normalizedDistance);
                 noiseAmount = Math.max(0.0, noiseAmount);
                 if (noiseAmount > 0) {
-                    p.setVisualOffsetDirectionFromForce(new Point2D.Double(pVisPos.x - center.x, pVisPos.y - center.y));
+                    Point2D.Double forceDirection = new Point2D.Double(pVisPos.x - center.x, pVisPos.y - center.y);
+                    p.setVisualOffsetDirectionFromForce(forceDirection);
                     p.addNoise(noiseAmount);
+                    double torqueMagnitude = IMPACT_WAVE_TORQUE_FACTOR * (1.0 - normalizedDistance);
+                    p.applyTorque(forceDirection, torqueMagnitude);
                 }
             }
         }
@@ -668,9 +708,11 @@ public class GamePanel extends JPanel {
         }
         boolean lostTooMany = gameState.getPacketLossPercentage() >= PACKET_LOSS_GAME_OVER_THRESHOLD;
         if (lostTooMany) {
+            logger.info("GAME OVER for Level {}. Reason: Packet loss exceeded threshold ({}% >= {}%).", currentLevel, String.format("%.1f", gameState.getPacketLossPercentage()), PACKET_LOSS_GAME_OVER_THRESHOLD);
             gameOver = true;
             if (!game.isMuted()) game.playSoundEffect("game_over");
         } else {
+            logger.info("LEVEL {} COMPLETE. Packet loss: {}%.", currentLevel, String.format("%.1f", gameState.getPacketLossPercentage()));
             levelComplete = true;
             if (!game.isMuted()) game.playSoundEffect("level_complete");
             if (currentLevel < gameState.getMaxLevels()) gameState.unlockLevel(currentLevel);
@@ -681,6 +723,7 @@ public class GamePanel extends JPanel {
     private void checkEndConditions() {
         if (gameOver || levelComplete || !simulationStarted) return;
         if (simulationTimeElapsedMs >= currentLevelTimeLimitMs) {
+            logger.info("Level {} ended due to time limit.", currentLevel);
             handleEndOfLevelByTimeLimit();
             return;
         }
@@ -725,9 +768,11 @@ public class GamePanel extends JPanel {
                 stopSimulation();
                 boolean lostTooMany = gameState.getPacketLossPercentage() >= PACKET_LOSS_GAME_OVER_THRESHOLD;
                 if (lostTooMany) {
+                    logger.info("GAME OVER for Level {}. Reason: Packet loss exceeded threshold after all packets processed ({}% >= {}%).", currentLevel, String.format("%.1f", gameState.getPacketLossPercentage()), PACKET_LOSS_GAME_OVER_THRESHOLD);
                     gameOver = true;
                     if (!game.isMuted()) game.playSoundEffect("game_over");
                 } else {
+                    logger.info("LEVEL {} COMPLETE after all packets processed. Packet loss: {}%.", currentLevel, String.format("%.1f", gameState.getPacketLossPercentage()));
                     levelComplete = true;
                     if (!game.isMuted()) game.playSoundEffect("level_complete");
                     if (currentLevel < gameState.getMaxLevels()) gameState.unlockLevel(currentLevel);
@@ -790,14 +835,15 @@ public class GamePanel extends JPanel {
         } else game.returnToMenu();
     }
 
-    public void activateAtar() { if (!atarActive) { atarActive = true;} atarTimer.restart(); repaint(); }
-    private void deactivateAtar() { if (atarActive) { atarActive = false; repaint(); } atarTimer.stop(); }
-    public void activateAiryaman() {  if (!airyamanActive) { airyamanActive = true;} airyamanTimer.restart(); repaint(); }
-    private void deactivateAiryaman() { if (airyamanActive) { airyamanActive = false; repaint(); } airyamanTimer.stop(); }
-    public void activateAnahita() { List<Packet> currentSimPackets; synchronized (packets) { currentSimPackets = new ArrayList<>(packets); } for (Packet p : currentSimPackets) { if (p != null && !p.isMarkedForRemoval() && p.getNoise() > 0) p.resetNoise(); } repaint(); }
-    public void activateSpeedLimiter() { if (!isSpeedLimiterActive) { isSpeedLimiterActive = true; } speedLimiterTimer.restart(); repaint(); }
-    private void deactivateSpeedLimiter() { if (isSpeedLimiterActive) { isSpeedLimiterActive = false; repaint(); } speedLimiterTimer.stop(); }
+    public void activateAtar() { if (!atarActive) { logger.info("Power-up activated: O' Atar."); atarActive = true;} atarTimer.restart(); repaint(); }
+    private void deactivateAtar() { if (atarActive) { logger.info("Power-up expired: O' Atar."); atarActive = false; repaint(); } atarTimer.stop(); }
+    public void activateAiryaman() {  if (!airyamanActive) { logger.info("Power-up activated: O' Airyaman."); airyamanActive = true;} airyamanTimer.restart(); repaint(); }
+    private void deactivateAiryaman() { if (airyamanActive) { logger.info("Power-up expired: O' Airyaman."); airyamanActive = false; repaint(); } airyamanTimer.stop(); }
+    public void activateAnahita() { logger.info("Power-up activated: O' Anahita."); List<Packet> currentSimPackets; synchronized (packets) { currentSimPackets = new ArrayList<>(packets); } for (Packet p : currentSimPackets) { if (p != null && !p.isMarkedForRemoval() && p.getNoise() > 0) p.resetNoise(); } repaint(); }
+    public void activateSpeedLimiter() { if (!isSpeedLimiterActive) { logger.info("Power-up activated: Speed Limiter."); isSpeedLimiterActive = true; } speedLimiterTimer.restart(); repaint(); }
+    private void deactivateSpeedLimiter() { if (isSpeedLimiterActive) { logger.info("Power-up expired: Speed Limiter."); isSpeedLimiterActive = false; repaint(); } speedLimiterTimer.stop(); }
     public void activateEmergencyBrake() {
+        logger.info("Power-up activated: Emergency Brake.");
         synchronized(packets) {
             for (Packet p : packets) {
                 if (p != null && !p.isMarkedForRemoval() && p.getCurrentWire() != null) {
@@ -814,7 +860,7 @@ public class GamePanel extends JPanel {
         gameRenderer.render(g);
     }
 
-    public void startWiringMode(Port startPort, Point currentMousePos) { if (!wireDrawingMode && startPort != null && !simulationStarted && startPort.getType() == NetworkEnums.PortType.OUTPUT && !startPort.isConnected()) { this.selectedOutputPort = startPort; this.mouseDragPos.setLocation(currentMousePos); this.wireDrawingMode = true; this.currentWiringColor = DEFAULT_WIRING_COLOR; setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)); repaint(); } else if (simulationStarted) { if(!game.isMuted()) game.playSoundEffect("error"); } }
+    public void startWiringMode(Port startPort, Point currentMousePos) { if (!wireDrawingMode && startPort != null && !simulationStarted && startPort.getType() == NetworkEnums.PortType.OUTPUT && !startPort.isConnected()) { logger.debug("Starting wire drawing from port {}.", startPort.getId()); this.selectedOutputPort = startPort; this.mouseDragPos.setLocation(currentMousePos); this.wireDrawingMode = true; this.currentWiringColor = DEFAULT_WIRING_COLOR; setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)); repaint(); } else if (simulationStarted) { if(!game.isMuted()) game.playSoundEffect("error"); } }
     public void updateDragPos(Point currentMousePos) { if (wireDrawingMode) this.mouseDragPos.setLocation(currentMousePos); }
     public void updateWiringPreview(Point currentMousePos) { if (!wireDrawingMode || selectedOutputPort == null || selectedOutputPort.getPosition() == null) { this.currentWiringColor = DEFAULT_WIRING_COLOR; repaint(); return; } Point startPos = selectedOutputPort.getPosition(); double wireLength = startPos.distance(currentMousePos); if (gameState.getRemainingWireLength() < wireLength) { this.currentWiringColor = INVALID_WIRING_COLOR; repaint(); return; } Port targetPort = findPortAt(currentMousePos); if (targetPort != null) { if (Objects.equals(targetPort.getParentSystem(), selectedOutputPort.getParentSystem()) || targetPort.getType() != NetworkEnums.PortType.INPUT || targetPort.isConnected()) { this.currentWiringColor = INVALID_WIRING_COLOR; } else { this.currentWiringColor = VALID_WIRING_COLOR_TARGET; } } else { this.currentWiringColor = DEFAULT_WIRING_COLOR; } repaint(); }
     public boolean attemptWireCreation(Port startPort, Port endPort) {
@@ -826,11 +872,13 @@ public class GamePanel extends JPanel {
             gameState.useWire(wireLength);
             try {
                 Wire newWire = new Wire(startPort, endPort);
+                logger.info("Created new wire {} between Port {} and Port {}. Length: {}", newWire.getId(), startPort.getId(), endPort.getId(), wireLength);
                 synchronized (wires) { wires.add(newWire); }
                 if (!game.isMuted()) game.playSoundEffect("wire_connect");
                 validateAndSetPredictionFlag();
                 return true;
             } catch (Exception e) {
+                logger.error("Exception during wire creation between Port {} and Port {}.", startPort.getId(), endPort.getId(), e);
                 gameState.returnWire(wireLength);
                 JOptionPane.showMessageDialog(this.game, "Cannot create wire:\n" + e.getMessage(), "Wiring Error", JOptionPane.WARNING_MESSAGE);
                 if (!game.isMuted()) game.playSoundEffect("error");
@@ -838,13 +886,14 @@ public class GamePanel extends JPanel {
                 return false;
             }
         } else {
+            logger.warn("Attempted to create wire, but not enough length. Needed: {}, Have: {}", wireLength, gameState.getRemainingWireLength());
             JOptionPane.showMessageDialog(this.game, "Not enough wire! Need: " + wireLength + ", Have: " + gameState.getRemainingWireLength(), "Insufficient Wire", JOptionPane.WARNING_MESSAGE);
             if (!game.isMuted()) game.playSoundEffect("error");
             return false;
         }
     }
-    public void cancelWiring() { if(wireDrawingMode) { selectedOutputPort = null; wireDrawingMode = false; currentWiringColor = DEFAULT_WIRING_COLOR; setCursor(Cursor.getDefaultCursor()); repaint(); } }
-    public void deleteWireRequest(Wire wireToDelete) { if (wireToDelete == null || simulationStarted) { if(simulationStarted) if(!game.isMuted()) game.playSoundEffect("error"); return; } boolean removed; synchronized (wires) { removed = wires.remove(wireToDelete); } if (removed) { int returnedLength = (int) Math.round(wireToDelete.getLength()); gameState.returnWire(returnedLength); wireToDelete.destroy(); if (!game.isMuted()) game.playSoundEffect("wire_disconnect"); validateAndSetPredictionFlag(); } }
+    public void cancelWiring() { if(wireDrawingMode) { logger.debug("Wire drawing cancelled."); selectedOutputPort = null; wireDrawingMode = false; currentWiringColor = DEFAULT_WIRING_COLOR; setCursor(Cursor.getDefaultCursor()); repaint(); } }
+    public void deleteWireRequest(Wire wireToDelete) { if (wireToDelete == null || simulationStarted) { if(simulationStarted) if(!game.isMuted()) game.playSoundEffect("error"); return; } boolean removed; synchronized (wires) { removed = wires.remove(wireToDelete); } if (removed) { int returnedLength = (int) Math.round(wireToDelete.getLength()); gameState.returnWire(returnedLength); logger.info("Deleted wire {}. Returned {} length.", wireToDelete.getId(), returnedLength); wireToDelete.destroy(); if (!game.isMuted()) game.playSoundEffect("wire_disconnect"); validateAndSetPredictionFlag(); } }
     public Port findPortAt(Point p) { if (p == null) return null; List<System> systemsSnapshot; synchronized (this.systems) { systemsSnapshot = new ArrayList<>(this.systems); } for (System s : systemsSnapshot) { if (s != null) { Port port = s.getPortAt(p); if (port != null) return port; } } return null; }
     public Wire findWireAt(Point p, double clickThreshold) { if (p == null) return null; double clickThresholdSq = clickThreshold * clickThreshold; Wire closestWire = null; double minDistanceSq = Double.MAX_VALUE; List<Wire> wiresSnapshot; synchronized (this.wires) { wiresSnapshot = new ArrayList<>(this.wires); } for (Wire w : wiresSnapshot) { if (w == null) continue; List<Point2D.Double> path = w.getFullPathPoints(); if (path.size() < 2) continue; for (int i = 0; i < path.size() - 1; i++) { double distSq = Line2D.ptSegDistSq(path.get(i).x, path.get(i).y, path.get(i+1).x, path.get(i+1).y, p.x, p.y); if (distSq < minDistanceSq) { minDistanceSq = distSq; closestWire = w; } } } return (closestWire != null && minDistanceSq < clickThresholdSq) ? closestWire : null; }
     public Wire findWireFromPort(Port outputPort) { if (outputPort == null || outputPort.getType() != NetworkEnums.PortType.OUTPUT) return null; synchronized (wires) { List<Wire> wiresSnapshot = new ArrayList<>(wires); for (Wire w : wiresSnapshot) { if (w != null && Objects.equals(w.getStartPort(), outputPort)) return w; } } return null; }
@@ -909,10 +958,12 @@ public class GamePanel extends JPanel {
             return;
         }
         if (!gameState.spendCoins(RELAY_COST)) {
+            logger.warn("Failed to add relay point: not enough coins. Cost: {}", RELAY_COST);
             game.showTemporaryMessage("Not enough coins to add a relay point! Cost: " + RELAY_COST, Color.RED, 2500);
             if (!game.isMuted()) game.playSoundEffect("error");
             return;
         }
+        logger.info("Added a relay point to wire {}", wire.getId());
         int oldLength = (int)Math.round(wire.getLength());
         wire.addRelayPoint(new Point2D.Double(p.x, p.y));
         int newLength = (int)Math.round(wire.getLength());
@@ -926,6 +977,7 @@ public class GamePanel extends JPanel {
     public void deleteRelayPointRequest(Wire.RelayPoint relayPoint) {
         if (relayPoint == null || simulationStarted) return;
         Wire parentWire = relayPoint.getParentWire();
+        logger.info("Deleted a relay point from wire {}", parentWire.getId());
         int oldLength = (int)Math.round(parentWire.getLength());
         parentWire.removeRelayPoint(relayPoint);
         int newLength = (int)Math.round(parentWire.getLength());
@@ -944,6 +996,7 @@ public class GamePanel extends JPanel {
 
     public void enterAergiaPlacementMode() {
         if (currentInteractiveMode != InteractiveMode.NONE) cancelAllInteractiveModes();
+        logger.info("Entering interactive mode: Aergia Placement.");
         currentInteractiveMode = InteractiveMode.AERGIA_PLACEMENT;
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         game.showTemporaryMessage("Scroll of Aergia: Click on a wire to place the effect.", Color.CYAN, 5000);
@@ -952,6 +1005,7 @@ public class GamePanel extends JPanel {
 
     public void enterSisyphusDragMode() {
         if (currentInteractiveMode != InteractiveMode.NONE) cancelAllInteractiveModes();
+        logger.info("Entering interactive mode: Sisyphus Drag.");
         currentInteractiveMode = InteractiveMode.SISYPHUS_DRAG;
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         game.showTemporaryMessage("Scroll of Sisyphus: Click and drag a non-reference system to move it.", Color.MAGENTA, 5000);
@@ -960,6 +1014,7 @@ public class GamePanel extends JPanel {
 
     public void enterEliphasPlacementMode() {
         if (currentInteractiveMode != InteractiveMode.NONE) cancelAllInteractiveModes();
+        logger.info("Entering interactive mode: Eliphas Placement.");
         currentInteractiveMode = InteractiveMode.ELIPHAS_PLACEMENT;
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         game.showTemporaryMessage("Scroll of Eliphas: Click on a wire to place the realignment field.", Color.ORANGE, 5000);
@@ -967,6 +1022,7 @@ public class GamePanel extends JPanel {
     }
 
     public void cancelAllInteractiveModes() {
+        logger.info("Cancelling all interactive modes. Current mode: {}", currentInteractiveMode);
         if (sisyphusDraggedSystem != null) {
             int originalRemainingWire = gameState.getRemainingWireLength() + sisyphusPreDragWireLength;
             sisyphusDraggedSystem.setPosition(sisyphusDragStartPos.x, sisyphusDragStartPos.y);
@@ -1004,6 +1060,7 @@ public class GamePanel extends JPanel {
     }
 
     public void placeAergiaEffect(Wire wire, Point point) {
+        logger.info("Placed Aergia effect on wire {}", wire.getId());
         activeWireEffects.add(new ActiveWireEffect(InteractiveMode.AERGIA_PLACEMENT, new Point2D.Double(point.x, point.y), wire, simulationTimeElapsedMs + AERGIA_DURATION_MS));
         aergiaCooldownUntil = simulationTimeElapsedMs + AERGIA_COOLDOWN_MS;
         currentInteractiveMode = InteractiveMode.NONE;
@@ -1013,6 +1070,7 @@ public class GamePanel extends JPanel {
     }
 
     public void placeEliphasEffect(Wire wire, Point point) {
+        logger.info("Placed Eliphas effect on wire {}", wire.getId());
         activeWireEffects.add(new ActiveWireEffect(InteractiveMode.ELIPHAS_PLACEMENT, new Point2D.Double(point.x, point.y), wire, simulationTimeElapsedMs + ELIPHAS_DURATION_MS));
         currentInteractiveMode = InteractiveMode.NONE;
         setCursor(Cursor.getDefaultCursor());
@@ -1021,6 +1079,7 @@ public class GamePanel extends JPanel {
     }
 
     public void startSisyphusDrag(System system, Point point) {
+        logger.info("Started dragging system {} with Sisyphus.", system.getId());
         sisyphusDraggedSystem = system;
         sisyphusDragStartPos = system.getPosition();
         this.sisyphusPreDragWireLength = 0;
@@ -1074,6 +1133,7 @@ public class GamePanel extends JPanel {
         if (sisyphusDraggedSystem == null) return;
         revalidateSystemMove();
         if (sisyphusMoveIsValid) {
+            logger.info("Sisyphus drag for system {} finished successfully.", sisyphusDraggedSystem.getId());
             int newTotalWireLength = 0;
             synchronized(wires) { for(Wire w : wires) newTotalWireLength += w.getLength(); }
             int deltaLength = newTotalWireLength - sisyphusPreDragWireLength;
@@ -1081,6 +1141,7 @@ public class GamePanel extends JPanel {
             else gameState.returnWire(-deltaLength);
             if (!game.isMuted()) game.playSoundEffect("ui_confirm");
         } else {
+            logger.warn("Sisyphus drag for system {} failed validation. Reverting to original position.", sisyphusDraggedSystem.getId());
             sisyphusDraggedSystem.setPosition(sisyphusDragStartPos.x - System.SYSTEM_WIDTH/2, sisyphusDragStartPos.y - System.SYSTEM_HEIGHT/2);
             recalculateAllWireLengths();
             if (!game.isMuted()) game.playSoundEffect("error");
@@ -1140,7 +1201,7 @@ public class GamePanel extends JPanel {
             ObjectInputStream ois = new ObjectInputStream(bais);
             return (T) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Failed to perform deep copy.", e);
             return null;
         }
     }

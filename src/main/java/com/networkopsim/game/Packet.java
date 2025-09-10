@@ -1,5 +1,5 @@
 // ================================================================================
-// FILE: Packet.java (کد کامل و نهایی با تشخیص برخورد دقیق چندضلعی)
+// FILE: Packet.java (کد کامل و نهایی با گشتاور دورانی)
 // ================================================================================
 package com.networkopsim.game;
 import java.awt.*;
@@ -36,7 +36,7 @@ public class Packet implements Serializable {
     // --- بخش جدید: تعریف Hitbox های پایه برای اشکال مختلف ---
     private static final Path2D.Double BASE_SQUARE_HITBOX;
     private static final Path2D.Double BASE_TRIANGLE_HITBOX;
-    private static final Path2D.Double BASE_CIRCLE_HITBOX; // هشت‌ضلعی برای تقریب دایره
+    private static final Path2D.Double BASE_CIRCLE_HITBOX;
 
     static {
         // تعریف مربع واحد (از -0.5 تا 0.5)
@@ -65,6 +65,13 @@ public class Packet implements Serializable {
         BASE_CIRCLE_HITBOX.closePath();
     }
     // ---------------------------------------------------------
+
+    // ===== بخش جدید: فیلدهای مربوط به گشتاور دورانی =====
+    private static final float ANGULAR_DAMPING = 0.98f; // ضریب کاهش سرعت زاویه‌ای
+    private float angle = 0.0f; // زاویه چرخش فعلی به رادیان
+    private float angularVelocity = 0.0f; // سرعت زاویه‌ای
+    private float momentOfInertia; // لختی دورانی
+    // ======================================================
 
     private final int id;
     private final NetworkEnums.PacketShape shape;
@@ -143,7 +150,13 @@ public class Packet implements Serializable {
         this.originalSize = this.size;
         this.originalBaseCoinValue = this.baseCoinValue;
         this.initialOffsetSidePreference = this.id % 2;
-        updateHitbox(); // ساخت hitbox اولیه
+
+        // ===== بخش جدید: محاسبه لختی دورانی =====
+        // فرمول ساده شده: لختی متناسب با جرم (size) و ابعاد (drawSize) است
+        this.momentOfInertia = 0.5f * this.size * this.getDrawSize();
+        // ===========================================
+
+        updateHitbox();
     }
 
     public Packet(NetworkEnums.PacketShape shape, double startX, double startY) {
@@ -166,37 +179,48 @@ public class Packet implements Serializable {
 
         int drawSize = getDrawSize();
         int halfSize = drawSize / 2;
-        int drawX = (int) Math.round(visualPosition.x - halfSize);
-        int drawY = (int) Math.round(visualPosition.y - halfSize);
 
-        Path2D path = null;
         AffineTransform oldTransform = g2d.getTransform();
-        boolean transformed = false;
 
         try {
+            // ===== بخش اصلاح شده: اعمال چرخش به همه پکت‌ها =====
+            g2d.translate(visualPosition.x, visualPosition.y);
+            // برای مثلث، چرخش هم بر اساس سرعت و هم بر اساس گشتاور است
+            if (this.shape == NetworkEnums.PacketShape.TRIANGLE) {
+                Point2D.Double direction = getVelocity();
+                if (direction != null && (Math.abs(direction.x) > 0.01 || Math.abs(direction.y) > 0.01)) {
+                    double angleFromVelocity = Math.atan2(direction.y, direction.x);
+                    if (isReversing) angleFromVelocity += Math.PI;
+                    g2d.rotate(angleFromVelocity + this.angle); // ترکیب دو زاویه
+                } else {
+                    g2d.rotate(this.angle);
+                }
+            } else {
+                g2d.rotate(this.angle); // بقیه اشکال فقط بر اساس گشتاور می‌چرخند
+            }
+            // =====================================================
+
+            int drawX = -halfSize;
+            int drawY = -halfSize;
+
             if (packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) {
-                double centerX = visualPosition.x;
-                double centerY = visualPosition.y;
                 double scale = getDrawSize() * 1.8;
-
                 Path2D.Double leftPolygon = new Path2D.Double();
-                leftPolygon.moveTo(centerX - 0.45 * scale, centerY + 0.15 * scale);
-                leftPolygon.lineTo(centerX - 0.20 * scale, centerY + 0.35 * scale);
-                leftPolygon.lineTo(centerX + 0.05 * scale, centerY + 0.15 * scale);
-                leftPolygon.lineTo(centerX + 0.05 * scale, centerY - 0.15 * scale);
-                leftPolygon.lineTo(centerX - 0.20 * scale, centerY - 0.35 * scale);
-                leftPolygon.lineTo(centerX - 0.45 * scale, centerY - 0.15 * scale);
+                leftPolygon.moveTo(-0.45 * scale, 0.15 * scale);
+                leftPolygon.lineTo(-0.20 * scale, 0.35 * scale);
+                leftPolygon.lineTo(0.05 * scale, 0.15 * scale);
+                leftPolygon.lineTo(0.05 * scale, -0.15 * scale);
+                leftPolygon.lineTo(-0.20 * scale, -0.35 * scale);
+                leftPolygon.lineTo(-0.45 * scale, -0.15 * scale);
                 leftPolygon.closePath();
-
                 Path2D.Double rightPolygon = new Path2D.Double();
-                rightPolygon.moveTo(centerX + 0.45 * scale, centerY - 0.15 * scale);
-                rightPolygon.lineTo(centerX + 0.20 * scale, centerY - 0.35 * scale);
-                rightPolygon.lineTo(centerX - 0.05 * scale, centerY - 0.15 * scale);
-                rightPolygon.lineTo(centerX - 0.05 * scale, centerY + 0.15 * scale);
-                rightPolygon.lineTo(centerX + 0.20 * scale, centerY + 0.35 * scale);
-                rightPolygon.lineTo(centerX + 0.45 * scale, centerY + 0.15 * scale);
+                rightPolygon.moveTo(0.45 * scale, -0.15 * scale);
+                rightPolygon.lineTo(0.20 * scale, -0.35 * scale);
+                rightPolygon.lineTo(-0.05 * scale, -0.15 * scale);
+                rightPolygon.lineTo(-0.05 * scale, 0.15 * scale);
+                rightPolygon.lineTo(0.20 * scale, 0.35 * scale);
+                rightPolygon.lineTo(0.45 * scale, 0.15 * scale);
                 rightPolygon.closePath();
-
                 g2d.setColor(Color.WHITE);
                 g2d.fill(leftPolygon);
                 g2d.fill(rightPolygon);
@@ -207,46 +231,37 @@ public class Packet implements Serializable {
                         Color shackleColor = new Color(240, 190, 100);
                         Color shadowLineColor = new Color(160, 90, 40);
                         Color keyholeColor = Color.BLACK;
-
                         int bodyWidth = (int) (drawSize * 0.8);
-                        int bodyX = drawX + (drawSize - bodyWidth) / 2;
-                        int bodyY = drawY + (int) (drawSize * 0.3);
+                        int bodyX = -bodyWidth / 2;
+                        int bodyY = (int) (-drawSize * 0.2);
                         int bodyHeight = (int) (drawSize * 0.7);
-
                         int shackleWidth = (int) (drawSize * 0.6);
-                        int shackleX = drawX + (drawSize - shackleWidth) / 2;
+                        int shackleX = -shackleWidth / 2;
                         int shackleThickness = (int) (Math.max(2, drawSize * 0.15));
                         int shackleHeight = (int) (drawSize * 0.4);
-
                         g2d.setColor(shackleColor);
-                        g2d.fillRect(shackleX, drawY, shackleWidth, shackleThickness);
-                        g2d.fillRect(shackleX, drawY, shackleThickness, shackleHeight);
-                        g2d.fillRect(shackleX + shackleWidth - shackleThickness, drawY, shackleThickness, shackleHeight);
-
+                        g2d.fillRect(shackleX, -drawSize / 2, shackleWidth, shackleThickness);
+                        g2d.fillRect(shackleX, -drawSize/2, shackleThickness, shackleHeight);
+                        g2d.fillRect(shackleX + shackleWidth - shackleThickness, -drawSize/2, shackleThickness, shackleHeight);
                         g2d.setColor(mainBodyColor);
                         g2d.fillRect(bodyX, bodyY, bodyWidth, bodyHeight);
-
                         g2d.setColor(shadowLineColor);
                         int lineWidth = (int) (Math.max(1, bodyWidth * 0.1));
                         int lineX1 = bodyX + (int) (bodyWidth * 0.2);
                         int lineX2 = bodyX + (int) (bodyWidth * 0.8) - lineWidth;
                         g2d.fillRect(lineX1, bodyY, lineWidth, bodyHeight);
                         g2d.fillRect(lineX2, bodyY, lineWidth, bodyHeight);
-
                         g2d.setColor(keyholeColor);
                         int keyholeCircleDiameter = (int) (drawSize * 0.25);
-                        int keyholeCircleX = drawX + (drawSize - keyholeCircleDiameter) / 2;
+                        int keyholeCircleX = -keyholeCircleDiameter / 2;
                         int keyholeCircleY = bodyY + (int) (bodyHeight * 0.15);
                         g2d.fillOval(keyholeCircleX, keyholeCircleY, keyholeCircleDiameter, keyholeCircleDiameter);
-
                         int keyholeStemTopY = keyholeCircleY + keyholeCircleDiameter / 2;
                         int keyholeStemWidthTop = (int) (drawSize * 0.1);
                         int keyholeStemWidthBottom = (int) (drawSize * 0.25);
                         int keyholeStemHeight = (int) (bodyHeight * 0.5);
                         int keyholeStemBottomY = keyholeStemTopY + keyholeStemHeight;
-                        int centerX = drawX + drawSize / 2;
-
-                        int[] xPoints = { centerX - keyholeStemWidthTop / 2, centerX + keyholeStemWidthTop / 2, centerX + keyholeStemWidthBottom / 2, centerX - keyholeStemWidthBottom / 2 };
+                        int[] xPoints = { -keyholeStemWidthTop / 2, keyholeStemWidthTop / 2, keyholeStemWidthBottom / 2, -keyholeStemWidthBottom / 2 };
                         int[] yPoints = { keyholeStemTopY, keyholeStemTopY, keyholeStemBottomY, keyholeStemBottomY };
                         g2d.fillPolygon(xPoints, yPoints, 4);
                         break;
@@ -254,20 +269,16 @@ public class Packet implements Serializable {
                         Color[] blueCamoPalette = { new Color(30, 40, 80), new Color(60, 80, 130), new Color(110, 120, 150) };
                         Color[] grayCamoPalette = { new Color(50, 50, 50), new Color(100, 100, 100), new Color(150, 150, 150) };
                         Color[] selectedPalette = isUpgradedSecret ? grayCamoPalette : blueCamoPalette;
-
                         Shape oldClip = g2d.getClip();
                         g2d.setClip(new java.awt.geom.Ellipse2D.Double(drawX, drawY, drawSize, drawSize));
-
                         int pixelSize = Math.max(2, drawSize / 6);
                         java.util.Random rand = System.getGlobalRandom();
-
                         for (int py = drawY; py < drawY + drawSize; py += pixelSize) {
                             for (int px = drawX; px < drawX + drawSize; px += pixelSize) {
                                 g2d.setColor(selectedPalette[rand.nextInt(selectedPalette.length)]);
                                 g2d.fillRect(px, py, pixelSize, pixelSize);
                             }
                         }
-
                         g2d.setClip(oldClip);
                         g2d.setColor(Color.BLACK);
                         g2d.setStroke(new BasicStroke(1.0f));
@@ -278,43 +289,24 @@ public class Packet implements Serializable {
                         Color midBlue = new Color(40, 80, 160);
                         Color lightBlue = new Color(80, 140, 220);
                         Color outlineColor = new Color(200, 220, 255, 150);
-
                         double radius = getDrawSize() / 3.5;
                         double h_offset = radius * 1.5;
                         double v_offset = radius * Math.sqrt(3.0) / 2.0;
-
                         Point2D.Double[] centers = new Point2D.Double[] {
-                                new Point2D.Double(0, -v_offset * 2),
-                                new Point2D.Double(-h_offset / 2, -v_offset),
-                                new Point2D.Double(h_offset / 2, -v_offset),
-                                new Point2D.Double(-h_offset, 0),
-                                new Point2D.Double(0, 0),
-                                new Point2D.Double(h_offset, 0),
-                                new Point2D.Double(-h_offset / 2, v_offset),
-                                new Point2D.Double(h_offset / 2, v_offset),
+                                new Point2D.Double(0, -v_offset * 2), new Point2D.Double(-h_offset / 2, -v_offset),
+                                new Point2D.Double(h_offset / 2, -v_offset), new Point2D.Double(-h_offset, 0),
+                                new Point2D.Double(0, 0), new Point2D.Double(h_offset, 0),
+                                new Point2D.Double(-h_offset / 2, v_offset), new Point2D.Double(h_offset / 2, v_offset),
                                 new Point2D.Double(0, v_offset * 2)
                         };
-
                         g2d.setStroke(new BasicStroke(1.5f));
-
                         for (Point2D.Double centerOffset : centers) {
-                            double currentX = visualPosition.x + centerOffset.x;
-                            double currentY = visualPosition.y + centerOffset.y;
-
-                            Color fillColor;
-                            if (centerOffset.y < -v_offset * 1.5) {
-                                fillColor = darkBlue;
-                            } else if (centerOffset.y > v_offset * 1.5) {
-                                fillColor = lightBlue;
-                            } else {
-                                fillColor = midBlue;
-                            }
-
+                            double currentX = centerOffset.x;
+                            double currentY = centerOffset.y;
+                            Color fillColor = (centerOffset.y < -v_offset * 1.5) ? darkBlue : (centerOffset.y > v_offset * 1.5) ? lightBlue : midBlue;
                             Path2D hexagonPath = createHexagon(currentX, currentY, radius);
-
                             g2d.setColor(fillColor);
                             g2d.fill(hexagonPath);
-
                             g2d.setColor(outlineColor);
                             g2d.draw(hexagonPath);
                         }
@@ -324,41 +316,32 @@ public class Packet implements Serializable {
                         Color midNodeColor = new Color(40, 100, 150);
                         Color lightNodeColor = new Color(130, 180, 210);
                         Color lightLineColor = new Color(130, 180, 210, 150);
-
                         double scale_wobble = drawSize * 0.5;
                         double nodeRadius = Math.max(1.5, drawSize * 0.08);
-
                         Point[] nodes = new Point[13];
-                        nodes[0] = new Point((int)visualPosition.x, (int)visualPosition.y);
+                        nodes[0] = new Point(0,0);
                         for (int i = 0; i < 6; i++) {
-                            double angle = Math.toRadians(60 * i);
-                            nodes[i + 1] = new Point((int)(visualPosition.x + scale_wobble * Math.cos(angle)), (int)(visualPosition.y + scale_wobble * Math.sin(angle)));
+                            double ang = Math.toRadians(60 * i);
+                            nodes[i + 1] = new Point((int)(scale_wobble * Math.cos(ang)), (int)(scale_wobble * Math.sin(ang)));
                         }
                         for (int i = 0; i < 6; i++) {
-                            double angle = Math.toRadians(60 * i + 30);
-                            nodes[i + 7] = new Point((int)(visualPosition.x + scale_wobble * 2 * Math.cos(angle)), (int)(visualPosition.y + scale_wobble * 2 * Math.sin(angle)));
+                            double ang = Math.toRadians(60 * i + 30);
+                            nodes[i + 7] = new Point((int)(scale_wobble * 2 * Math.cos(ang)), (int)(scale_wobble * 2 * Math.sin(ang)));
                         }
-
                         int[][] connections = { {0,1}, {0,2}, {0,3}, {0,4}, {0,5}, {0,6}, {1,2}, {2,3}, {3,4}, {4,5}, {5,6}, {6,1}, {1,7}, {1,8}, {2,8}, {2,9}, {3,9}, {3,10}, {4,10}, {4,11}, {5,11}, {5,12}, {6,12}, {6,7}, {7,8}, {8,9}, {9,10}, {10,11}, {11,12}, {12,7} };
-
                         g2d.setStroke(new BasicStroke(Math.max(1.0f, drawSize * 0.04f), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{2f, 2f}, 0.0f));
                         g2d.setColor(lightLineColor);
-                        for (int[] conn : connections) {
-                            g2d.drawLine(nodes[conn[0]].x, nodes[conn[0]].y, nodes[conn[1]].x, nodes[conn[1]].y);
-                        }
-
+                        for (int[] conn : connections) g2d.drawLine(nodes[conn[0]].x, nodes[conn[0]].y, nodes[conn[1]].x, nodes[conn[1]].y);
                         int nodeDiameter = (int)(nodeRadius * 2);
                         g2d.setColor(darkNodeColor);
                         for(int i = 7; i <= 12; i++) g2d.fillOval(nodes[i].x - (int)nodeRadius, nodes[i].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
                         g2d.fillOval(nodes[2].x - (int)nodeRadius, nodes[2].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
                         g2d.fillOval(nodes[5].x - (int)nodeRadius, nodes[5].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
-
                         g2d.setColor(lightNodeColor);
                         g2d.fillOval(nodes[1].x - (int)nodeRadius, nodes[1].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
                         g2d.fillOval(nodes[3].x - (int)nodeRadius, nodes[3].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
                         g2d.fillOval(nodes[4].x - (int)nodeRadius, nodes[4].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
                         g2d.fillOval(nodes[6].x - (int)nodeRadius, nodes[6].y - (int)nodeRadius, nodeDiameter, nodeDiameter);
-
                         int arcNodeDiameter = (int)(nodeRadius * 3);
                         g2d.setColor(midNodeColor);
                         g2d.fillArc(nodes[0].x - arcNodeDiameter/2, nodes[0].y - arcNodeDiameter/2, arcNodeDiameter, arcNodeDiameter, 45, 270);
@@ -370,30 +353,18 @@ public class Packet implements Serializable {
                     default:
                         Color packetColor = Port.getColorFromShape(shape);
                         if (packetType == NetworkEnums.PacketType.BIT) packetColor = new Color(Color.HSBtoRGB((this.bulkParentId * 0.27f) % 1.0f, 0.7f, 0.95f));
-                        if (packetType == NetworkEnums.PacketType.MESSENGER) packetColor = Port.getColorFromShape(shape);
                         g2d.setColor(packetColor);
 
-                        Point2D.Double directionForRotation = getVelocity();
-                        if (shape == NetworkEnums.PacketShape.TRIANGLE && directionForRotation != null && Math.hypot(directionForRotation.x, directionForRotation.y) > 0.01) {
-                            g2d.translate(visualPosition.x, visualPosition.y);
-                            double angle = Math.atan2(directionForRotation.y, directionForRotation.x) + (isReversing ? Math.PI : 0);
-                            g2d.rotate(angle);
-                            path = new Path2D.Double();
-                            path.moveTo(halfSize, 0); path.lineTo(-halfSize, -halfSize); path.lineTo(-halfSize, halfSize);
-                            path.closePath();
-                            g2d.fill(path);
-                            transformed = true;
-                        } else {
-                            switch (shape) {
-                                case SQUARE: g2d.fillRect(drawX, drawY, drawSize, drawSize); break;
-                                case CIRCLE: g2d.fillOval(drawX, drawY, drawSize, drawSize); break;
-                                case TRIANGLE:
-                                    path = new Path2D.Double();
-                                    path.moveTo(visualPosition.x, drawY); path.lineTo(drawX + drawSize, drawY + drawSize); path.lineTo(drawX, drawY + drawSize);
-                                    path.closePath();
-                                    g2d.fill(path);
-                                    break;
-                            }
+                        Path2D path;
+                        switch (shape) {
+                            case SQUARE: g2d.fillRect(drawX, drawY, drawSize, drawSize); break;
+                            case CIRCLE: g2d.fillOval(drawX, drawY, drawSize, drawSize); break;
+                            case TRIANGLE:
+                                path = new Path2D.Double();
+                                path.moveTo(halfSize, 0); path.lineTo(-halfSize, -halfSize); path.lineTo(-halfSize, halfSize);
+                                path.closePath();
+                                g2d.fill(path);
+                                break;
                         }
                         break;
                 }
@@ -405,19 +376,21 @@ public class Packet implements Serializable {
                     case TROJAN:
                         g2d.setColor(new Color(255, 50, 50, 200));
                         g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{3f, 3f}, 0.0f));
-                        if (transformed && path != null) g2d.draw(path); else if (shape == NetworkEnums.PacketShape.SQUARE) g2d.drawRect(drawX, drawY, drawSize, drawSize); else g2d.drawOval(drawX, drawY, drawSize, drawSize);
+                        if (shape == NetworkEnums.PacketShape.SQUARE) g2d.drawRect(drawX, drawY, drawSize, drawSize);
+                        else g2d.drawOval(drawX, drawY, drawSize, drawSize);
                         break;
                     case BIT:
                         g2d.setColor(new Color(255, 255, 255, 180));
                         g2d.setFont(new Font("Monospaced", Font.BOLD, 9));
                         String bitId = String.valueOf(this.bulkParentId);
-                        if (transformed) g2d.drawString(bitId, -3, 3); else g2d.drawString(bitId, drawX + 2, drawY + 9);
+                        g2d.drawString(bitId, drawX + 2, drawY + 9);
                         break;
                 }
             }
             g2d.setStroke(defaultStroke);
+
         } finally {
-            if (transformed) g2d.setTransform(oldTransform);
+            g2d.setTransform(oldTransform);
             if (noise > 0.05) {
                 g2d.setFont(NOISE_FONT);
                 g2d.setColor(NOISE_TEXT_COLOR);
@@ -449,6 +422,15 @@ public class Packet implements Serializable {
             return;
         }
 
+        // ===== بخش جدید: به‌روزرسانی فیزیک دورانی =====
+        if (Math.abs(this.angularVelocity) > 0.001f) {
+            this.angle += this.angularVelocity;
+            this.angularVelocity *= ANGULAR_DAMPING; // کاهش تدریجی سرعت
+        } else {
+            this.angularVelocity = 0; // توقف کامل برای جلوگیری از محاسبات اضافی
+        }
+        // ============================================
+
         if (this.packetType == NetworkEnums.PacketType.SECRET) {
             if (isUpgradedSecret) { handleUpgradedSecretMovement(gamePanel); }
             else {
@@ -472,7 +454,7 @@ public class Packet implements Serializable {
         else { progressOnWire = isReversing ? 0.0 : 1.0; }
         progressOnWire = Math.max(0.0, Math.min(1.0, progressOnWire));
         updateIdealPositionAndVelocity();
-        updateHitbox(); // بروزرسانی hitbox در هر فریم
+        updateHitbox();
 
         if (!markedForRemoval && noise >= this.size) {
             gamePanel.packetLostInternal(this, isPredictionRun);
@@ -604,7 +586,7 @@ public class Packet implements Serializable {
         this.currentSpeedMagnitude = initialSpeed;
         this.enteredViaIncompatiblePort = false;
         updateIdealPositionAndVelocity();
-        updateHitbox(); // بروزرسانی hitbox هنگام قرار گرفتن روی سیم
+        updateHitbox();
     }
 
     public void addNoise(double amount) {
@@ -660,6 +642,40 @@ public class Packet implements Serializable {
         }
     }
 
+    // ===== متد جدید: برای اعمال گشتاور دورانی =====
+    /**
+     * Applies torque to the packet based on an external force vector.
+     * @param forceVector The direction of the force being applied.
+     * @param forceMagnitude The strength of the force.
+     */
+    public void applyTorque(Point2D.Double forceVector, double forceMagnitude) {
+        if (momentOfInertia < 1e-6) return;
+
+        Point2D.Double packetDirection = this.getVelocity();
+        double packetSpeed = Math.hypot(packetDirection.x, packetDirection.y);
+
+        if (packetSpeed < 0.1 && currentWire != null) {
+            Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire);
+            if (pathInfo != null) {
+                packetDirection = pathInfo.direction;
+            }
+        }
+
+        double forceMag = Math.hypot(forceVector.x, forceVector.y);
+        if (forceMag < 1e-6) return;
+        Point2D.Double forceDir = new Point2D.Double(forceVector.x / forceMag, forceVector.y / forceMag);
+
+        double packetDirMag = Math.hypot(packetDirection.x, packetDirection.y);
+        if (packetDirMag < 1e-6) return;
+        Point2D.Double packetDir = new Point2D.Double(packetDirection.x / packetDirMag, packetDirection.y / packetDirMag);
+
+        double crossProduct = (packetDir.x * forceDir.y) - (packetDir.y * forceDir.x);
+        double torque = crossProduct * forceMagnitude;
+        float angularAcceleration = (float) (torque / this.momentOfInertia);
+        this.angularVelocity += angularAcceleration;
+    }
+    // ==============================================
+
     public void transformToProtected() { this.originalPacketType = this.packetType; this.originalSize = this.size; this.originalBaseCoinValue = this.baseCoinValue; this.packetType = NetworkEnums.PacketType.PROTECTED; this.size = this.originalSize * 2; this.baseCoinValue = 5; this.protectedMovementMode = null; }
     public void upgradeSecretPacket() { if (this.packetType == NetworkEnums.PacketType.SECRET && !this.isUpgradedSecret) { this.isUpgradedSecret = true; this.size = 6; this.baseCoinValue = 4; } }
     public void revertToOriginalType() { this.packetType = this.originalPacketType; this.size = this.originalSize; this.baseCoinValue = this.originalBaseCoinValue; this.protectedMovementMode = null; }
@@ -706,33 +722,20 @@ public class Packet implements Serializable {
     private void updateIdealPositionAndVelocity() { if (currentWire == null) return; Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire); if (pathInfo != null) { this.idealPosition = pathInfo.position; double dx = pathInfo.direction.x * currentSpeedMagnitude; double dy = pathInfo.direction.y * currentSpeedMagnitude; this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy); } else if (currentWire.getStartPort() != null) { this.idealPosition = currentWire.getStartPort().getPrecisePosition(); this.velocity = new Point2D.Double(0,0); } }
     public void setVisualOffsetDirectionFromForce(Point2D.Double forceDirection) { if (currentWire == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0,1); return; } Point2D.Double wireDir = pathInfo.direction; if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } return; } Point2D.Double perp1 = new Point2D.Double(-wireDir.y, wireDir.x); double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y); if (Math.abs(dotProductWithPerp1) < 1e-6) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } } } else if (dotProductWithPerp1 > 0) this.visualOffsetDirection = perp1; else this.visualOffsetDirection = new Point2D.Double(-perp1.x, -perp1.y); double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double m = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (m > 1e-6) { this.visualOffsetDirection.x /= m; this.visualOffsetDirection.y /= m; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } }
 
-    /**
-     * متد بازنویسی شده برای تشخیص برخورد دقیق چندضلعی.
-     */
     public boolean collidesWith(Packet other) {
         if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) {
             return false;
         }
-
-        // اطمینان از اینکه hitbox ها وجود دارند
         if (this.hitbox == null) this.updateHitbox();
         if (other.hitbox == null) other.updateHitbox();
         if (this.hitbox == null || other.hitbox == null) return false;
 
-        // استفاده از کلاس Area برای بررسی برخورد
         Area area1 = new Area(this.hitbox);
         Area area2 = new Area(other.hitbox);
-
-        // محاسبه اشتراک دو ناحیه
         area1.intersect(area2);
-
-        // اگر ناحیه اشتراک خالی نباشد، یعنی برخورد رخ داده است
         return !area1.isEmpty();
     }
 
-    /**
-     * متد جدید برای بروزرسانی hitbox بر اساس موقعیت، اندازه و چرخش فعلی.
-     */
     public void updateHitbox() {
         Path2D.Double baseShape;
         switch (this.shape) {
@@ -743,26 +746,22 @@ public class Packet implements Serializable {
         }
 
         AffineTransform tx = new AffineTransform();
-        Point2D.Double visualPos = getPositionDouble(); // از موقعیت بصری (با آفست) برای برخورد استفاده می‌شود
+        Point2D.Double visualPos = getPositionDouble();
         double currentDrawSize = getDrawSize();
-
-        // 1. انتقال به موقعیت فعلی
         tx.translate(visualPos.x, visualPos.y);
 
-        // 2. چرخش (مخصوصاً برای مثلث‌ها)
+        double totalAngle = this.angle;
         if (this.shape == NetworkEnums.PacketShape.TRIANGLE) {
             Point2D.Double direction = getVelocity();
             if (direction != null && (Math.abs(direction.x) > 0.01 || Math.abs(direction.y) > 0.01)) {
-                double angle = Math.atan2(direction.y, direction.x);
-                if (isReversing) angle += Math.PI;
-                tx.rotate(angle);
+                double angleFromVelocity = Math.atan2(direction.y, direction.x);
+                if (isReversing) angleFromVelocity += Math.PI;
+                totalAngle += angleFromVelocity;
             }
         }
+        tx.rotate(totalAngle);
 
-        // 3. مقیاس‌دهی به اندازه صحیح
         tx.scale(currentDrawSize, currentDrawSize);
-
-        // اعمال تبدیل و ساخت hitbox نهایی
         this.hitbox = (Path2D.Double) baseShape.createTransformedShape(tx);
     }
 
@@ -777,7 +776,6 @@ public class Packet implements Serializable {
         if (this.currentWireId != -1) {
             this.currentWire = wireMap.get(this.currentWireId);
         }
-        // بازسازی hitbox پس از بارگذاری از فایل
         if (this.currentWire != null) {
             updateIdealPositionAndVelocity();
         }

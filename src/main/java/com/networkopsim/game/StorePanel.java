@@ -1,7 +1,10 @@
 // ================================================================================
-// FILE: StorePanel.java (کد کامل و نهایی با قابلیت‌های جدید)
+// FILE: StorePanel.java (کد کامل و نهایی با سیستم لاگ)
 // ================================================================================
 package com.networkopsim.game;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -10,15 +13,16 @@ import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 public class StorePanel extends JDialog {
+    private static final Logger logger = LoggerFactory.getLogger(StorePanel.class);
+
     private final NetworkGame game;
     private final GamePanel gamePanel;
     private final GameState gameState;
     private JLabel coinsLabel;
     private JButton atarButton, airyamanButton, anahitaButton, speedLimiterButton, emergencyBrakeButton;
-    private JButton aergiaButton, sisyphusButton, eliphasButton; // دکمه‌های جدید
+    private JButton aergiaButton, sisyphusButton, eliphasButton;
     private JButton closeButton;
 
-    // آیتم‌های قدیمی
     private static final String ITEM_ATAR_NAME = "O' Atar";
     private static final int COST_ATAR = 3;
     private static final String DESC_ATAR = "Disables collision Impact Waves for 10 seconds.";
@@ -34,8 +38,6 @@ public class StorePanel extends JDialog {
     private static final String ITEM_EMERGENCY_BRAKE_NAME = "Emergency Brake";
     private static final int COST_EMERGENCY_BRAKE = 8;
     private static final String DESC_EMERGENCY_BRAKE = "Instantly resets the speed of all active packets to their base speed.";
-
-    // ===== آیتم‌های جدید =====
     private static final String ITEM_AERGIA_NAME = "Scroll of Aergia";
     private static final int COST_AERGIA = 10;
     private static final String DESC_AERGIA = "Click a wire to nullify packet acceleration at that point for 20s. (Has Cooldown)";
@@ -74,7 +76,7 @@ public class StorePanel extends JDialog {
         this.game = Objects.requireNonNull(owner, "NetworkGame owner cannot be null");
         this.gamePanel = Objects.requireNonNull(gamePanel, "GamePanel cannot be null");
         this.gameState = Objects.requireNonNull(owner.getGameState(), "GameState cannot be null");
-        setSize(550, 750); // افزایش ارتفاع برای آیتم‌های جدید
+        setSize(550, 750);
         setLocationRelativeTo(owner);
         setResizable(false);
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -151,7 +153,6 @@ public class StorePanel extends JDialog {
         itemsPanel.add(Box.createVerticalStrut(12));
         itemsPanel.add(emergencyBrakeButton);
 
-        // جداکننده برای آیتم‌های جدید و تعاملی
         JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
         separator.setForeground(ITEM_BORDER_COLOR);
         separator.setBackground(DIALOG_BG_COLOR);
@@ -245,7 +246,6 @@ public class StorePanel extends JDialog {
     private void purchaseItem(String itemName, int cost, JButton button) {
         if (gamePanel == null || !gamePanel.isGameRunning()) return;
 
-        // چک کردن cooldown یا فعال بودن
         if ((itemName.equals(ITEM_ATAR_NAME) && gamePanel.isAtarActive()) ||
                 (itemName.equals(ITEM_AIRYAMAN_NAME) && gamePanel.isAiryamanActive()) ||
                 (itemName.equals(ITEM_SPEED_LIMITER_NAME) && gamePanel.isSpeedLimiterActive()) ||
@@ -256,6 +256,7 @@ public class StorePanel extends JDialog {
         }
 
         if (gameState.spendCoins(cost)) {
+            logger.info("User purchased item '{}' for {} coins. Remaining coins: {}", itemName, cost, gameState.getCoins());
             if (!game.isMuted()) game.playSoundEffect("ui_confirm");
             updateCoinsDisplay(gameState.getCoins());
 
@@ -275,8 +276,8 @@ public class StorePanel extends JDialog {
                     break;
                 case ITEM_AERGIA_NAME:
                     gamePanel.enterAergiaPlacementMode();
-                    setVisible(false); // بستن فروشگاه تا کاربر آیتم را قرار دهد
-                    return; // برای جلوگیری از flashButton و updateButtonStates بعدی
+                    setVisible(false);
+                    return;
                 case ITEM_SISYPHUS_NAME:
                     gamePanel.enterSisyphusDragMode();
                     setVisible(false);
@@ -288,6 +289,7 @@ public class StorePanel extends JDialog {
             }
             flashButton(button, FLASH_COLOR_PURCHASE);
         } else {
+            logger.warn("User failed to purchase item '{}'. Insufficient coins. Required: {}, Have: {}", itemName, cost, gameState.getCoins());
             if (!game.isMuted()) game.playSoundEffect("error");
             JOptionPane.showMessageDialog(this,
                     "Not enough coins for " + itemName + "!\nRequired: " + cost + ", Have: " + gameState.getCoins(),
@@ -318,7 +320,6 @@ public class StorePanel extends JDialog {
         if (gamePanel == null) return;
         int currentCoins = gameState.getCoins();
 
-        // آیتم‌های قدیمی
         boolean atarActive = gamePanel.isAtarActive();
         atarButton.setText(buildButtonHtml(ITEM_ATAR_NAME, COST_ATAR, DESC_ATAR, atarActive ? "ACTIVE" : ""));
         atarButton.setEnabled(currentCoins >= COST_ATAR && !atarActive);
@@ -342,7 +343,6 @@ public class StorePanel extends JDialog {
         emergencyBrakeButton.setEnabled(currentCoins >= COST_EMERGENCY_BRAKE && !brakePurchasedThisVisit);
         emergencyBrakeButton.setBackground(brakePurchasedThisVisit ? ACTIVATED_BUTTON_BG_COLOR : (emergencyBrakeButton.isEnabled() ? ITEM_BG_COLOR : DISABLED_BUTTON_BG_COLOR));
 
-        // آیتم‌های جدید
         boolean aergiaOnCooldown = gamePanel.isAergiaOnCooldown();
         aergiaButton.setText(buildButtonHtml(ITEM_AERGIA_NAME, COST_AERGIA, DESC_AERGIA, aergiaOnCooldown ? "ON COOLDOWN" : ""));
         aergiaButton.setEnabled(currentCoins >= COST_AERGIA && !aergiaOnCooldown);
@@ -362,6 +362,7 @@ public class StorePanel extends JDialog {
     }
 
     private void closeStoreAndResumeGame() {
+        logger.debug("Closing store and resuming game.");
         setVisible(false);
         if (gamePanel != null && gamePanel.isGameRunning() && gamePanel.isGamePaused()) {
             gamePanel.pauseGame(false);
@@ -372,7 +373,9 @@ public class StorePanel extends JDialog {
     @Override
     public void setVisible(boolean b) {
         if (b) {
+            logger.debug("Store panel is being made visible.");
             if(gameState == null || gamePanel == null){
+                logger.error("Cannot show store, GameState or GamePanel is null.");
                 super.setVisible(false);
                 return;
             }
@@ -383,6 +386,7 @@ public class StorePanel extends JDialog {
                 updateButtonStates();
                 setLocationRelativeTo(getOwner());
             } catch (Exception e) {
+                logger.error("Exception preparing store display.", e);
                 super.setVisible(false);
                 JOptionPane.showMessageDialog(this.game, "Error preparing store display.", "Store Error", JOptionPane.ERROR_MESSAGE);
                 if (gamePanel.isGamePaused()) {

@@ -1,2 +1,2 @@
 JAVA_VERSION="24.0.1"
-MODULES="java.base java.datatransfer java.xml java.prefs java.desktop networkoperatorsimulator.appmodule"
+MODULES="java.base java.xml ch.qos.logback.core org.slf4j ch.qos.logback.classic java.datatransfer java.prefs java.desktop networkoperatorsimulator.appmodule"

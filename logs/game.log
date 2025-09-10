@@ -1,0 +1,39 @@
+2025-09-10 13:25:00.895 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:25:00.896 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application starting up...
+2025-09-10 13:25:00.896 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-10 13:25:00.897 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:25:00.923 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:25:00.923 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Network Operator Simulator is starting up...
+2025-09-10 13:25:01.565 [AWT-EventQueue-0] DEBUG com.networkopsim.game.NetworkGame - Background music started playing.
+2025-09-10 13:25:01.566 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Sound system initialized successfully.
+2025-09-10 13:25:01.665 [AWT-EventQueue-0] DEBUG c.networkopsim.game.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-10 13:25:01.666 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - No existing save file found. Starting fresh.
+2025-09-10 13:25:01.666 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-10 13:55:38.002 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:55:38.003 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application starting up...
+2025-09-10 13:55:38.003 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-10 13:55:38.005 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:55:38.046 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:55:38.046 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Network Operator Simulator is starting up...
+2025-09-10 13:55:39.016 [AWT-EventQueue-0] DEBUG com.networkopsim.game.NetworkGame - Background music started playing.
+2025-09-10 13:55:39.017 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Sound system initialized successfully.
+2025-09-10 13:55:39.171 [AWT-EventQueue-0] DEBUG c.networkopsim.game.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-10 13:55:39.172 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - No existing save file found. Starting fresh.
+2025-09-10 13:55:39.172 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-10 13:55:42.105 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Shutdown sequence initiated...
+2025-09-10 13:55:42.152 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application shutdown complete. Exiting.
+2025-09-10 13:56:06.498 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:56:06.499 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application starting up...
+2025-09-10 13:56:06.500 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-10 13:56:06.501 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:56:06.526 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - ========================================================
+2025-09-10 13:56:06.527 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Network Operator Simulator is starting up...
+2025-09-10 13:56:07.110 [AWT-EventQueue-0] DEBUG com.networkopsim.game.NetworkGame - Background music started playing.
+2025-09-10 13:56:07.111 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Sound system initialized successfully.
+2025-09-10 13:56:07.220 [AWT-EventQueue-0] DEBUG c.networkopsim.game.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-10 13:56:07.220 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - No existing save file found. Starting fresh.
+2025-09-10 13:56:07.220 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-10 13:56:08.884 [AWT-EventQueue-0] INFO  com.networkopsim.game.NetworkGame - Attempting to start game for level 1.
+2025-09-10 13:56:08.885 [AWT-EventQueue-0] DEBUG com.networkopsim.game.NetworkGame - Background music stopped.
+2025-09-10 13:56:08.889 [AWT-EventQueue-0] INFO  com.networkopsim.game.GamePanel - Initializing level 1.
+2025-09-10 13:56:08.920 [AWT-EventQueue-0] INFO  com.networkopsim.game.GamePanel - Level 1 initialized successfully with 9 systems and 0 wires.

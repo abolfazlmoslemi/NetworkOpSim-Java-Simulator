@@ -1,8 +1,10 @@
 // ================================================================================
-// FILE: GameStateManager.java (کلاس جدید برای مدیریت ذخیره و بارگذاری)
+// FILE: GameStateManager.java (کد کامل و نهایی با سیستم لاگ)
 // ================================================================================
 package com.networkopsim.game;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,18 +13,17 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class GameStateManager {
-
+    private static final Logger logger = LoggerFactory.getLogger(GameStateManager.class);
     public static final String SAVE_FILE_NAME = "game_autosave.dat";
 
-    // یک کلاس داخلی برای بسته‌بندی تمام داده‌های ذخیره شده
     public static class SaveData implements Serializable {
-        private static final long serialVersionUID = 1L; // برای کنترل نسخه سریالایزیشن
+        private static final long serialVersionUID = 1L;
         public final List<System> systems;
         public final List<Wire> wires;
         public final List<Packet> packets;
         public final GameState gameState;
         public final long simulationTimeElapsedMs;
-        public final byte[] checksum; // برای اعتبارسنجی
+        public final byte[] checksum;
 
         public SaveData(List<System> systems, List<Wire> wires, List<Packet> packets, GameState gameState, long simTime, byte[] checksum) {
             this.systems = systems;
@@ -39,8 +40,8 @@ public class GameStateManager {
      * @return true اگر ذخیره‌سازی موفق بود، در غیر این صورت false.
      */
     public static boolean saveGameState(GamePanel gamePanel) {
+        logger.info("Attempting to save game state...");
         try (ObjectOutputStream oos = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream(SAVE_FILE_NAME)))) {
-            // ایجاد یک کپی عمیق (deep copy) از داده‌ها برای جلوگیری از مشکلات همزمانی
             List<System> systemsCopy = gamePanel.getSystemsDeepCopy();
             List<Wire> wiresCopy = gamePanel.getWiresDeepCopy();
             List<Packet> packetsCopy = gamePanel.getPacketsDeepCopy();
@@ -51,11 +52,10 @@ public class GameStateManager {
 
             SaveData dataToSave = new SaveData(systemsCopy, wiresCopy, packetsCopy, gameStateCopy, simTime, checksum);
             oos.writeObject(dataToSave);
-            java.lang.System.out.println("Game state saved successfully with checksum.");
+            logger.info("Game state saved successfully to '{}'.", SAVE_FILE_NAME);
             return true;
         } catch (IOException | NoSuchAlgorithmException e) {
-            java.lang.System.err.println("Error saving game state: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("SEVERE: Error saving game state to '{}'.", SAVE_FILE_NAME, e);
             return false;
         }
     }
@@ -67,23 +67,24 @@ public class GameStateManager {
     public static SaveData loadGameState() {
         File saveFile = new File(SAVE_FILE_NAME);
         if (!saveFile.exists()) {
+            logger.debug("No save file found at '{}'.", SAVE_FILE_NAME);
             return null;
         }
 
+        logger.info("Attempting to load game state from '{}'...", SAVE_FILE_NAME);
         try (ObjectInputStream ois = new ObjectInputStream(new GZIPInputStream(new FileInputStream(saveFile)))) {
             SaveData loadedData = (SaveData) ois.readObject();
 
-            // اعتبارسنجی با Checksum
             byte[] expectedChecksum = calculateChecksum(loadedData.systems, loadedData.packets, loadedData.gameState, loadedData.simulationTimeElapsedMs);
             if (java.util.Arrays.equals(expectedChecksum, loadedData.checksum)) {
-                java.lang.System.out.println("Save file loaded and checksum validated successfully.");
+                logger.info("Save file loaded and checksum validated successfully.");
                 return loadedData;
             } else {
-                java.lang.System.err.println("Checksum mismatch! Save file may be corrupted or tampered with.");
+                logger.error("SEVERE: Checksum mismatch! Save file '{}' may be corrupted or tampered with.", SAVE_FILE_NAME);
                 return null;
             }
         } catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {
-            java.lang.System.err.println("Error loading game state: " + e.getMessage());
+            logger.error("SEVERE: Error loading game state from '{}'. The file might be incompatible or corrupted.", SAVE_FILE_NAME, e);
             return null;
         }
     }
@@ -95,10 +96,12 @@ public class GameStateManager {
         File saveFile = new File(SAVE_FILE_NAME);
         if (saveFile.exists()) {
             if (saveFile.delete()) {
-                java.lang.System.out.println("Autosave file deleted.");
+                logger.info("Autosave file '{}' deleted successfully.", SAVE_FILE_NAME);
             } else {
-                java.lang.System.err.println("Failed to delete autosave file.");
+                logger.error("SEVERE: Failed to delete autosave file '{}'.", SAVE_FILE_NAME);
             }
+        } else {
+            logger.debug("Attempted to delete autosave file, but it does not exist.");
         }
     }
 
@@ -110,13 +113,11 @@ public class GameStateManager {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-        // داده‌های کلیدی را برای هش کردن می‌نویسیم
         oos.writeObject(systems);
         oos.writeObject(packets);
         oos.writeInt(gameState.getCoins());
         oos.writeLong(simTime);
         oos.writeDouble(gameState.getPacketLossPercentage());
-        // یک "نمک" (salt) مخفی اضافه می‌کنیم تا حدس زدن هش سخت‌تر شود
         oos.writeUTF("N3tw0rk_Op_S1m_S@lt!_2024");
 
         oos.flush();

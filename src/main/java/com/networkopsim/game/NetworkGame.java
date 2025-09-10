@@ -1,7 +1,10 @@
 // ================================================================================
-// FILE: NetworkGame.java (کد کامل و نهایی با سیستم ذخیره و بارگذاری)
+// FILE: NetworkGame.java (کد کامل و نهایی با سیستم لاگ)
 // ================================================================================
 package com.networkopsim.game;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +16,8 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class NetworkGame extends JFrame {
+    private static final Logger logger = LoggerFactory.getLogger(NetworkGame.class);
+
     public static final int WINDOW_WIDTH = 1200;
     public static final int WINDOW_HEIGHT = 800;
     private GamePanel gamePanel;
@@ -48,6 +53,8 @@ public class NetworkGame extends JFrame {
     private Timer temporaryMessageTimer;
 
     public NetworkGame() {
+        logger.info("========================================================");
+        logger.info("Network Operator Simulator is starting up...");
         setTitle("Network Operator Simulator");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -78,8 +85,8 @@ public class NetworkGame extends JFrame {
         setVisible(true);
         menuPanel.requestFocusInWindow();
 
-        // بررسی وجود فایل ذخیره در هنگام شروع بازی
         checkForExistingSave();
+        logger.info("Application initialized successfully. Showing main menu.");
     }
 
     private void handleExitRequest() {
@@ -90,6 +97,8 @@ public class NetworkGame extends JFrame {
                 JOptionPane.QUESTION_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
             shutdownGame();
+        } else {
+            logger.debug("User cancelled exit request.");
         }
     }
 
@@ -99,6 +108,7 @@ public class NetworkGame extends JFrame {
             InputStream audioSrc = getClass().getResourceAsStream(musicPath);
 
             if (audioSrc == null) {
+                logger.error("Background music file not found in resources: {}", musicPath);
                 JOptionPane.showMessageDialog(this,
                         "Background music file (background_music.wav) not found in resources.\nExpected path: " + musicPath,
                         "Resource Error", JOptionPane.ERROR_MESSAGE);
@@ -112,26 +122,31 @@ public class NetworkGame extends JFrame {
             backgroundMusic.open(audioStream);
             setVolume(backgroundMusic, this.masterVolume);
             playBackgroundMusicIfNeeded();
+            logger.info("Sound system initialized successfully.");
 
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             backgroundMusic = null;
+            logger.error("Error loading or playing background music", e);
             JOptionPane.showMessageDialog(this,
                     "Error loading or playing background music:\n" + e.getMessage(),
                     "Sound Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             backgroundMusic = null;
+            logger.error("An unexpected error occurred during sound initialization", e);
         }
     }
 
     private void playBackgroundMusicIfNeeded() {
         if (backgroundMusic != null && backgroundMusic.isOpen() && !isMuted && !backgroundMusic.isRunning()) {
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            logger.debug("Background music started playing.");
         }
     }
 
     private void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusic.stop();
+            logger.debug("Background music stopped.");
         }
     }
 
@@ -163,7 +178,7 @@ public class NetworkGame extends JFrame {
             }
             gainControl.setValue(targetDb);
         } catch (Exception e) {
-            // Error handling
+            logger.warn("Could not set volume on clip.", e);
         }
     }
 
@@ -178,7 +193,7 @@ public class NetworkGame extends JFrame {
                 String soundPath = "/assets/sounds/" + soundName + ".wav";
                 soundFileStream = getClass().getResourceAsStream(soundPath);
                 if (soundFileStream == null) {
-                    java.lang.System.err.println("Warning: Sound effect not found: " + soundPath);
+                    logger.warn("Sound effect not found: {}", soundPath);
                     return;
                 }
                 bufferedIn = new BufferedInputStream(soundFileStream);
@@ -200,6 +215,7 @@ public class NetworkGame extends JFrame {
                 setVolume(clip, masterVolume);
                 clip.start();
             } catch (Exception e) {
+                logger.error("Failed to play sound effect '{}'", soundName, e);
                 if (clip != null && clip.isOpen()) clip.close();
                 try { if (audioStream != null) audioStream.close(); } catch (IOException ioe) {/* ignore */}
                 try { if (bufferedIn != null) bufferedIn.close(); } catch (IOException ioe) {/* ignore */}
@@ -211,6 +227,7 @@ public class NetworkGame extends JFrame {
     public float getMasterVolume() { return masterVolume; }
     public void setMasterVolume(float volume) {
         this.masterVolume = Math.max(0.0f, Math.min(1.0f, volume));
+        logger.info("Master volume set to {}%", (int)(this.masterVolume * 100));
         setVolume(backgroundMusic, this.masterVolume);
         if (settingsPanel != null && settingsPanel.isShowing()) {
             settingsPanel.updateUIFromGameState();
@@ -219,6 +236,7 @@ public class NetworkGame extends JFrame {
     public boolean isMuted() { return isMuted; }
     public void toggleMute() {
         isMuted = !isMuted;
+        logger.info("Audio muted status set to: {}", isMuted);
         if (backgroundMusic != null && backgroundMusic.isOpen()) {
             if (isMuted) {
                 if (backgroundMusic.isRunning()) {
@@ -245,6 +263,7 @@ public class NetworkGame extends JFrame {
     }
 
     public void startGame() {
+        logger.info("Attempting to start game for level {}.", currentLevel);
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusicWasPlaying = true;
         } else {
@@ -252,13 +271,17 @@ public class NetworkGame extends JFrame {
         }
         stopBackgroundMusic();
         clearTemporaryMessage();
-        if (gamePanel == null) return;
+        if (gamePanel == null) {
+            logger.error("Cannot start game, GamePanel is null!");
+            return;
+        }
         cardLayout.show(mainPanelContainer, "GamePanel");
         gamePanel.initializeLevel(currentLevel);
         SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
     }
 
     public void showSettings() {
+        logger.debug("Showing settings panel.");
         playBackgroundMusicIfNeeded();
         clearTemporaryMessage();
         if (settingsPanel == null) return;
@@ -268,6 +291,7 @@ public class NetworkGame extends JFrame {
     }
 
     public void showLevelSelection() {
+        logger.debug("Showing level selection panel.");
         playBackgroundMusicIfNeeded();
         clearTemporaryMessage();
         if (levelSelectionPanel == null) return;
@@ -277,6 +301,7 @@ public class NetworkGame extends JFrame {
     }
 
     public void returnToMenu() {
+        logger.info("Returning to main menu.");
         playBackgroundMusicIfNeeded();
         clearTemporaryMessage();
         boolean gamePanelWasVisible = false;
@@ -290,7 +315,6 @@ public class NetworkGame extends JFrame {
             gamePanel.stopSimulation();
         }
 
-        // پاک کردن فایل ذخیره هنگام خروج عادی از مرحله
         GameStateManager.deleteSaveFile();
 
         if (menuPanel == null) return;
@@ -301,15 +325,18 @@ public class NetworkGame extends JFrame {
 
     public void showStore() {
         if (gamePanel == null || !gamePanel.isGamePaused()) {
+            logger.warn("Attempted to open store while game was not paused. Request denied.");
             if (!isMuted()) playSoundEffect("error");
             return;
         }
+        logger.debug("Showing store panel.");
         clearTemporaryMessage();
         if (storeDialog == null) {
             try {
                 storeDialog = new StorePanel(this, gamePanel);
             } catch (Exception e) {
                 if (gamePanel.isGamePaused()) gamePanel.pauseGame(false);
+                logger.error("Failed to create StorePanel dialog.", e);
                 JOptionPane.showMessageDialog(this, "Error opening store!", "Store Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -322,6 +349,7 @@ public class NetworkGame extends JFrame {
                 SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
             }
         } catch (Exception e) {
+            logger.error("Exception while showing store dialog.", e);
             if (gamePanel.isGamePaused()) {
                 gamePanel.pauseGame(false);
                 SwingUtilities.invokeLater(gamePanel::requestFocusInWindow);
@@ -330,6 +358,7 @@ public class NetworkGame extends JFrame {
     }
 
     public void showKeyBindingDialog() {
+        logger.debug("Showing key binding dialog.");
         playBackgroundMusicIfNeeded();
         clearTemporaryMessage();
         if (keyBindingDialog != null && keyBindingDialog.isVisible()) {
@@ -348,9 +377,12 @@ public class NetworkGame extends JFrame {
     public int getCurrentLevel() { return currentLevel; }
     public void setLevel(int level) {
         if (level >= 1 && level <= gameState.getMaxLevels()) {
+            logger.info("Current level set to {}.", level);
             this.currentLevel = level;
             gameState.setCurrentSelectedLevel(level);
             if (menuPanel != null) menuPanel.updateStartButtonLevel(level);
+        } else {
+            logger.warn("Attempted to set an invalid level: {}", level);
         }
     }
 
@@ -358,6 +390,7 @@ public class NetworkGame extends JFrame {
     public KeyBindings getKeyBindings() { return keyBindings; }
 
     public void shutdownGame() {
+        logger.info("Shutdown sequence initiated...");
         clearTemporaryMessage();
         if (gamePanel != null && (gamePanel.isGameRunning() || gamePanel.isGamePaused())) {
             gamePanel.stopSimulation();
@@ -373,10 +406,12 @@ public class NetworkGame extends JFrame {
         if (keyBindingDialog != null) { keyBindingDialog.dispose(); }
         if (temporaryMessageTimer != null && temporaryMessageTimer.isRunning()) temporaryMessageTimer.stop();
         dispose();
+        logger.info("Application shutdown complete. Exiting.");
         java.lang.System.exit(0);
     }
 
     public void showTemporaryMessage(String message, Color color, int durationMs) {
+        logger.debug("Displaying temporary message: '{}'", message);
         currentTemporaryMessage = new TemporaryMessage(message, color, java.lang.System.currentTimeMillis() + durationMs);
         if (temporaryMessageTimer != null && temporaryMessageTimer.isRunning()) {
             temporaryMessageTimer.stop();
@@ -419,6 +454,7 @@ public class NetworkGame extends JFrame {
     private void checkForExistingSave() {
         GameStateManager.SaveData saveData = GameStateManager.loadGameState();
         if (saveData != null) {
+            logger.info("Valid saved game data found. Prompting user to resume.");
             int choice = JOptionPane.showConfirmDialog(
                     this,
                     "An unfinished game was found. Do you want to resume it?",
@@ -428,15 +464,21 @@ public class NetworkGame extends JFrame {
             );
 
             if (choice == JOptionPane.YES_OPTION) {
-                // بارگذاری بازی
+                logger.info("User chose to resume the saved game.");
                 cardLayout.show(mainPanelContainer, "GamePanel");
                 gamePanel.loadFromSaveData(saveData);
             } else {
-                // حذف فایل ذخیره
+                logger.info("User chose not to resume. Deleting saved game file.");
                 GameStateManager.deleteSaveFile();
             }
+        } else {
+            logger.info("No existing save file found. Starting fresh.");
         }
     }
+
+// فایل: NetworkGame.java
+
+// فایل: NetworkGame.java
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -446,7 +488,20 @@ public class NetworkGame extends JFrame {
                     if ("Nimbus".equals(info.getName())) { UIManager.setLookAndFeel(info.getClassName()); nimbusFound = true; break; }
                 }
                 if (!nimbusFound) UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) { /* ignore */ }
+            } catch (Exception e) {
+                LoggerFactory.getLogger(NetworkGame.class).warn("Could not set Look and Feel.", e);
+            }
+
+            // ===== کد اصلاح شده برای رفع تداخل نام =====
+            Logger mainLogger = LoggerFactory.getLogger(NetworkGame.class);
+            // استفاده از نام کامل کلاس برای جلوگیری از تداخل
+            String workingDir = java.lang.System.getProperty("user.dir");
+            mainLogger.info("========================================================");
+            mainLogger.info("Application starting up...");
+            mainLogger.info("Current Working Directory: {}", workingDir);
+            mainLogger.info("========================================================");
+            // ===============================================
+
             new NetworkGame();
         });
     }

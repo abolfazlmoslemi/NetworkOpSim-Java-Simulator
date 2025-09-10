@@ -17,10 +17,20 @@
         <jlink.module.name>networkoperatorsimulator.appmodule</jlink.module.name>
         <jdk.jmods.path>${java.home}/jmods</jdk.jmods.path>
         <jlink.image.output.dir>${project.build.directory}/app-image</jlink.image.output.dir>
+        <dependencies.path>${project.build.directory}/dependencies</dependencies.path>
     </properties>
 
     <dependencies>
-        <!-- Dependencies -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.12</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -55,6 +65,24 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${dependencies.path}</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
@@ -69,7 +97,7 @@
                             <executable>${java.home}/bin/jlink</executable>
                             <arguments>
                                 <argument>--module-path</argument>
-                                <argument>${jdk.jmods.path}${path.separator}${project.build.outputDirectory}</argument>
+                                <argument>${jdk.jmods.path}${path.separator}${project.build.outputDirectory}${path.separator}${dependencies.path}</argument>
                                 <argument>--add-modules</argument>
                                 <argument>${jlink.module.name}</argument>
                                 <argument>--launcher</argument>
@@ -108,4 +136,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Maven Central Plugin Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
 </project>
