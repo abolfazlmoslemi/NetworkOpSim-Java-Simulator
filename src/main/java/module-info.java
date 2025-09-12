@@ -1,16 +1,19 @@
-// FILE: P1/src/main/java/module-info.java
-
 module networkoperatorsimulator.appmodule {
-    // وابستگی به ماژول‌های استاندارد جاوا
-    requires java.desktop;
+    requires java.desktop;          // Swing/AWT
+    requires org.slf4j;             // SLF4J API
+    requires ch.qos.logback.classic; // (logback has named modules since 1.4)
 
-    // ===== بخش اضافه شده برای لاگ‌گیری =====
-    // اعلام نیاز به ماژول SLF4J API
-    requires org.slf4j;
-    // اعلام نیاز به ماژول Logback Classic (که خودکار Logback Core را هم می‌آورد)
-    requires ch.qos.logback.classic;
-    // =======================================
+    // Export ONLY the packages that actually exist now:
+    exports com.networkopsim.game.controller.core;
+    exports com.networkopsim.game.controller.input;
 
-    // اکسپورت کردن پکیج اصلی برنامه
-    exports com.networkopsim.game;
+    exports com.networkopsim.game.model.core;
+    exports com.networkopsim.game.model.enums;
+    exports com.networkopsim.game.model.state;
+
+    exports com.networkopsim.game.view.panels;
+    exports com.networkopsim.game.view.dialogs;
+    exports com.networkopsim.game.view.rendering;
+
+    exports com.networkopsim.game.utils;
 }
