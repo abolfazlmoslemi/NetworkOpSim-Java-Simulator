@@ -589,6 +589,35 @@ public class Packet implements Serializable {
         updateHitbox();
     }
 
+    // ===== متد جدید برای رفع باگ SPY =====
+    /**
+     * Special method for placing a packet on a wire after a SPY teleport.
+     * This bypasses complex speed calculations based on port compatibility.
+     * @param wire The wire to place the packet on.
+     */
+    public void teleportToWire(Wire wire) {
+        this.currentWire = Objects.requireNonNull(wire, "Cannot teleport to a null wire for packet " + id);
+        this.currentWireId = wire.getId();
+        this.currentSystem = null;
+        this.currentSystemId = -1;
+        this.progressOnWire = 0.0;
+        this.isReversing = false;
+        this.isDecelerating = false;
+        this.isAccelerating = false;
+        this.enteredViaIncompatiblePort = false;
+
+        if (finalStatusForPrediction != null && finalStatusForPrediction != PredictedPacketStatus.ON_WIRE) {
+            this.finalStatusForPrediction = null;
+        }
+
+        // A teleported packet always starts at base speed, regardless of type or port.
+        this.currentSpeedMagnitude = BASE_SPEED_MAGNITUDE;
+        this.targetSpeedMagnitude = BASE_SPEED_MAGNITUDE;
+
+        updateIdealPositionAndVelocity();
+        updateHitbox();
+    }
+
     public void addNoise(double amount) {
         if (amount > 0 && !markedForRemoval) {
             this.noise = Math.min(this.size, this.noise + amount);

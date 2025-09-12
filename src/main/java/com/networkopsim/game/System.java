@@ -123,7 +123,8 @@ public class System implements Serializable {
     }
     public void configureGenerator(int totalPackets, int frequencyMs) {
         if (systemType == NetworkEnums.SystemType.SOURCE && hasOutputPorts()) {
-            this.packetsToGenerateConfig = Math.max(0, totalPackets);
+            // totalPackets can be -1 for infinite
+            this.packetsToGenerateConfig = totalPackets;
             this.generationFrequencyMillisConfig = Math.max(100, frequencyMs);
             this.packetTypeToGenerate = NetworkEnums.PacketType.NORMAL;
         } else { this.packetsToGenerateConfig = 0; }
@@ -265,33 +266,64 @@ public class System implements Serializable {
             } else { if(packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); }
         } else { if(packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); }
     }
+
     public void attemptPacketGeneration(GamePanel gamePanel, long currentSimTimeMs, boolean isPredictionRun) {
-        if (systemType != NetworkEnums.SystemType.SOURCE || !hasOutputPorts() || packetsGeneratedThisRun >= packetsToGenerateConfig || packetsToGenerateConfig <= 0) return;
-        if (lastGenerationTimeThisRun == -1) lastGenerationTimeThisRun = currentSimTimeMs - generationFrequencyMillisConfig;
-        if (currentSimTimeMs - lastGenerationTimeThisRun < generationFrequencyMillisConfig) return;
+        if (systemType != NetworkEnums.SystemType.SOURCE || !hasOutputPorts()) {
+            return;
+        }
+        if (packetsToGenerateConfig > 0 && packetsGeneratedThisRun >= packetsToGenerateConfig) {
+            return;
+        }
+
+        if (lastGenerationTimeThisRun == -1) {
+            lastGenerationTimeThisRun = currentSimTimeMs - generationFrequencyMillisConfig;
+        }
+        if (currentSimTimeMs - lastGenerationTimeThisRun < generationFrequencyMillisConfig) {
+            return;
+        }
+
+        List<Port> availablePorts = new ArrayList<>();
+        synchronized(outputPorts) {
+            for (Port port : outputPorts) {
+                if (port != null && port.isConnected()) {
+                    Wire wire = gamePanel.findWireFromPort(port);
+                    if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) {
+                        System destinationSystem = wire.getEndPort().getParentSystem();
+                        if (destinationSystem != null && !destinationSystem.isDisabled()) {
+                            availablePorts.add(port);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (availablePorts.isEmpty()) {
+            return;
+        }
+
+        Collections.shuffle(availablePorts, globalRandom);
+        Port chosenPort = availablePorts.get(0);
+        Wire outputWire = gamePanel.findWireFromPort(chosenPort);
+
         NetworkEnums.PacketShape shapeToGenerate;
+
         if (this.packetShapeToGenerate != null) {
             shapeToGenerate = this.packetShapeToGenerate;
-        } else if (packetTypeToGenerate == NetworkEnums.PacketType.BULK || packetTypeToGenerate == NetworkEnums.PacketType.WOBBLE || packetTypeToGenerate == NetworkEnums.PacketType.SECRET) {
-            shapeToGenerate = NetworkEnums.PacketShape.CIRCLE;
         } else {
-            shapeToGenerate = getPacketShapeFromPortShapeStatic(outputPorts.get(0).getShape());
+            shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
         }
-        Packet ghostPacket = new Packet(shapeToGenerate, 0, 0, packetTypeToGenerate);
-        Port chosenPort = findAvailableOutputPort(ghostPacket, gamePanel, isPredictionRun);
-        if (chosenPort != null) {
-            Wire outputWire = gamePanel.findWireFromPort(chosenPort);
-            if (outputWire != null) {
-                lastGenerationTimeThisRun = currentSimTimeMs;
-                Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY(), packetTypeToGenerate);
-                boolean compatibleExit = (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) ||
-                        (packetTypeToGenerate == NetworkEnums.PacketType.BULK) ||
-                        (packetTypeToGenerate == NetworkEnums.PacketType.MESSENGER) ||
-                        (Port.getShapeEnum(newPacket.getShape()) == chosenPort.getShape());
-                newPacket.setWire(outputWire, compatibleExit);
-                gamePanel.addPacketInternal(newPacket, isPredictionRun);
-                packetsGeneratedThisRun++;
-            }
+
+        if (shapeToGenerate == null) {
+            return;
+        }
+
+        lastGenerationTimeThisRun = currentSimTimeMs;
+        Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY(), packetTypeToGenerate);
+        newPacket.setWire(outputWire, true);
+        gamePanel.addPacketInternal(newPacket, isPredictionRun);
+
+        if (packetsToGenerateConfig != -1) {
+            packetsGeneratedThisRun++;
         }
     }
     public void draw(Graphics2D g2d) {
@@ -393,7 +425,31 @@ public class System implements Serializable {
     private void handleDistributorLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet.getPacketType() != NetworkEnums.PacketType.BULK) { processOrQueuePacket(packet, gamePanel, isPredictionRun); return; } int numBits = packet.getSize(); if (numBits <= 0) { gamePanel.packetLostInternal(packet, isPredictionRun); return; } List<Packet> bitPackets = new ArrayList<>(); for(int i = 0; i < numBits; i++){ Packet bit = new Packet(NetworkEnums.PacketShape.CIRCLE, this.x, this.y, NetworkEnums.PacketType.BIT); bit.configureAsBit(packet.getId(), numBits); bitPackets.add(bit); } gamePanel.packetLostInternal(packet, isPredictionRun); for(Packet bit : bitPackets){ processOrQueuePacket(bit, gamePanel, isPredictionRun); } }
     private void handleMergerLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if(packet.getPacketType() != NetworkEnums.PacketType.BIT){ processOrQueuePacket(packet, gamePanel, isPredictionRun); return; } int parentId = packet.getBulkParentId(); if(parentId == -1){ gamePanel.packetLostInternal(packet, isPredictionRun); return; } mergingPackets.computeIfAbsent(parentId, k -> new ArrayList<>()).add(packet); gamePanel.packetLostInternal(packet, isPredictionRun); List<Packet> collectedBits = mergingPackets.get(parentId); if(collectedBits.size() >= packet.getTotalBitsInGroup()){ Packet newBulkPacket = new Packet(NetworkEnums.PacketShape.CIRCLE, this.x, this.y, NetworkEnums.PacketType.BULK); queuePacket(newBulkPacket, gamePanel, isPredictionRun); mergingPackets.remove(parentId); } }
     private void handleVpnLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (vpnIsActive) { if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) packet.transformToProtected(); else if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) packet.upgradeSecretPacket(); } processOrQueuePacket(packet, gamePanel, isPredictionRun); }
-    private void handleSpyLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) { gamePanel.packetLostInternal(packet, isPredictionRun); return; } List<System> otherSpySystems = gamePanel.getSystems().stream().filter(s -> s != null && s.getSystemType() == NetworkEnums.SystemType.SPY && s.getId() != this.id).collect(Collectors.toList()); if (otherSpySystems.isEmpty()) { gamePanel.packetLostInternal(packet, isPredictionRun); return; } Collections.shuffle(otherSpySystems, globalRandom); Port targetPort = otherSpySystems.get(0).findAvailableOutputPort(packet, gamePanel, isPredictionRun); if (targetPort != null) { Wire targetWire = gamePanel.findWireFromPort(targetPort); if(targetWire != null) { packet.setCurrentSystem(otherSpySystems.get(0)); packet.setWire(targetWire, Port.getShapeEnum(packet.getShape()) == targetPort.getShape()); } else { gamePanel.packetLostInternal(packet, isPredictionRun); } } else { gamePanel.packetLostInternal(packet, isPredictionRun); } }
+    // ===== بخش اصلاح شده: منطق SPY برای رفع باگ توقف =====
+    private void handleSpyLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
+        if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
+            gamePanel.packetLostInternal(packet, isPredictionRun);
+            return;
+        }
+        List<System> otherSpySystems = gamePanel.getSystems().stream().filter(s -> s != null && s.getSystemType() == NetworkEnums.SystemType.SPY && s.getId() != this.id).collect(Collectors.toList());
+        if (otherSpySystems.isEmpty()) {
+            gamePanel.packetLostInternal(packet, isPredictionRun);
+            return;
+        }
+        Collections.shuffle(otherSpySystems, globalRandom);
+        Port targetPort = otherSpySystems.get(0).findAvailableOutputPort(packet, gamePanel, isPredictionRun);
+        if (targetPort != null) {
+            Wire targetWire = gamePanel.findWireFromPort(targetPort);
+            if(targetWire != null) {
+                // ===== تغییر کلیدی: استفاده از متد جدید teleportToWire =====
+                packet.teleportToWire(targetWire);
+            } else {
+                gamePanel.packetLostInternal(packet, isPredictionRun);
+            }
+        } else {
+            gamePanel.packetLostInternal(packet, isPredictionRun);
+        }
+    }
     private void handleCorruptorLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet.getNoise() < 0.01) packet.addNoise(CORRUPTOR_NOISE_ADDITION); if (globalRandom.nextDouble() < TROJAN_CONVERSION_CHANCE) packet.setPacketType(NetworkEnums.PacketType.TROJAN); Port outputPort = findIncompatibleOutputPort(packet, gamePanel, isPredictionRun); if (outputPort == null) outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun); if (outputPort != null) { Wire outputWire = gamePanel.findWireFromPort(outputPort); if (outputWire != null) packet.setWire(outputWire, Port.getShapeEnum(packet.getShape()) == outputPort.getShape()); else queuePacket(packet, gamePanel, isPredictionRun); } else queuePacket(packet, gamePanel, isPredictionRun); }
     private void processOrQueuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { Port outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun); if (outputPort != null) { Wire outputWire = gamePanel.findWireFromPort(outputPort); if (outputWire != null) { boolean compatibleExit = packet.getPacketType() != NetworkEnums.PacketType.SECRET && (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER || (Port.getShapeEnum(packet.getShape()) == outputPort.getShape())); packet.setWire(outputWire, compatibleExit); if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) packet.setFinalStatusForPrediction(null); } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.STALLED_AT_NODE); queuePacket(packet, gamePanel, isPredictionRun); } } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); queuePacket(packet, gamePanel, isPredictionRun); } }
     private void queuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { synchronized (packetQueue) { if (packetQueue.size() < QUEUE_CAPACITY) { packetQueue.offer(packet); if(packet.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST); gamePanel.packetLostInternal(packet, isPredictionRun); } } }

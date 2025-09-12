@@ -82,9 +82,9 @@ public class LevelLoader {
 
     private static int getWireBudgetForLevel(int level) {
         switch (level) {
-            case 1: return 4750;
-            case 2: return 6500;
-            case 3: return 21000;
+            case 1: return 4040;
+            case 2: return 6380;
+            case 3: return 9999;
             case 4: return 30000;
             case 5: return 55000;
             default: return 1000;
@@ -455,27 +455,33 @@ public class LevelLoader {
         sinkS_C_End.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(sinkS_C_End);
     }
+    // ===== متد اصلاح شده نهایی برای مرحله 3 =====
     private static void initializeLevel3_Redesigned(List<System> systems) {
         int w = NetworkGame.WINDOW_WIDTH;
         int h = NetworkGame.WINDOW_HEIGHT;
         int sysW = System.SYSTEM_WIDTH;
+
+        // ===== تغییر: پورت‌های خروجی SOURCE به CIRCLE و نوع بسته به MESSENGER =====
         System sourceSquare = new System(50, h / 2, NetworkEnums.SystemType.SOURCE);
-        sourceSquare.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
-        sourceSquare.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
-        sourceSquare.configureGenerator(25, 2000, NetworkEnums.PacketType.NORMAL);
-        sourceSquare.setPacketShapeToGenerate(NetworkEnums.PacketShape.SQUARE);
+        sourceSquare.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        sourceSquare.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        sourceSquare.configureGenerator(25, 2000, NetworkEnums.PacketType.MESSENGER);
+        sourceSquare.setPacketShapeToGenerate(NetworkEnums.PacketShape.CIRCLE);
         systems.add(sourceSquare);
+
         System sourceTriangle = new System(50, h - 100, NetworkEnums.SystemType.SOURCE);
-        sourceTriangle.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
-        sourceTriangle.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
-        sourceTriangle.configureGenerator(20, 2500, NetworkEnums.PacketType.NORMAL);
-        sourceTriangle.setPacketShapeToGenerate(NetworkEnums.PacketShape.TRIANGLE);
+        sourceTriangle.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        sourceTriangle.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        sourceTriangle.configureGenerator(20, 2500, NetworkEnums.PacketType.MESSENGER);
+        sourceTriangle.setPacketShapeToGenerate(NetworkEnums.PacketShape.CIRCLE);
         systems.add(sourceTriangle);
+
         System sourceMessenger = new System(50, 100, NetworkEnums.SystemType.SOURCE);
         sourceMessenger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
         sourceMessenger.configureGenerator(15, 3000, NetworkEnums.PacketType.MESSENGER);
         sourceMessenger.setPacketShapeToGenerate(NetworkEnums.PacketShape.CIRCLE);
         systems.add(sourceMessenger);
+
         System sinkSquare = new System(w - sysW - 50, h / 2, NetworkEnums.SystemType.SINK);
         sinkSquare.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         sinkSquare.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
@@ -487,23 +493,30 @@ public class LevelLoader {
         System sinkMessenger = new System(w - sysW - 50, 100, NetworkEnums.SystemType.SINK);
         sinkMessenger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
         systems.add(sinkMessenger);
-        System node1 = new System(w/4 - 40, 150, NetworkEnums.SystemType.NODE);
-        node1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
-        node1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
-        node1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
-        node1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
-        systems.add(node1);
-        System node2 = new System(w/4 - 40, h/2, NetworkEnums.SystemType.NODE);
-        node2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
-        node2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
-        node2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
-        node2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
-        systems.add(node2);
-        System node3 = new System(w/4 - 40, h-150, NetworkEnums.SystemType.NODE);
-        node3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
-        node3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
-        node3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
-        systems.add(node3);
+
+        // ===== تغییر: سیستم شماره 6 (ID: 6) از NODE به CORRUPTOR =====
+        System system6 = new System(w/4 - 40, 150, NetworkEnums.SystemType.CORRUPTOR);
+        system6.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        system6.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        system6.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        system6.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(system6);
+
+        // ===== تغییر: سیستم شماره 7 (ID: 7) از NODE به VPN =====
+        System system7 = new System(w/4 - 40, h/2, NetworkEnums.SystemType.VPN);
+        system7.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        system7.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        system7.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        system7.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        systems.add(system7);
+
+        // ===== تغییر: سیستم شماره 8 (ID: 8) از NODE به VPN =====
+        System system8 = new System(w/4 - 40, h-150, NetworkEnums.SystemType.VPN);
+        system8.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        system8.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        system8.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        systems.add(system8);
+
         System vpn = new System(w/2 - 80, 80, NetworkEnums.SystemType.VPN);
         vpn.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
         vpn.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
@@ -544,14 +557,9 @@ public class LevelLoader {
         spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
         spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
         systems.add(spy2);
-        System node_final = new System(w*4/5, h/2, NetworkEnums.SystemType.NODE);
-        node_final.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
-        node_final.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
-        node_final.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
-        node_final.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
-        node_final.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
-        node_final.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
-        systems.add(node_final);
+
+        // ===== تغییر: سیستم شماره 16 (node_final) حذف شد =====
+
         System balancingNode = new System(w-sysW-150, h-250, NetworkEnums.SystemType.NODE);
         balancingNode.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
         balancingNode.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
