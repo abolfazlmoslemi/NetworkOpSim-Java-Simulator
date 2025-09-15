@@ -1,0 +1,11 @@
+2025-09-16 00:07:11.692 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-16 00:07:11.722 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-16 00:07:11.722 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-16 00:07:11.724 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-16 00:07:11.777 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-16 00:07:11.777 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-16 00:07:12.564 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-16 00:07:12.565 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-16 00:07:12.764 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-16 00:07:12.765 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-16 00:07:12.766 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.

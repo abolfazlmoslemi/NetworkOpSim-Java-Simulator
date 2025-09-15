@@ -1,17 +1,11 @@
+// ===== File: GameState.java (Final Corrected Version 2 with Typo Fix) =====
+
 package com.networkopsim.game.model.state;
 
-
-import com.networkopsim.game.model.core.Packet;
-import com.networkopsim.game.model.core.System;
-import com.networkopsim.game.model.core.Wire;
-
-// ================================================================================
-// FILE: GameState.java (کد کامل و اصلاح شده با متد جدید)
-// ================================================================================
-import java.io.Serializable; // اضافه شود
+import java.io.Serializable;
 
 public class GameState implements Serializable {
-    private static final long serialVersionUID = 1L; // اضافه شود
+    private static final long serialVersionUID = 1L;
     public static final int MAX_LEVELS = 5;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
@@ -22,6 +16,9 @@ public class GameState implements Serializable {
     private int maxWireLengthPerLevel = 500;
     private int remainingWireLength = maxWireLengthPerLevel;
     private int currentSelectedLevel = 1;
+
+    // Configurable maximum safe entry speed for systems.
+    private double maxSafeEntrySpeed = 4.0;
 
     public GameState() {
         for (int i = 0; i < unlockedLevels.length; i++) {
@@ -40,21 +37,20 @@ public class GameState implements Serializable {
     public double getPacketLossPercentage() {
         if (totalPacketUnitsGenerated <= 0) return 0.0;
         double actualLossUnits = Math.min(totalPacketLossUnits, totalPacketUnitsGenerated);
-        double lossRatio = (double) actualLossUnits / totalPacketUnitsGenerated;
-        return Math.min(100.0, Math.max(0.0, lossRatio * 100.0));
+        return Math.min(100.0, Math.max(0.0, ((double) actualLossUnits / totalPacketUnitsGenerated) * 100.0));
     }
 
     public int getTotalPacketsGeneratedCount() { return totalPacketsGeneratedCount; }
     public int getTotalPacketsLostCount() { return totalPacketsLostCount; }
 
-    public void recordPacketGeneration(Packet packet) {
+    public void recordPacketGeneration(com.networkopsim.game.model.core.Packet packet) {
         if (packet != null) {
             totalPacketUnitsGenerated += packet.getSize();
             totalPacketsGeneratedCount++;
         }
     }
 
-    public void increasePacketLoss(Packet packet) {
+    public void increasePacketLoss(com.networkopsim.game.model.core.Packet packet) {
         if (packet != null) {
             totalPacketLossUnits += packet.getSize();
             totalPacketsLostCount++;
@@ -70,35 +66,18 @@ public class GameState implements Serializable {
     }
 
     public int getRemainingWireLength() { return remainingWireLength; }
-
-    public void useWire(int length) {
-        if (length > 0) {
-            remainingWireLength -= length;
-        }
-    }
-
-    public void returnWire(int length) {
-        if (length > 0) {
-            remainingWireLength += length;
-        }
-    }
+    public void useWire(int length) { if (length > 0) remainingWireLength -= length; }
+    public void returnWire(int length) { if (length > 0) remainingWireLength += length; }
 
     public void setMaxWireLengthForLevel(int length) {
         this.maxWireLengthPerLevel = Math.max(0, length);
         this.remainingWireLength = this.maxWireLengthPerLevel;
-        java.lang.System.out.println("GameState: Max wire length for level set to: " + this.maxWireLengthPerLevel + ". Remaining wire also reset to this value.");
+        java.lang.System.out.println("GameState: Max wire length set to: " + this.maxWireLengthPerLevel);
     }
 
-    // ===== متد جدید برای رفع خطا =====
-    /**
-     * Directly sets the remaining wire length. Used for complex state reversions
-     * like cancelling a system move with the Scroll of Sisyphus.
-     * @param length The new value for the remaining wire length.
-     */
     public void setRemainingWireLength(int length) {
         this.remainingWireLength = length;
     }
-    // ===================================
 
     public int getMaxWireLengthForLevel() { return maxWireLengthPerLevel; }
 
@@ -124,13 +103,14 @@ public class GameState implements Serializable {
 
     public void resetForNewLevel() {
         resetPacketStatsForSimulationAttempt();
+        // [CORRECTED] Fixed the typo from 'maxWireLengthForLevel' to 'maxWireLengthPerLevel'
         this.remainingWireLength = this.maxWireLengthPerLevel;
-        java.lang.System.out.println("GameState: Full reset for new level. Wire length: " + this.remainingWireLength + " (Max: " + this.maxWireLengthPerLevel + ")");
+        java.lang.System.out.println("GameState: Full reset for new level.");
     }
 
     public void resetForSimulationAttemptOnly() {
         resetPacketStatsForSimulationAttempt();
-        java.lang.System.out.println("GameState: Reset for simulation attempt ONLY. Packet stats cleared. Wire length ("+ remainingWireLength +") UNCHANGED.");
+        java.lang.System.out.println("GameState: Reset for simulation attempt ONLY.");
     }
 
     public void setCurrentSelectedLevel(int level) {
@@ -139,5 +119,12 @@ public class GameState implements Serializable {
     }
 
     public int getCurrentSelectedLevel() { return currentSelectedLevel; }
-}
 
+    public double getMaxSafeEntrySpeed() {
+        return maxSafeEntrySpeed;
+    }
+
+    public void setMaxSafeEntrySpeed(double speed) {
+        this.maxSafeEntrySpeed = speed;
+    }
+}

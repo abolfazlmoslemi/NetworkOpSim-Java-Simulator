@@ -1,12 +1,6 @@
 package com.networkopsim.game.model.core;
 
-
-import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.enums.NetworkEnums;
-
-// ================================================================================
-// FILE: Port.java (کد کامل و نهایی - اصلاح شده)
-// ================================================================================
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -92,6 +86,17 @@ public class Port implements Serializable {
         }
     }
 
+    // NEWLY ADDED STATIC METHOD
+    public static NetworkEnums.PacketShape getPacketShapeFromPortShapeStatic(NetworkEnums.PortShape portShape) {
+        if (portShape == null) return null;
+        switch (portShape) {
+            case SQUARE: return NetworkEnums.PacketShape.SQUARE;
+            case TRIANGLE: return NetworkEnums.PacketShape.TRIANGLE;
+            case CIRCLE: return NetworkEnums.PacketShape.CIRCLE;
+            default: return null;
+        }
+    }
+
     public void updatePosition(int systemX, int systemY, int totalInputPorts, int totalOutputPorts) {
         this.position = calculatePosition(systemX, systemY, totalInputPorts, totalOutputPorts, this.type, this.index);
     }
@@ -104,65 +109,27 @@ public class Port implements Serializable {
         int y = position.y - PORT_SIZE / 2;
         Path2D path = null;
         switch (shape) {
-            case SQUARE:
-                g2d.fillRect(x, y, PORT_SIZE, PORT_SIZE);
-                break;
+            case SQUARE: g2d.fillRect(x, y, PORT_SIZE, PORT_SIZE); break;
             case TRIANGLE:
                 path = new Path2D.Double();
-                if (type == NetworkEnums.PortType.OUTPUT) {
-                    path.moveTo(x, y);
-                    path.lineTo(x + PORT_SIZE, position.y);
-                    path.lineTo(x, y + PORT_SIZE);
-                } else {
-                    path.moveTo(x + PORT_SIZE, y);
-                    path.lineTo(x, position.y);
-                    path.lineTo(x + PORT_SIZE, y + PORT_SIZE);
-                }
-                path.closePath();
-                g2d.fill(path);
-                break;
-            case CIRCLE:
-                g2d.fillOval(x, y, PORT_SIZE, PORT_SIZE);
-                break;
-            case ANY:
-                g2d.setColor(Color.GRAY);
-                g2d.fillOval(x + 2, y + 2, PORT_SIZE - 4, PORT_SIZE - 4);
-                break;
+                if (type == NetworkEnums.PortType.OUTPUT) { path.moveTo(x, y); path.lineTo(x + PORT_SIZE, position.y); path.lineTo(x, y + PORT_SIZE); }
+                else { path.moveTo(x + PORT_SIZE, y); path.lineTo(x, position.y); path.lineTo(x + PORT_SIZE, y + PORT_SIZE); }
+                path.closePath(); g2d.fill(path); break;
+            case CIRCLE: g2d.fillOval(x, y, PORT_SIZE, PORT_SIZE); break;
+            case ANY: g2d.setColor(Color.GRAY); g2d.fillOval(x + 2, y + 2, PORT_SIZE - 4, PORT_SIZE - 4); break;
         }
-
-        if (shape == NetworkEnums.PortShape.ANY) {
-            g2d.setColor(Color.DARK_GRAY);
-        } else {
-            g2d.setColor(portColor.darker().darker());
-        }
+        if (shape == NetworkEnums.PortShape.ANY) { g2d.setColor(Color.DARK_GRAY); } else { g2d.setColor(portColor.darker().darker()); }
         g2d.setStroke(new BasicStroke(1));
         switch (shape) {
-            case SQUARE:
-                g2d.drawRect(x, y, PORT_SIZE, PORT_SIZE);
-                break;
-            case TRIANGLE:
-                if (path != null) g2d.draw(path);
-                break;
-            case CIRCLE:
-                g2d.drawOval(x, y, PORT_SIZE, PORT_SIZE);
-                break;
-            case ANY:
-                g2d.drawOval(x + 2, y + 2, PORT_SIZE - 4, PORT_SIZE - 4);
-                break;
+            case SQUARE: g2d.drawRect(x, y, PORT_SIZE, PORT_SIZE); break;
+            case TRIANGLE: if (path != null) g2d.draw(path); break;
+            case CIRCLE: g2d.drawOval(x, y, PORT_SIZE, PORT_SIZE); break;
+            case ANY: g2d.drawOval(x + 2, y + 2, PORT_SIZE - 4, PORT_SIZE - 4); break;
         }
     }
 
-    public boolean contains(Point p) {
-        if (p == null || position == null) return false;
-        int clickRadius = PORT_SIZE + 4;
-        Rectangle bounds = new Rectangle(position.x - clickRadius / 2, position.y - clickRadius / 2, clickRadius, clickRadius);
-        return bounds.contains(p);
-    }
-
-    public void rebuildTransientReferences(Map<Integer, System> systemMap) {
-        this.parentSystem = systemMap.get(this.parentSystemId);
-    }
-
+    public boolean contains(Point p) { if (p == null || position == null) return false; int clickRadius = PORT_SIZE + 4; return new Rectangle(position.x - clickRadius / 2, position.y - clickRadius / 2, clickRadius, clickRadius).contains(p); }
+    public void rebuildTransientReferences(Map<Integer, System> systemMap) { this.parentSystem = systemMap.get(this.parentSystemId); }
     public int getId() { return id; }
     public NetworkEnums.PortType getType() { return type; }
     public NetworkEnums.PortShape getShape() { return shape; }
@@ -173,30 +140,8 @@ public class Port implements Serializable {
     public boolean isConnected() { return isConnected; }
     public int getIndex() { return index; }
     public void setConnected(boolean connected) { isConnected = connected; }
-    public Point2D.Double getPrecisePosition() {
-        return (position != null) ? new Point2D.Double(position.x, position.y) : new Point2D.Double(0,0);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Port port = (Port) o;
-        return id == port.id;
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-    @Override
-    public String toString() {
-        String parentIdStr = (parentSystem != null) ? Integer.toString(parentSystem.getId()) : "null";
-        String posStr = (position != null) ? position.x + "," + position.y : "null";
-        return "Port{" + id + ":" +
-                parentIdStr + "." + type + "[" + index + "]" +
-                shape + "@" + posStr +
-                (isConnected ? ", Connected" : ", Open") +
-                '}';
-    }
+    public Point2D.Double getPrecisePosition() { return (position != null) ? new Point2D.Double(position.x, position.y) : new Point2D.Double(0,0); }
+    @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Port port = (Port) o; return id == port.id; }
+    @Override public int hashCode() { return Objects.hash(id); }
+    @Override public String toString() { String parentIdStr = (parentSystem != null) ? Integer.toString(parentSystem.getId()) : "null"; String posStr = (position != null) ? position.x + "," + position.y : "null"; return "Port{" + id + ":" + parentIdStr + "." + type + "[" + index + "]" + shape + "@" + posStr + (isConnected ? ", Connected" : ", Open") + '}'; }
 }
-

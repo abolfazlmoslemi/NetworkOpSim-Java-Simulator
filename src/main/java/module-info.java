@@ -7,6 +7,9 @@ module networkoperatorsimulator.appmodule {
     exports com.networkopsim.game.controller.core;
     exports com.networkopsim.game.controller.input;
 
+    // NEW EXPORT: This line is added to make GameEngine visible to GamePanel.
+    exports com.networkopsim.game.controller.logic;
+
     exports com.networkopsim.game.model.core;
     exports com.networkopsim.game.model.enums;
     exports com.networkopsim.game.model.state;
