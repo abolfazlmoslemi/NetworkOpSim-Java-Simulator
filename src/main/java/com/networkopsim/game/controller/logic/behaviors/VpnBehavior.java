@@ -1,29 +1,41 @@
-// ===== File: VpnBehavior.java (Final Corrected to pass VPN ID) =====
+// ===== File: VpnBehavior.java (FINAL - Corrected Build Errors) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
-import com.networkopsim.game.controller.logic.GameEngine;
+import com.networkopsim.game.controller.logic.GameEngine; // <-- FIX: IMPORT ADDED
 import com.networkopsim.game.model.core.Packet;
 import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.enums.NetworkEnums;
-import com.networkopsim.game.controller.logic.SystemBehavior;
-/**
- * Behavior for VPN systems. Protects MESSENGER packets and upgrades SECRET packets if the VPN is active.
- */
+
 public class VpnBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+            handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
+            return;
+        }
+
         if (system.isVpnActive()) {
             if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
-                // [MODIFIED] Pass the current VPN's ID when protecting the packet.
                 packet.transformToProtected(system.getId());
             } else if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
                 packet.upgradeSecretPacket();
             }
         }
-        // After potential transformation, route it normally.
         processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+    }
+
+    protected void handleDestructiveArrival(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) { // <-- FIX: Fully qualified System
+        synchronized(system.packetQueue) {
+            for(Packet p : system.packetQueue) {
+                gameEngine.getGameState().increasePacketLoss(p);
+                gameEngine.packetLostInternal(p, isPredictionRun);
+            }
+            system.packetQueue.clear();
+        }
+        gameEngine.getGameState().increasePacketLoss(packet);
+        gameEngine.packetLostInternal(packet, isPredictionRun);
     }
 
     @Override

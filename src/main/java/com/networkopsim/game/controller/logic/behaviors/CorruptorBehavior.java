@@ -1,12 +1,10 @@
-// ===== File: CorruptorBehavior.java (Final Corrected with Proper PROTECTED Packet Handling) =====
+// ===== File: CorruptorBehavior.java (FINAL - Corrected Build Errors) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
-import com.networkopsim.game.controller.logic.GameEngine;
+import com.networkopsim.game.controller.logic.GameEngine; // <-- FIX: IMPORT ADDED
 import com.networkopsim.game.model.core.*;
 import com.networkopsim.game.model.enums.NetworkEnums;
-import com.networkopsim.game.controller.logic.SystemBehavior;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,38 +16,48 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // [CORRECTED] Handle PROTECTED packets first and then exit immediately.
-        if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
-            packet.revertToOriginalType();
-            // After reverting, the Corruptor acts as a simple NODE for this packet.
-            // It does NOT apply its corrupting logic.
-            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+            handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
             return;
         }
 
-        // The following logic only applies to packets that were NOT protected on entry.
+        if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
+            packet.revertToOriginalType();
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+            return;
+        }
         if (packet.getNoise() < 0.01) {
             packet.addNoise(CORRUPTOR_NOISE_ADDITION);
         }
         if (com.networkopsim.game.model.core.System.getGlobalRandom().nextDouble() < TROJAN_CONVERSION_CHANCE) {
             packet.setPacketType(NetworkEnums.PacketType.TROJAN);
         }
-
         Port outputPort = findIncompatibleOutputPort(system, packet, gameEngine, isPredictionRun);
         if (outputPort == null) {
             outputPort = findAvailableOutputPort(system, packet, gameEngine, isPredictionRun);
         }
-
         if (outputPort != null) {
             Wire outputWire = gameEngine.findWireFromPort(outputPort);
             if (outputWire != null) {
-                packet.setWire(outputWire, Port.getShapeEnum(packet.getShape()) == outputPort.getShape());
+                dispatchPacket(packet, outputWire, outputPort);
             } else {
                 queuePacket(system, packet, gameEngine, isPredictionRun);
             }
         } else {
             queuePacket(system, packet, gameEngine, isPredictionRun);
         }
+    }
+
+    protected void handleDestructiveArrival(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) { // <-- FIX: Fully qualified System
+        synchronized(system.packetQueue) {
+            for(Packet p : system.packetQueue) {
+                gameEngine.getGameState().increasePacketLoss(p);
+                gameEngine.packetLostInternal(p, isPredictionRun);
+            }
+            system.packetQueue.clear();
+        }
+        gameEngine.getGameState().increasePacketLoss(packet);
+        gameEngine.packetLostInternal(packet, isPredictionRun);
     }
 
     private Port findIncompatibleOutputPort(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {

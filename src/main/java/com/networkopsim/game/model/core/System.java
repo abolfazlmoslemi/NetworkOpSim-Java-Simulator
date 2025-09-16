@@ -1,4 +1,4 @@
-// ===== File: System.java (Final Corrected with Explicit BULK Packet Logic) =====
+// ===== File: System.java (FINAL - With Wire Blocking State) =====
 
 package com.networkopsim.game.model.core;
 
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class System implements Serializable {
     private static final long serialVersionUID = 2L;
@@ -46,7 +47,13 @@ public class System implements Serializable {
     private static final long ANTITROJAN_COOLDOWN_MS = 8000;
     private long antiTrojanCooldownUntil = 0;
     private boolean vpnIsActive = true;
-    private final Map<Integer, List<Packet>> mergingPackets = new HashMap<>();
+
+    private final Map<Integer, List<Packet>> mergingPackets = new ConcurrentHashMap<>();
+    private final Map<Integer, Long> mergeGroupArrivalTimes = new ConcurrentHashMap<>();
+    private volatile int currentBulkOperationId = -1;
+
+    // [NEW] State for Distributor to block its entry wire while busy.
+    private volatile int entryWireIdInUse = -1;
 
     private transient SystemBehavior behavior;
     private final NetworkEnums.SystemType systemType;
@@ -80,110 +87,31 @@ public class System implements Serializable {
         }
     }
 
-    public void reinitializeBehavior() {
-        if (this.behavior == null) {
-            this.behavior = createBehaviorForType(this.systemType);
-        }
+    public void resetForNewRun() {
+        synchronized (packetQueue) { packetQueue.clear(); }
+        this.packetsGeneratedThisRun = 0;
+        this.lastGenerationTimeThisRun = -1;
+        this.antiTrojanCooldownUntil = 0;
+        this.vpnIsActive = true;
+        this.mergingPackets.clear();
+        this.mergeGroupArrivalTimes.clear();
+        this.currentBulkOperationId = -1;
+        this.isDisabled = false;
+        this.disabledUntil = 0;
+        this.entryWireIdInUse = -1; // Reset the wire blocking state
     }
 
-    public void receivePacket(Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        if (packet == null || gameEngine == null) return;
+    // --- Getters and Setters for the new state ---
+    public int getEntryWireIdInUse() { return entryWireIdInUse; }
+    public void setEntryWireIdInUse(int wireId) { this.entryWireIdInUse = wireId; }
 
-        boolean isReversible = List.of(
-                NetworkEnums.PacketType.MESSENGER,
-                NetworkEnums.PacketType.NORMAL,
-                NetworkEnums.PacketType.SECRET,
-                NetworkEnums.PacketType.BULK
-        ).contains(packet.getPacketType());
-
-        if (this.isDisabled) {
-            if (isReversible) {
-                packet.reverseDirection(gameEngine);
-            } else {
-                gameEngine.packetLostInternal(packet, isPredictionRun);
-            }
-            return;
-        }
-
-        double maxSafeSpeed = gameEngine.getGameState().getMaxSafeEntrySpeed();
-        if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > maxSafeSpeed) {
-            this.isDisabled = true;
-            this.disabledUntil = gameEngine.getSimulationTimeElapsedMs() + GameEngine.SYSTEM_DISABLE_DURATION_MS;
-            if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
-                gameEngine.getGame().playSoundEffect("system_shutdown");
-            }
-            gameEngine.packetLostInternal(packet, isPredictionRun);
-            return;
-        }
-
-        // [CRITICAL FIX] Explicitly separate the logic for BULK packets from all other packet types.
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
-            // Case 1: The BULK packet arrives at the correct system (a Distributor).
-            if (getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR) {
-                packet.setCurrentSystem(this);
-                gameEngine.addRoutingCoinsInternal(packet, isPredictionRun);
-                getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
-            } else {
-                // Case 2: The BULK packet arrives at any other system (incorrect routing).
-                // It performs its destructive action and is then consumed.
-                synchronized(packetQueue) {
-                    for(Packet p : packetQueue) {
-                        gameEngine.packetLostInternal(p, isPredictionRun);
-                    }
-                    packetQueue.clear();
-                }
-                if(packet.getCurrentWire() != null) {
-                    Port entryPort = packet.getCurrentWire().getEndPort();
-                    if (entryPort != null) entryPort.randomizeShape();
-                }
-                // The offending BULK packet is now lost and does not proceed further.
-                gameEngine.packetLostInternal(packet, isPredictionRun);
-            }
-        } else {
-            // This is the normal flow for any packet that is NOT a BULK packet.
-            if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && getSystemType() == NetworkEnums.SystemType.NODE) {
-                packet.setEnteredViaIncompatiblePort(!enteredCompatibly);
-            }
-            packet.setCurrentSystem(this);
-            gameEngine.addRoutingCoinsInternal(packet, isPredictionRun);
-            getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
-        }
-    }
-
+    // ... (The rest of the file is identical to the previous correct version) ...
+    public void reinitializeBehavior() { if (this.behavior == null) { this.behavior = createBehaviorForType(this.systemType); } }
+    public void receivePacket(Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) { if (packet == null || gameEngine == null) return; if (this.isDisabled) { boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET, NetworkEnums.PacketType.BULK).contains(packet.getPacketType()); if (isReversible) packet.reverseDirection(gameEngine); else gameEngine.packetLostInternal(packet, isPredictionRun); return; } double maxSafeSpeed = gameEngine.getGameState().getMaxSafeEntrySpeed(); if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > maxSafeSpeed) { this.isDisabled = true; this.disabledUntil = gameEngine.getSimulationTimeElapsedMs() + GameEngine.SYSTEM_DISABLE_DURATION_MS; if (!isPredictionRun && !gameEngine.getGame().isMuted()) gameEngine.getGame().playSoundEffect("system_shutdown"); gameEngine.packetLostInternal(packet, isPredictionRun); return; } if (packet.getPacketType() == NetworkEnums.PacketType.BULK) { if (getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR) { packet.setCurrentSystem(this); gameEngine.addRoutingCoinsInternal(packet, isPredictionRun); getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly); } else { synchronized(packetQueue) { for(Packet p : packetQueue) { gameEngine.packetLostInternal(p, isPredictionRun); } packetQueue.clear(); } if(packet.getCurrentWire() != null) { Port entryPort = packet.getCurrentWire().getEndPort(); if (entryPort != null) entryPort.randomizeShape(); } gameEngine.packetLostInternal(packet, isPredictionRun); } } else { if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && getSystemType() == NetworkEnums.SystemType.NODE) { packet.setEnteredViaIncompatiblePort(!enteredCompatibly); } packet.setCurrentSystem(this); gameEngine.addRoutingCoinsInternal(packet, isPredictionRun); getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly); } }
     public void processQueue(GameEngine gameEngine, boolean isPredictionRun) { getBehavior().processQueue(this, gameEngine, isPredictionRun); }
     public void attemptPacketGeneration(GameEngine gameEngine, long currentSimTimeMs, boolean isPredictionRun) { getBehavior().attemptPacketGeneration(this, gameEngine, currentSimTimeMs, isPredictionRun); }
-
-    public void updateSystemState(long currentTimeMs, GameEngine gameEngine) {
-        if (isDisabled && currentTimeMs >= disabledUntil) {
-            isDisabled = false;
-            disabledUntil = 0;
-            if (!isReferenceSystem && !gameEngine.getGame().isMuted()) {
-                gameEngine.getGame().playSoundEffect("system_reboot");
-            }
-        }
-    }
-
-    public void updateAntiTrojan(GameEngine gameEngine, boolean isPredictionRun) {
-        if (getSystemType() != NetworkEnums.SystemType.ANTITROJAN) return;
-        long currentTime = gameEngine.getSimulationTimeElapsedMs();
-        if (currentTime < antiTrojanCooldownUntil) return;
-        Packet targetTrojan = null;
-        for (Packet p : gameEngine.getPacketsForRendering()) {
-            if (p != null && p.getPacketType() == NetworkEnums.PacketType.TROJAN) {
-                Point2D.Double pVisPos = p.getVisualPosition();
-                if (pVisPos != null && this.getPosition().distanceSq(pVisPos) < ANTITROJAN_SCAN_RADIUS * ANTITROJAN_SCAN_RADIUS) {
-                    targetTrojan = p; break;
-                }
-            }
-        }
-        if (targetTrojan != null) {
-            targetTrojan.setPacketType(NetworkEnums.PacketType.MESSENGER);
-            this.antiTrojanCooldownUntil = currentTime + ANTITROJAN_COOLDOWN_MS;
-            if (!isPredictionRun && !gameEngine.getGame().isMuted()) { gameEngine.getGame().playSoundEffect("ui_confirm"); }
-        }
-    }
-
-    // --- Getters and Setters ---
+    public void updateSystemState(long currentTimeMs, GameEngine gameEngine) { if (isDisabled && currentTimeMs >= disabledUntil) { isDisabled = false; disabledUntil = 0; if (!isReferenceSystem && !gameEngine.getGame().isMuted()) gameEngine.getGame().playSoundEffect("system_reboot"); } }
+    public void updateAntiTrojan(GameEngine gameEngine, boolean isPredictionRun) { if (getSystemType() != NetworkEnums.SystemType.ANTITROJAN) return; long currentTime = gameEngine.getSimulationTimeElapsedMs(); if (currentTime < antiTrojanCooldownUntil) return; Packet targetTrojan = null; for (Packet p : gameEngine.getPacketsForRendering()) { if (p != null && p.getPacketType() == NetworkEnums.PacketType.TROJAN) { Point2D.Double pVisPos = p.getVisualPosition(); if (pVisPos != null && this.getPosition().distanceSq(pVisPos) < ANTITROJAN_SCAN_RADIUS * ANTITROJAN_SCAN_RADIUS) { targetTrojan = p; break; } } } if (targetTrojan != null) { targetTrojan.setPacketType(NetworkEnums.PacketType.MESSENGER); this.antiTrojanCooldownUntil = currentTime + ANTITROJAN_COOLDOWN_MS; if (!isPredictionRun && !gameEngine.getGame().isMuted()) { gameEngine.getGame().playSoundEffect("ui_confirm"); } } }
     public SystemBehavior getBehavior() { if (behavior == null) { reinitializeBehavior(); } return behavior; }
     public NetworkEnums.SystemType getSystemType() { return systemType; }
     public int getId() { return id; }
@@ -197,17 +125,9 @@ public class System implements Serializable {
     public boolean hasInputPorts() { synchronized(inputPorts) { return !inputPorts.isEmpty(); } }
     public int getQueueSize() { synchronized(packetQueue) { return packetQueue.size(); } }
     public boolean isDisabled() { return isDisabled; }
-    public boolean areAllPortsConnected() {
-        synchronized(inputPorts) { for (Port p : inputPorts) if (p != null && !p.isConnected()) return false; }
-        synchronized(outputPorts) { for (Port p : outputPorts) if (p != null && !p.isConnected()) return false; }
-        return true;
-    }
-    public void setIndicator(boolean on) {
-        this.indicatorOn = on;
-    }
-    public boolean isIndicatorOn() {
-        return this.indicatorOn;
-    }
+    public boolean areAllPortsConnected() { synchronized(inputPorts) { for (Port p : inputPorts) if (p != null && !p.isConnected()) return false; } synchronized(outputPorts) { for (Port p : outputPorts) if (p != null && !p.isConnected()) return false; } return true; }
+    public void setIndicator(boolean on) { this.indicatorOn = on; }
+    public boolean isIndicatorOn() { return this.indicatorOn; }
     public void setPosition(int x, int y) { this.x = x; this.y = y; updateAllPortPositions(); }
     public void configureGenerator(int totalPackets, int frequencyMs, NetworkEnums.PacketType type) { if (systemType == NetworkEnums.SystemType.SOURCE) { this.packetsToGenerateConfig = totalPackets; this.generationFrequencyMillisConfig = Math.max(100, frequencyMs); this.packetTypeToGenerate = type; } }
     public int getPacketsGeneratedCount() { return packetsGeneratedThisRun; }
@@ -220,22 +140,12 @@ public class System implements Serializable {
     public void setPacketShapeToGenerate(NetworkEnums.PacketShape shape) { this.packetShapeToGenerate = shape; }
     public NetworkEnums.PacketShape getPacketShapeToGenerate() { return packetShapeToGenerate; }
     public boolean isVpnActive() { return vpnIsActive; }
-
-    public void setVpnActive(boolean active, GameEngine gameEngine) {
-        if (this.systemType != NetworkEnums.SystemType.VPN || this.vpnIsActive == active) return;
-        this.vpnIsActive = active;
-        if (!active) {
-            for (Packet p : gameEngine.getAllActivePackets()) {
-                if (p != null && p.getPacketType() == NetworkEnums.PacketType.PROTECTED && p.getProtectedBySystemId() == this.getId()) {
-                    p.revertToOriginalType();
-                }
-            }
-        }
-    }
-
+    public void setVpnActive(boolean active, GameEngine gameEngine) { if (this.systemType != NetworkEnums.SystemType.VPN || this.vpnIsActive == active) return; this.vpnIsActive = active; if (!active) { for (Packet p : gameEngine.getAllActivePackets()) { if (p != null && p.getPacketType() == NetworkEnums.PacketType.PROTECTED && p.getProtectedBySystemId() == this.getId()) { p.revertToOriginalType(); } } } }
     public long getAntiTrojanCooldownUntil() { return antiTrojanCooldownUntil; }
     public Map<Integer, List<Packet>> getMergingPackets() { return mergingPackets; }
-    public void resetForNewRun() { synchronized (packetQueue) { packetQueue.clear(); } this.packetsGeneratedThisRun = 0; this.lastGenerationTimeThisRun = -1; this.antiTrojanCooldownUntil = 0; this.vpnIsActive = true; this.mergingPackets.clear(); this.isDisabled = false; this.disabledUntil = 0; }
+    public Map<Integer, Long> getMergeGroupArrivalTimes() { return mergeGroupArrivalTimes; }
+    public int getCurrentBulkOperationId() { return currentBulkOperationId; }
+    public void setCurrentBulkOperationId(int id) { this.currentBulkOperationId = id; }
     public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) { if (shape == NetworkEnums.PortShape.ANY) throw new IllegalArgumentException("PortShape.ANY is not allowed."); int index; if (type == NetworkEnums.PortType.INPUT) { synchronized(inputPorts) { index = inputPorts.size(); inputPorts.add(new Port(this, type, shape, index)); } } else { synchronized(outputPorts) { index = outputPorts.size(); outputPorts.add(new Port(this, type, shape, index)); } } updateAllPortPositions(); }
     public void updateAllPortPositions() { int totalInput, totalOutput; synchronized (inputPorts) { totalInput = inputPorts.size(); } synchronized (outputPorts) { totalOutput = outputPorts.size(); } synchronized (inputPorts) { for (Port p : inputPorts) { if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } synchronized (outputPorts) { for (Port p : outputPorts) { if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } }
     public Port getPortAt(Point p) { synchronized (outputPorts) { for (Port port : outputPorts) if (port != null && port.contains(p)) return port; } synchronized (inputPorts) { for (Port port : inputPorts) if (port != null && port.contains(p)) return port; } return null; }

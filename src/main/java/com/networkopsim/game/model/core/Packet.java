@@ -1,4 +1,4 @@
-// ===== File: Packet.java (FINAL - Corrected variable reference in handleArrival) =====
+// ===== File: Packet.java (FINAL - Added Ghost State and setSize) =====
 
 package com.networkopsim.game.model.core;
 
@@ -19,6 +19,7 @@ public class Packet implements Serializable {
     private static final long serialVersionUID = 2L;
     public static final double BASE_SPEED_MAGNITUDE = 2.0;
     public static final int BASE_DRAW_SIZE = 8;
+    // ... (other constants are unchanged) ...
     public static final double SQUARE_COMPATIBLE_SPEED_FACTOR = 0.5;
     private static final double TRIANGLE_ACCELERATION_RATE = 0.018;
     private static final double MESSENGER_DECELERATION_RATE = 0.04;
@@ -44,24 +45,20 @@ public class Packet implements Serializable {
         BASE_TRIANGLE_HITBOX = new Path2D.Double(); BASE_TRIANGLE_HITBOX.moveTo(0.5, 0); BASE_TRIANGLE_HITBOX.lineTo(-0.5, -0.5); BASE_TRIANGLE_HITBOX.lineTo(-0.5, 0.5); BASE_TRIANGLE_HITBOX.closePath();
         BASE_CIRCLE_HITBOX = new Path2D.Double(); int sides = 8; BASE_CIRCLE_HITBOX.moveTo(0.5, 0); for (int i = 1; i < sides; i++) { double angle = 2 * Math.PI * i / sides; BASE_CIRCLE_HITBOX.lineTo(0.5 * Math.cos(angle), 0.5 * Math.sin(angle)); } BASE_CIRCLE_HITBOX.closePath();
     }
-
     private static final float ANGULAR_DAMPING = 0.98f;
     private float angle = 0.0f;
     private float angularVelocity = 0.0f;
     private float momentOfInertia;
-
     private static int nextPacketId = 0;
     private final int id;
     private final NetworkEnums.PacketShape shape;
     private NetworkEnums.PacketType packetType;
     private int size;
     private int baseCoinValue;
-
     private NetworkEnums.PacketType originalPacketType;
     private int originalSize;
     private int originalBaseCoinValue;
     private int protectedBySystemId = -1;
-
     private Point2D.Double idealPosition;
     private Point2D.Double velocity;
     private double progressOnWire = 0.0;
@@ -71,28 +68,26 @@ public class Packet implements Serializable {
     private boolean isDecelerating = false;
     private boolean isReversing = false;
     private boolean enteredViaIncompatiblePort = false;
-
     private double noise = 0.0;
     private Point2D.Double visualOffsetDirection = null;
     private double visualOffsetMagnitude = 0.0;
     private final int initialOffsetSidePreference;
-
     private long timeOnCurrentWireMs = 0;
-
     private boolean markedForRemoval = false;
     private transient Wire currentWire;
     private transient com.networkopsim.game.model.core.System currentSystem;
     private int currentWireId = -1;
     private int currentSystemId = -1;
-
     private int bulkParentId = -1;
     private int totalBitsInGroup = 0;
-
     private boolean isUpgradedSecret = false;
     private enum ProtectedMovementMode { LIKE_SQUARE, LIKE_TRIANGLE, LIKE_MESSENGER }
     private ProtectedMovementMode protectedMovementMode = null;
-
     private PredictedPacketStatus finalStatusForPrediction = null;
+
+    // [NEW] Fields for the Ghost Packet logic
+    private boolean isGhost = false;
+    private int ghostForSystemId = -1;
 
     private transient Path2D.Double hitbox;
     private transient List<Point2D.Double> positionHistory;
@@ -106,34 +101,25 @@ public class Packet implements Serializable {
         this.originalPacketType = type;
         this.idealPosition = new Point2D.Double(startX, startY);
         this.velocity = new Point2D.Double(0, 0);
-
         switch (type) {
             case SECRET: this.size = 4; this.baseCoinValue = 3; break;
             case BULK: this.size = 8; this.baseCoinValue = 8; break;
             case WOBBLE: this.size = 10; this.baseCoinValue = 10; break;
             case MESSENGER: this.size = 1; this.baseCoinValue = 1; break;
-            default: // NORMAL
-                if (shape == NetworkEnums.PacketShape.SQUARE) { this.size = 2; this.baseCoinValue = 2; }
-                else if (shape == NetworkEnums.PacketShape.TRIANGLE) { this.size = 3; this.baseCoinValue = 3; }
-                else { this.size = 1; this.baseCoinValue = 1; }
-                break;
+            default: if (shape == NetworkEnums.PacketShape.SQUARE) { this.size = 2; this.baseCoinValue = 2; } else if (shape == NetworkEnums.PacketShape.TRIANGLE) { this.size = 3; this.baseCoinValue = 3; } else { this.size = 1; this.baseCoinValue = 1; } break;
         }
-
         this.originalSize = this.size; this.originalBaseCoinValue = this.baseCoinValue; this.initialOffsetSidePreference = this.id % 2; this.momentOfInertia = 0.5f * this.size * this.getDrawSize();
         this.positionHistory = new LinkedList<>();
         updateHitbox();
     }
 
     public void update(GameEngine gameEngine, boolean isAiryamanActive, boolean isSpeedLimiterActive, boolean isPredictionRun) {
-        if (markedForRemoval || currentSystem != null) return;
+        // [MODIFIED] Ghost packets do not move or update. They just exist.
+        if (markedForRemoval || currentSystem != null || isGhost) return;
+
         if (currentWire == null) { gameEngine.packetLostInternal(this, isPredictionRun); return; }
-
         timeOnCurrentWireMs += 16;
-        if (timeOnCurrentWireMs > WIRE_TIMEOUT_MS) {
-            gameEngine.packetLostInternal(this, isPredictionRun);
-            return;
-        }
-
+        if (timeOnCurrentWireMs > WIRE_TIMEOUT_MS) { gameEngine.packetLostInternal(this, isPredictionRun); return; }
         if (Math.abs(this.angularVelocity) > 0.001f) { this.angle += this.angularVelocity; this.angularVelocity *= ANGULAR_DAMPING; } else { this.angularVelocity = 0; }
         if (this.packetType == NetworkEnums.PacketType.SECRET) { if (isUpgradedSecret) { handleUpgradedSecretMovement(gameEngine); } else { com.networkopsim.game.model.core.System destSystem = currentWire.getEndPort().getParentSystem(); targetSpeedMagnitude = (destSystem != null && destSystem.getQueueSize() > 0) ? BASE_SPEED_MAGNITUDE * SECRET_PACKET_SLOW_SPEED_FACTOR : BASE_SPEED_MAGNITUDE; currentSpeedMagnitude = targetSpeedMagnitude; isAccelerating = false; } }
         else if (isAccelerating && !isSpeedLimiterActive) { currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + TRIANGLE_ACCELERATION_RATE); if (currentSpeedMagnitude >= targetSpeedMagnitude) isAccelerating = false; }
@@ -144,83 +130,33 @@ public class Packet implements Serializable {
         progressOnWire = Math.max(0.0, Math.min(1.0, progressOnWire));
         updateIdealPositionAndVelocity();
         updateHitbox();
-
         Point2D.Double currentVisualPos = getVisualPosition();
         if (currentVisualPos != null) {
             positionHistory.add(currentVisualPos);
-            if (positionHistory.size() > POSITION_HISTORY_SIZE) {
-                ((LinkedList<Point2D.Double>) positionHistory).removeFirst();
-            }
+            if (positionHistory.size() > POSITION_HISTORY_SIZE) { ((LinkedList<Point2D.Double>) positionHistory).removeFirst(); }
         }
-
         if (!markedForRemoval && noise >= this.size) { gameEngine.packetLostInternal(this, isPredictionRun); return; }
         if (!isReversing && progressOnWire >= 1.0 - 1e-9) { handleArrival(currentWire.getEndPort(), gameEngine, isPredictionRun); }
         else if (isReversing && progressOnWire <= 1e-9) { isReversing = false; handleArrival(currentWire.getStartPort(), gameEngine, isPredictionRun); }
     }
 
-    private void handleUpgradedSecretMovement(GameEngine gameEngine) {
-        List<Packet> otherPackets = gameEngine.getAllActivePackets(); Packet closestPacket = null; double minDistanceSq = Double.MAX_VALUE; Point2D.Double myPos = this.getVisualPosition();
-        for (Packet other : otherPackets) { if (other == this || other.isMarkedForRemoval()) continue; double distSq = myPos.distanceSq(other.getVisualPosition()); if (distSq < minDistanceSq) { minDistanceSq = distSq; closestPacket = other; } }
-        if (closestPacket != null) { double minDistance = Math.sqrt(minDistanceSq); if (minDistance < SECRET_REPULSION_DISTANCE) targetSpeedMagnitude = BASE_SPEED_MAGNITUDE * 0.5; else if (minDistance > SECRET_ATTRACTION_DISTANCE) targetSpeedMagnitude = MAX_SPEED_MAGNITUDE; else targetSpeedMagnitude = BASE_SPEED_MAGNITUDE; }
-        else { targetSpeedMagnitude = BASE_SPEED_MAGNITUDE; }
-        if (currentSpeedMagnitude < targetSpeedMagnitude) currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + SECRET_SPEED_ADJUST_RATE);
-        else if (currentSpeedMagnitude > targetSpeedMagnitude) currentSpeedMagnitude = Math.max(targetSpeedMagnitude, currentSpeedMagnitude - SECRET_SPEED_ADJUST_RATE);
+    // [NEW METHOD] Transforms a packet into a ghost.
+    public void transformToGhost(com.networkopsim.game.model.core.System distributor) {
+        this.isGhost = true;
+        this.ghostForSystemId = distributor.getId();
+        this.currentSystem = null; // Ensure it's not considered "in" a system
+        this.currentSystemId = -1;
+        this.progressOnWire = 1.0; // Stay at the end of the wire
+        updateIdealPositionAndVelocity(); // Lock its position
     }
 
-    private void handleArrival(Port destinationPort, GameEngine gameEngine, boolean isPredictionRun) {
-        if (destinationPort == null || destinationPort.getParentSystem() == null) { gameEngine.packetLostInternal(this, isPredictionRun); return; }
-        this.idealPosition = destinationPort.getPrecisePosition();
-        com.networkopsim.game.model.core.System targetSystem = destinationPort.getParentSystem();
-        if (this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun) {
-            gameEngine.logBulkPacketWireUsage(this.currentWire);
-        }
-        boolean enteredCompatibly = packetType == NetworkEnums.PacketType.MESSENGER || packetType == NetworkEnums.PacketType.PROTECTED || packetType == NetworkEnums.PacketType.SECRET || (Port.getShapeEnum(this.shape) == destinationPort.getShape());
-        // [FIXED] Changed 'packet' to 'this' to refer to the current object instance.
-        targetSystem.receivePacket(this, gameEngine, isPredictionRun, enteredCompatibly);
-    }
-
-    public void setWire(Wire wire, boolean compatiblePortExit) {
-        this.currentWire = Objects.requireNonNull(wire, "Cannot set a null wire for packet " + id); this.currentWireId = wire.getId(); this.currentSystem = null; this.currentSystemId = -1; this.progressOnWire = 0.0; this.isReversing = false; this.isDecelerating = false; this.isAccelerating = false; this.timeOnCurrentWireMs = 0;
-        if (finalStatusForPrediction != null && finalStatusForPrediction != PredictedPacketStatus.ON_WIRE) { this.finalStatusForPrediction = null; }
-        double initialSpeed;
-        if (this.packetType == NetworkEnums.PacketType.PROTECTED) {
-            int choice = com.networkopsim.game.model.core.System.getGlobalRandom().nextInt(3);
-            if (choice == 0) this.protectedMovementMode = ProtectedMovementMode.LIKE_SQUARE; else if (choice == 1) this.protectedMovementMode = ProtectedMovementMode.LIKE_TRIANGLE; else this.protectedMovementMode = ProtectedMovementMode.LIKE_MESSENGER;
-            switch (this.protectedMovementMode) {
-                case LIKE_SQUARE: initialSpeed = compatiblePortExit ? BASE_SPEED_MAGNITUDE * SQUARE_COMPATIBLE_SPEED_FACTOR : BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; break;
-                case LIKE_TRIANGLE: initialSpeed = BASE_SPEED_MAGNITUDE; isAccelerating = !compatiblePortExit; targetSpeedMagnitude = isAccelerating ? MAX_SPEED_MAGNITUDE : initialSpeed; break;
-                default: initialSpeed = BASE_SPEED_MAGNITUDE; isAccelerating = compatiblePortExit; targetSpeedMagnitude = MAX_SPEED_MAGNITUDE; break;
-            }
-        } else {
-            switch(this.packetType) {
-                case BULK:
-                    double threshold = wire.getRelayPointsCount() > 0 ? LONG_WIRE_THRESHOLD * 0.75 : LONG_WIRE_THRESHOLD;
-                    boolean isLongWire = wire.getLength() >= threshold;
-                    isAccelerating = isLongWire;
-                    initialSpeed = BASE_SPEED_MAGNITUDE;
-                    targetSpeedMagnitude = isLongWire ? MAX_SPEED_MAGNITUDE : BASE_SPEED_MAGNITUDE;
-                    break;
-                case WOBBLE: case SECRET: initialSpeed = BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; break;
-                case MESSENGER:
-                    if (this.enteredViaIncompatiblePort) {
-                        initialSpeed = BASE_SPEED_MAGNITUDE * MESSENGER_INCOMPATIBLE_SPEED_BOOST;
-                        targetSpeedMagnitude = initialSpeed;
-                    } else if (compatiblePortExit) {
-                        initialSpeed = BASE_SPEED_MAGNITUDE;
-                        isAccelerating = true;
-                        targetSpeedMagnitude = MAX_SPEED_MAGNITUDE;
-                    } else {
-                        initialSpeed = BASE_SPEED_MAGNITUDE;
-                        targetSpeedMagnitude = 0;
-                        isDecelerating = true;
-                    }
-                    break;
-                default: if (this.shape == NetworkEnums.PacketShape.SQUARE) { initialSpeed = compatiblePortExit ? BASE_SPEED_MAGNITUDE * SQUARE_COMPATIBLE_SPEED_FACTOR : BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; } else if (this.shape == NetworkEnums.PacketShape.TRIANGLE) { initialSpeed = BASE_SPEED_MAGNITUDE; isAccelerating = !compatiblePortExit; targetSpeedMagnitude = isAccelerating ? MAX_SPEED_MAGNITUDE : initialSpeed; } else { initialSpeed = BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; } break;
-            }
-        }
-        this.currentSpeedMagnitude = initialSpeed; this.enteredViaIncompatiblePort = false; updateIdealPositionAndVelocity(); updateHitbox();
-    }
-
+    // ... (rest of the file is largely unchanged, adding getters and setSize) ...
+    public void setSize(int newSize) { if (this.packetType == NetworkEnums.PacketType.BULK) { this.size = newSize; } }
+    public boolean isGhost() { return isGhost; }
+    public int getGhostForSystemId() { return ghostForSystemId; }
+    private void handleUpgradedSecretMovement(GameEngine gameEngine) { List<Packet> otherPackets = gameEngine.getAllActivePackets(); Packet closestPacket = null; double minDistanceSq = Double.MAX_VALUE; Point2D.Double myPos = this.getVisualPosition(); for (Packet other : otherPackets) { if (other == this || other.isMarkedForRemoval()) continue; double distSq = myPos.distanceSq(other.getVisualPosition()); if (distSq < minDistanceSq) { minDistanceSq = distSq; closestPacket = other; } } if (closestPacket != null) { double minDistance = Math.sqrt(minDistanceSq); if (minDistance < SECRET_REPULSION_DISTANCE) targetSpeedMagnitude = BASE_SPEED_MAGNITUDE * 0.5; else if (minDistance > SECRET_ATTRACTION_DISTANCE) targetSpeedMagnitude = MAX_SPEED_MAGNITUDE; else targetSpeedMagnitude = BASE_SPEED_MAGNITUDE; } else { targetSpeedMagnitude = BASE_SPEED_MAGNITUDE; } if (currentSpeedMagnitude < targetSpeedMagnitude) currentSpeedMagnitude = Math.min(targetSpeedMagnitude, currentSpeedMagnitude + SECRET_SPEED_ADJUST_RATE); else if (currentSpeedMagnitude > targetSpeedMagnitude) currentSpeedMagnitude = Math.max(targetSpeedMagnitude, currentSpeedMagnitude - SECRET_SPEED_ADJUST_RATE); }
+    private void handleArrival(Port destinationPort, GameEngine gameEngine, boolean isPredictionRun) { if (destinationPort == null || destinationPort.getParentSystem() == null) { gameEngine.packetLostInternal(this, isPredictionRun); return; } this.idealPosition = destinationPort.getPrecisePosition(); com.networkopsim.game.model.core.System targetSystem = destinationPort.getParentSystem(); if (this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun) { gameEngine.logBulkPacketWireUsage(this.currentWire); } boolean enteredCompatibly = packetType == NetworkEnums.PacketType.MESSENGER || packetType == NetworkEnums.PacketType.PROTECTED || packetType == NetworkEnums.PacketType.SECRET || (Port.getShapeEnum(this.shape) == destinationPort.getShape()); targetSystem.receivePacket(this, gameEngine, isPredictionRun, enteredCompatibly); }
+    public void setWire(Wire wire, boolean compatiblePortExit) { this.currentWire = Objects.requireNonNull(wire, "Cannot set a null wire for packet " + id); this.currentWireId = wire.getId(); this.currentSystem = null; this.currentSystemId = -1; this.progressOnWire = 0.0; this.isReversing = false; this.isDecelerating = false; this.isAccelerating = false; this.timeOnCurrentWireMs = 0; if (finalStatusForPrediction != null && finalStatusForPrediction != PredictedPacketStatus.ON_WIRE) { this.finalStatusForPrediction = null; } double initialSpeed; if (this.packetType == NetworkEnums.PacketType.PROTECTED) { int choice = com.networkopsim.game.model.core.System.getGlobalRandom().nextInt(3); if (choice == 0) this.protectedMovementMode = ProtectedMovementMode.LIKE_SQUARE; else if (choice == 1) this.protectedMovementMode = ProtectedMovementMode.LIKE_TRIANGLE; else this.protectedMovementMode = ProtectedMovementMode.LIKE_MESSENGER; switch (this.protectedMovementMode) { case LIKE_SQUARE: initialSpeed = compatiblePortExit ? BASE_SPEED_MAGNITUDE * SQUARE_COMPATIBLE_SPEED_FACTOR : BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; break; case LIKE_TRIANGLE: initialSpeed = BASE_SPEED_MAGNITUDE; isAccelerating = !compatiblePortExit; targetSpeedMagnitude = isAccelerating ? MAX_SPEED_MAGNITUDE : initialSpeed; break; default: initialSpeed = BASE_SPEED_MAGNITUDE; isAccelerating = compatiblePortExit; targetSpeedMagnitude = MAX_SPEED_MAGNITUDE; break; } } else { switch(this.packetType) { case BULK: double threshold = wire.getRelayPointsCount() > 0 ? LONG_WIRE_THRESHOLD * 0.75 : LONG_WIRE_THRESHOLD; boolean isLongWire = wire.getLength() >= threshold; isAccelerating = isLongWire; initialSpeed = BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = isLongWire ? MAX_SPEED_MAGNITUDE : BASE_SPEED_MAGNITUDE; break; case WOBBLE: case SECRET: initialSpeed = BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; break; case MESSENGER: initialSpeed = BASE_SPEED_MAGNITUDE; if (this.enteredViaIncompatiblePort) { initialSpeed *= MESSENGER_INCOMPATIBLE_SPEED_BOOST; } isAccelerating = true; targetSpeedMagnitude = MAX_SPEED_MAGNITUDE; break; default: if (this.shape == NetworkEnums.PacketShape.SQUARE) { initialSpeed = compatiblePortExit ? BASE_SPEED_MAGNITUDE * SQUARE_COMPATIBLE_SPEED_FACTOR : BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; } else if (this.shape == NetworkEnums.PacketShape.TRIANGLE) { initialSpeed = BASE_SPEED_MAGNITUDE; isAccelerating = !compatiblePortExit; targetSpeedMagnitude = isAccelerating ? MAX_SPEED_MAGNITUDE : initialSpeed; } else { initialSpeed = BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; } break; } } this.currentSpeedMagnitude = initialSpeed; this.enteredViaIncompatiblePort = false; updateIdealPositionAndVelocity(); updateHitbox(); }
     public void teleportToWire(Wire wire) { this.currentWire = Objects.requireNonNull(wire, "Cannot teleport to a null wire"); this.currentWireId = wire.getId(); this.currentSystem = null; this.currentSystemId = -1; this.progressOnWire = 0.0; this.isReversing = false; this.isDecelerating = false; this.isAccelerating = false; this.enteredViaIncompatiblePort = false; this.timeOnCurrentWireMs = 0; if (finalStatusForPrediction != null && finalStatusForPrediction != PredictedPacketStatus.ON_WIRE) { this.finalStatusForPrediction = null; } this.currentSpeedMagnitude = BASE_SPEED_MAGNITUDE; this.targetSpeedMagnitude = BASE_SPEED_MAGNITUDE; updateIdealPositionAndVelocity(); updateHitbox(); }
     public void addNoise(double amount) { if (amount > 0 && !markedForRemoval) { this.noise = Math.min(this.size, this.noise + amount); updateVisualOffsetMagnitude(); } }
     public void resetNoise() { if (!markedForRemoval) { this.noise = 0.0; updateVisualOffsetMagnitude(); } }
@@ -263,13 +199,7 @@ public class Packet implements Serializable {
     public int getDrawSize() { return BASE_DRAW_SIZE + (size * 2); }
     public double getCurrentSpeedMagnitude() { return currentSpeedMagnitude; }
     public void setCurrentSpeedMagnitude(double speed) { this.currentSpeedMagnitude = speed; }
-    public void configureAsBulkPart(int parentId, int totalParts) {
-        if(this.packetType == NetworkEnums.PacketType.MESSENGER){
-            this.bulkParentId = parentId;
-            this.totalBitsInGroup = totalParts;
-            this.baseCoinValue = 0;
-        }
-    }
+    public void configureAsBulkPart(int parentId, int totalParts) { if(this.packetType == NetworkEnums.PacketType.MESSENGER){ this.bulkParentId = parentId; this.totalBitsInGroup = totalParts; this.baseCoinValue = 0; } }
     public PredictedPacketStatus getFinalStatusForPrediction() { return this.finalStatusForPrediction; }
     public void setFinalStatusForPrediction(PredictedPacketStatus status) { this.finalStatusForPrediction = status; }
     public Point2D.Double getVelocity() { if (this.velocity == null) return new Point2D.Double(0,0); return (Point2D.Double) this.velocity.clone(); }

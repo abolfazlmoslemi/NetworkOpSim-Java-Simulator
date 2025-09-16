@@ -1,4 +1,4 @@
-// ===== File: SinkBehavior.java (FINAL - Corrected for special MESSENGERs) =====
+// ===== File: SinkBehavior.java (FINAL - Correctly Handles Merged BULK Packets) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -11,14 +11,30 @@ public class SinkBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // [MODIFIED] BULK packets and MESSENGERs that are part of a BULK group (identified by bulkParentId)
-        // should be handled by MERGERs, not SINKs. Receiving them here means they are lost.
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK ||
-                (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getBulkParentId() != -1)) {
 
+        // [SCENARIO 1] A BULK packet arrives.
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+            // A BULK packet arriving at a Sink is ALWAYS considered a success,
+            // because it could only have been created by a Merger. The actual
+            // packet loss calculation for its original parts has already been
+            // handled by the Merger reporting to the GameState.
+            // We treat this as a successful delivery of the merged payload.
+            gameEngine.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
+            if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
+                gameEngine.getGame().playSoundEffect("delivery_success");
+            }
+            return;
+        }
+
+        // [SCENARIO 2] A MESSENGER part of a BULK packet arrives.
+        // This is always an error, as these parts should only go to a Merger.
+        if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getBulkParentId() != -1) {
+            // The final loss is calculated by the Merger's timeout logic.
+            // We just need to remove the packet from the simulation here.
             gameEngine.packetLostInternal(packet, isPredictionRun);
         } else {
-            // All other packets are considered successfully delivered.
+            // [SCENARIO 3] All other standard packets.
+            // These are considered successfully delivered.
             gameEngine.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
                 gameEngine.getGame().playSoundEffect("delivery_success");

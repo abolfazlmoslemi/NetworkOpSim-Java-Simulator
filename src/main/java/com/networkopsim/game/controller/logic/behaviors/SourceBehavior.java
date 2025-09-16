@@ -1,3 +1,5 @@
+// ===== File: SourceBehavior.java (FINAL - Checks Global Distributor Busy Flag) =====
+
 package com.networkopsim.game.controller.logic.behaviors;
 
 import com.networkopsim.game.controller.logic.GameEngine;
@@ -6,7 +8,7 @@ import com.networkopsim.game.model.core.Port;
 import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.core.Wire;
 import com.networkopsim.game.model.enums.NetworkEnums;
-import com.networkopsim.game.controller.logic.SystemBehavior;
+import com.networkopsim.game.model.state.GameState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +27,14 @@ public class SourceBehavior extends AbstractSystemBehavior {
         if (system.getTotalPacketsToGenerate() > 0 && system.getPacketsGeneratedCount() >= system.getTotalPacketsToGenerate()) { return; }
         if (system.getLastGenerationTime() == -1) { system.setLastGenerationTime(currentSimTimeMs - system.getGenerationFrequency()); }
         if (currentSimTimeMs - system.getLastGenerationTime() < system.getGenerationFrequency()) { return; }
+
+        // [CRITICAL CHECK] Before attempting to generate, check the global Distributor busy flag.
+        // If a distributor is busy, no source can generate any packet.
+        GameState gameState = gameEngine.getGameState();
+        if (gameState.isDistributorBusy()) {
+            return;
+        }
+
         List<Port> availablePorts = new ArrayList<>();
         synchronized (system.getOutputPorts()) {
             for (Port port : system.getOutputPorts()) {
@@ -39,7 +49,9 @@ public class SourceBehavior extends AbstractSystemBehavior {
                 }
             }
         }
+
         if (availablePorts.isEmpty()) { return; }
+
         Collections.shuffle(availablePorts, System.getGlobalRandom());
         Port chosenPort = availablePorts.get(0);
         Wire outputWire = gameEngine.findWireFromPort(chosenPort);
@@ -49,7 +61,9 @@ public class SourceBehavior extends AbstractSystemBehavior {
         } else {
             shapeToGenerate = Port.getPacketShapeFromPortShapeStatic(chosenPort.getShape());
         }
+
         if (shapeToGenerate == null) { return; }
+
         system.setLastGenerationTime(currentSimTimeMs);
         Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY(), system.getPacketTypeToGenerate());
         newPacket.setWire(outputWire, true);

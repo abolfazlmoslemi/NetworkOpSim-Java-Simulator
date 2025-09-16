@@ -1,4 +1,4 @@
-// ===== File: LevelLoader.java (Final Corrected with All Levels 1-6) =====
+// ===== File: LevelLoader.java (FINAL - Added a Node to Level 6) =====
 
 package com.networkopsim.game.utils;
 
@@ -106,7 +106,6 @@ public class LevelLoader {
         return sink;
     }
 
-    // [CORRECTED] Added the full, correct implementations for levels 1-5.
     private static void initializeLevel1(List<System> systems) {
         int panelWidth = NetworkGame.WINDOW_WIDTH; int panelHeight = NetworkGame.WINDOW_HEIGHT; int sysWidth = System.SYSTEM_WIDTH; int sysHeight = System.SYSTEM_HEIGHT;
         System sourceS1 = new System(panelWidth / 7, panelHeight / 5 - sysHeight / 2, NetworkEnums.SystemType.SOURCE);
@@ -307,10 +306,11 @@ public class LevelLoader {
         int sysHeight = System.SYSTEM_HEIGHT;
         int y_pos = h / 2 - sysHeight / 2;
 
-        int x1 = 100;
-        int x2 = 350;
-        int x3 = 600;
-        int x4 = 850;
+        int x1 = 50;
+        int x2 = 300;
+        int x3 = 550;
+        int x4 = 800;
+        int x5 = 1050;
 
         // 1. BULK Source
         System source = createSource(x1, y_pos, NetworkEnums.PacketShape.CIRCLE, 5, 8000, NetworkEnums.PacketType.BULK);
@@ -328,8 +328,14 @@ public class LevelLoader {
         merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
         systems.add(merger);
 
-        // 4. SINK
-        System sink = createSink(x4, y_pos, NetworkEnums.PortShape.CIRCLE);
+        // 4. [NEW] Simple Node
+        System simpleNode = new System(x4, y_pos, NetworkEnums.SystemType.NODE);
+        simpleNode.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        simpleNode.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(simpleNode);
+
+        // 5. SINK
+        System sink = createSink(x5, y_pos, NetworkEnums.PortShape.CIRCLE);
         systems.add(sink);
     }
 }

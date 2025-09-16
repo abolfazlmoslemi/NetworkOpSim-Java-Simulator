@@ -1,4 +1,4 @@
-// ===== File: AbstractSystemBehavior.java (FINAL - Corrected, no BIT references) =====
+// ===== File: AbstractSystemBehavior.java (FINAL - Corrected with Reintroduction Logic) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -26,12 +26,8 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
             packetToProcess = system.packetQueue.peek();
         }
 
-        if (packetToProcess == null || packetToProcess.isMarkedForRemoval()) {
-            if (packetToProcess != null) {
-                synchronized (system.packetQueue) {
-                    system.packetQueue.poll();
-                }
-            }
+        if (packetToProcess == null) {
+            synchronized (system.packetQueue) { system.packetQueue.poll(); }
             return;
         }
 
@@ -43,26 +39,26 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
                 synchronized (system.packetQueue) {
                     sentPacket = system.packetQueue.poll();
                 }
+
                 if (sentPacket != null) {
-                    // Compatibility logic no longer needs to check for BIT.
-                    boolean compatibleExit = (sentPacket.getPacketType() == NetworkEnums.PacketType.SECRET) ||
-                            (sentPacket.getPacketType() == NetworkEnums.PacketType.BULK) ||
-                            (sentPacket.getPacketType() == NetworkEnums.PacketType.MESSENGER) ||
-                            (Port.getShapeEnum(sentPacket.getShape()) == outputPort.getShape());
-                    sentPacket.setWire(outputWire, compatibleExit);
-                    if (sentPacket.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) {
-                        sentPacket.setFinalStatusForPrediction(null);
-                    }
-                }
-            } else {
-                if (packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) {
-                    packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
+                    // [CRITICAL FIX] Re-introduce the packet to the game engine's main processing list.
+                    // This ensures it will be updated, rendered, and checked for wire occupation.
+                    gameEngine.reintroducePacketToWorld(sentPacket);
+                    dispatchPacket(sentPacket, outputWire, outputPort);
                 }
             }
-        } else {
-            if (packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) {
-                packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
-            }
+        }
+    }
+
+    protected void dispatchPacket(Packet packet, Wire wire, Port port) {
+        boolean compatibleExit = (packet.getPacketType() == NetworkEnums.PacketType.SECRET) ||
+                (packet.getPacketType() == NetworkEnums.PacketType.BULK) ||
+                (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) ||
+                (Port.getShapeEnum(packet.getShape()) == port.getShape());
+
+        packet.setWire(wire, compatibleExit);
+        if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) {
+            packet.setFinalStatusForPrediction(null);
         }
     }
 
@@ -86,65 +82,17 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
         if (outputPort != null) {
             Wire outputWire = gameEngine.findWireFromPort(outputPort);
             if (outputWire != null) {
-                boolean compatibleExit = packet.getPacketType() == NetworkEnums.PacketType.MESSENGER ||
-                        packet.getPacketType() == NetworkEnums.PacketType.SECRET ||
-                        packet.getPacketType() == NetworkEnums.PacketType.BULK ||
-                        (Port.getShapeEnum(packet.getShape()) == outputPort.getShape());
-                packet.setWire(outputWire, compatibleExit);
-                if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) {
-                    packet.setFinalStatusForPrediction(null);
-                }
+                // For passthrough systems, we don't need to reintroduce, as the packet is already in the world.
+                dispatchPacket(packet, outputWire, outputPort);
             } else {
-                packet.setFinalStatusForPrediction(PredictedPacketStatus.STALLED_AT_NODE);
                 queuePacket(system, packet, gameEngine, isPredictionRun);
             }
         } else {
-            packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
             queuePacket(system, packet, gameEngine, isPredictionRun);
         }
     }
 
-    protected Port findAvailableOutputPort(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
-        if (packet == null || gameEngine == null) return null;
-        List<Port> candidatePorts = new ArrayList<>();
-        synchronized (system.getOutputPorts()) {
-            for (Port port : system.getOutputPorts()) {
-                if (port != null && port.isConnected()) {
-                    Wire wire = gameEngine.findWireFromPort(port);
-                    if (wire != null && !gameEngine.isWireOccupied(wire, isPredictionRun)) {
-                        com.networkopsim.game.model.core.System destinationSystem = wire.getEndPort().getParentSystem();
-                        if (destinationSystem != null && !destinationSystem.isDisabled()) {
-                            candidatePorts.add(port);
-                        }
-                    }
-                }
-            }
-        }
-        if (candidatePorts.isEmpty()) return null;
-        Collections.shuffle(candidatePorts, com.networkopsim.game.model.core.System.getGlobalRandom());
-
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
-            return candidatePorts.get(0);
-        }
-
-        List<Port> compatiblePorts = new ArrayList<>();
-        List<Port> nonCompatiblePorts = new ArrayList<>();
-        NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());
-        if (requiredPacketShape == null) return null;
-        for (Port port : candidatePorts) {
-            if (port.getShape() == requiredPacketShape) {
-                compatiblePorts.add(port);
-            } else {
-                nonCompatiblePorts.add(port);
-            }
-        }
-        if (!compatiblePorts.isEmpty()) return compatiblePorts.get(0);
-        if (!nonCompatiblePorts.isEmpty()) return nonCompatiblePorts.get(0);
-        return null;
-    }
-
-    @Override
-    public void attemptPacketGeneration(com.networkopsim.game.model.core.System system, GameEngine gameEngine, long currentSimTimeMs, boolean isPredictionRun) {
-        // Default empty implementation
-    }
+    // ... (rest of the file is unchanged) ...
+    protected Port findAvailableOutputPort(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) { if (packet == null || gameEngine == null) return null; List<Port> candidatePorts = new ArrayList<>(); synchronized (system.getOutputPorts()) { for (Port port : system.getOutputPorts()) { if (port != null && port.isConnected()) { Wire wire = gameEngine.findWireFromPort(port); if (wire != null && !gameEngine.isWireOccupied(wire, isPredictionRun)) { com.networkopsim.game.model.core.System destinationSystem = wire.getEndPort().getParentSystem(); if (destinationSystem != null && !destinationSystem.isDisabled()) { candidatePorts.add(port); } } } } } if (candidatePorts.isEmpty()) return null; Collections.shuffle(candidatePorts, com.networkopsim.game.model.core.System.getGlobalRandom()); if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) { return candidatePorts.get(0); } List<Port> compatiblePorts = new ArrayList<>(); List<Port> nonCompatiblePorts = new ArrayList<>(); NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape()); if (requiredPacketShape == null) return null; for (Port port : candidatePorts) { if (port.getShape() == requiredPacketShape) { compatiblePorts.add(port); } else { nonCompatiblePorts.add(port); } } if (!compatiblePorts.isEmpty()) return compatiblePorts.get(0); if (!nonCompatiblePorts.isEmpty()) return nonCompatiblePorts.get(0); return null; }
+    @Override public void attemptPacketGeneration(com.networkopsim.game.model.core.System system, GameEngine gameEngine, long currentSimTimeMs, boolean isPredictionRun) { }
 }
