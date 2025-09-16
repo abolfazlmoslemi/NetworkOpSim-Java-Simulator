@@ -1,13 +1,8 @@
+// ===== File: Wire.java (Final Corrected with Bulk Traversal Logic) =====
+
 package com.networkopsim.game.model.core;
 
-
-import com.networkopsim.game.model.core.Port;
-import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.enums.NetworkEnums;
-
-// ================================================================================
-// FILE: Wire.java (کد کامل و نهایی - اصلاح شده)
-// ================================================================================
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
@@ -23,6 +18,7 @@ public class Wire implements Serializable {
     public static final int MAX_RELAY_POINTS = 3;
     public static final int RELAY_POINT_SIZE = 8;
     public static final int RELAY_CLICK_RADIUS = 12;
+    // [NEW] Maximum number of BULK packets a wire can handle before breaking.
     public static final int MAX_BULK_TRAVERSALS = 3;
 
     private final int id;
@@ -30,6 +26,7 @@ public class Wire implements Serializable {
     private final Port endPort;
     private final List<RelayPoint> relayPoints = new CopyOnWriteArrayList<>();
     private double length;
+    // [NEW] Counter for bulk packet traversals.
     private int bulkPacketTraversals = 0;
 
     public static class RelayPoint implements Serializable {
@@ -127,6 +124,7 @@ public class Wire implements Serializable {
             g2d.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
         }
 
+        // [MODIFIED] Draw the traversal counter for BULK packets.
         if (bulkPacketTraversals > 0) {
             Point midPoint = new Point((int)((path.get(0).x + path.get(path.size()-1).x)/2), (int)((path.get(0).y + path.get(path.size()-1).y)/2));
             String traversalText = bulkPacketTraversals + "/" + MAX_BULK_TRAVERSALS;
@@ -195,10 +193,12 @@ public class Wire implements Serializable {
         for(RelayPoint rp : relayPoints) rp.setHovered(false);
     }
 
+    // [NEW] Method to record a traversal by a BULK packet.
     public void recordBulkPacketTraversal() {
         this.bulkPacketTraversals++;
     }
 
+    // [NEW] Method to check if the wire is destroyed.
     public boolean isDestroyed() {
         return bulkPacketTraversals >= MAX_BULK_TRAVERSALS;
     }
@@ -225,4 +225,3 @@ public class Wire implements Serializable {
     @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; Wire wire = (Wire) o; return id == wire.id; }
     @Override public int hashCode() { return Objects.hash(id); }
 }
-

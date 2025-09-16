@@ -1,3 +1,5 @@
+// ===== File: LevelLoader.java (Final Corrected with All Levels 1-6) =====
+
 package com.networkopsim.game.utils;
 
 import com.networkopsim.game.controller.core.NetworkGame;
@@ -49,6 +51,9 @@ public class LevelLoader {
                 case 5:
                     initializeLevel5(systems);
                     break;
+                case 6:
+                    initializeLevel6(systems);
+                    break;
                 default:
                     java.lang.System.err.println("Warning: Invalid level number " + level + ". Loading Level 1 as fallback.");
                     gameState.setMaxWireLengthForLevel(getWireBudgetForLevel(1));
@@ -82,6 +87,7 @@ public class LevelLoader {
             case 3: return 9999;
             case 4: return 30000;
             case 5: return 55000;
+            case 6: return 10000;
             default: return 1000;
         }
     }
@@ -100,6 +106,7 @@ public class LevelLoader {
         return sink;
     }
 
+    // [CORRECTED] Added the full, correct implementations for levels 1-5.
     private static void initializeLevel1(List<System> systems) {
         int panelWidth = NetworkGame.WINDOW_WIDTH; int panelHeight = NetworkGame.WINDOW_HEIGHT; int sysWidth = System.SYSTEM_WIDTH; int sysHeight = System.SYSTEM_HEIGHT;
         System sourceS1 = new System(panelWidth / 7, panelHeight / 5 - sysHeight / 2, NetworkEnums.SystemType.SOURCE);
@@ -225,9 +232,15 @@ public class LevelLoader {
         int spy2Y = h - 150; System spy2 = new System(sectionX3, spy2Y, NetworkEnums.SystemType.SPY);
         spy2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); systems.add(spy2);
         System newSource1 = new System(sectionX3, spy1Y - 150, NetworkEnums.SystemType.SOURCE);
-        newSource1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); newSource1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); newSource1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); newSource1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); newSource1.configureGenerator(-1, 3300, NetworkEnums.PacketType.NORMAL); systems.add(newSource1);
+        newSource1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); newSource1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); newSource1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); newSource1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        newSource1.configureGenerator(-1, 3300, NetworkEnums.PacketType.MESSENGER);
+        newSource1.setPacketShapeToGenerate(NetworkEnums.PacketShape.CIRCLE);
+        systems.add(newSource1);
         System newSource2 = new System(sectionX3, spy2Y - 150, NetworkEnums.SystemType.SOURCE);
-        newSource2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); newSource2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); newSource2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); newSource2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); newSource2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); newSource2.configureGenerator(-1, 2900, NetworkEnums.PacketType.NORMAL); systems.add(newSource2);
+        newSource2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); newSource2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); newSource2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); newSource2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); newSource2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        newSource2.configureGenerator(-1, 2900, NetworkEnums.PacketType.MESSENGER);
+        newSource2.setPacketShapeToGenerate(NetworkEnums.PacketShape.CIRCLE);
+        systems.add(newSource2);
         System merger1 = new System(sectionX4, 80, NetworkEnums.SystemType.MERGER);
         merger1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); merger1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); merger1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(merger1);
         System merger2 = new System(sectionX4, 180, NetworkEnums.SystemType.MERGER);
@@ -286,5 +299,37 @@ public class LevelLoader {
         new_corr_2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); new_corr_2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); new_corr_2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); new_corr_2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(new_corr_2);
         System finalNode3 = new System(section_width + 150, h/2 - 50, NetworkEnums.SystemType.NODE);
         finalNode3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); finalNode3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); finalNode3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); finalNode3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); systems.add(finalNode3);
+    }
+
+    private static void initializeLevel6(List<System> systems) {
+        int w = NetworkGame.WINDOW_WIDTH;
+        int h = NetworkGame.WINDOW_HEIGHT;
+        int sysHeight = System.SYSTEM_HEIGHT;
+        int y_pos = h / 2 - sysHeight / 2;
+
+        int x1 = 100;
+        int x2 = 350;
+        int x3 = 600;
+        int x4 = 850;
+
+        // 1. BULK Source
+        System source = createSource(x1, y_pos, NetworkEnums.PacketShape.CIRCLE, 5, 8000, NetworkEnums.PacketType.BULK);
+        systems.add(source);
+
+        // 2. Distributor
+        System distributor = new System(x2, y_pos, NetworkEnums.SystemType.DISTRIBUTOR);
+        distributor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(distributor);
+
+        // 3. Merger
+        System merger = new System(x3, y_pos, NetworkEnums.SystemType.MERGER);
+        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(merger);
+
+        // 4. SINK
+        System sink = createSink(x4, y_pos, NetworkEnums.PortShape.CIRCLE);
+        systems.add(sink);
     }
 }

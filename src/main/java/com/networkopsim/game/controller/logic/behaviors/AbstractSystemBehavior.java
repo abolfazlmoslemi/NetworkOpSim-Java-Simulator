@@ -1,4 +1,4 @@
-// ===== File: AbstractSystemBehavior.java (Final Corrected Version 2) =====
+// ===== File: AbstractSystemBehavior.java (FINAL - Corrected, no BIT references) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -14,10 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * An abstract base class for SystemBehavior implementations to reduce code duplication.
- * It provides default implementations for common actions like queuing packets and finding output ports.
- */
 public abstract class AbstractSystemBehavior implements SystemBehavior {
 
     @Override
@@ -48,6 +44,7 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
                     sentPacket = system.packetQueue.poll();
                 }
                 if (sentPacket != null) {
+                    // Compatibility logic no longer needs to check for BIT.
                     boolean compatibleExit = (sentPacket.getPacketType() == NetworkEnums.PacketType.SECRET) ||
                             (sentPacket.getPacketType() == NetworkEnums.PacketType.BULK) ||
                             (sentPacket.getPacketType() == NetworkEnums.PacketType.MESSENGER) ||
@@ -71,7 +68,8 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
 
     protected void queuePacket(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
         synchronized (system.packetQueue) {
-            if (system.packetQueue.size() < com.networkopsim.game.model.core.System.QUEUE_CAPACITY) {
+            if (system.getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR || system.packetQueue.size() < com.networkopsim.game.model.core.System.QUEUE_CAPACITY) {
+                packet.setCurrentSystem(system);
                 system.packetQueue.offer(packet);
                 if (packet.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) {
                     packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
@@ -88,10 +86,10 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
         if (outputPort != null) {
             Wire outputWire = gameEngine.findWireFromPort(outputPort);
             if (outputWire != null) {
-                boolean compatibleExit = packet.getPacketType() != NetworkEnums.PacketType.SECRET &&
-                        (packet.getPacketType() == NetworkEnums.PacketType.BULK ||
-                                packet.getPacketType() == NetworkEnums.PacketType.MESSENGER ||
-                                (Port.getShapeEnum(packet.getShape()) == outputPort.getShape()));
+                boolean compatibleExit = packet.getPacketType() == NetworkEnums.PacketType.MESSENGER ||
+                        packet.getPacketType() == NetworkEnums.PacketType.SECRET ||
+                        packet.getPacketType() == NetworkEnums.PacketType.BULK ||
+                        (Port.getShapeEnum(packet.getShape()) == outputPort.getShape());
                 packet.setWire(outputWire, compatibleExit);
                 if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) {
                     packet.setFinalStatusForPrediction(null);
@@ -123,11 +121,12 @@ public abstract class AbstractSystemBehavior implements SystemBehavior {
             }
         }
         if (candidatePorts.isEmpty()) return null;
-        // CORRECTED: Call the static method on your System class, not the instance
         Collections.shuffle(candidatePorts, com.networkopsim.game.model.core.System.getGlobalRandom());
+
         if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
             return candidatePorts.get(0);
         }
+
         List<Port> compatiblePorts = new ArrayList<>();
         List<Port> nonCompatiblePorts = new ArrayList<>();
         NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());

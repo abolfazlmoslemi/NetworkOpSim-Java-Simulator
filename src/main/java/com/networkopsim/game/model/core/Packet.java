@@ -1,4 +1,4 @@
-// ===== File: Packet.java (Final Corrected with PCA-based Hitbox) =====
+// ===== File: Packet.java (FINAL - Corrected variable reference in handleArrival) =====
 
 package com.networkopsim.game.model.core;
 
@@ -32,11 +32,9 @@ public class Packet implements Serializable {
     private static final double ELIPHAS_REALIGNMENT_FACTOR = 0.05;
     private static final double LONG_WIRE_THRESHOLD = 700.0;
     private static final long WIRE_TIMEOUT_MS = 30000;
-
-    // [NEW] Constants for PCA-based hitbox generation
-    private static final int POSITION_HISTORY_SIZE = 20; // N=20
+    private static final int POSITION_HISTORY_SIZE = 20;
     private static final double PCA_ACTIVATION_NOISE_THRESHOLD = 2.5;
-    private static final double PCA_SCALE_FACTOR = 1.4; // k=1.4
+    private static final double PCA_SCALE_FACTOR = 1.4;
 
     private static final Path2D.Double BASE_SQUARE_HITBOX;
     private static final Path2D.Double BASE_TRIANGLE_HITBOX;
@@ -86,6 +84,7 @@ public class Packet implements Serializable {
     private transient com.networkopsim.game.model.core.System currentSystem;
     private int currentWireId = -1;
     private int currentSystemId = -1;
+
     private int bulkParentId = -1;
     private int totalBitsInGroup = 0;
 
@@ -96,9 +95,7 @@ public class Packet implements Serializable {
     private PredictedPacketStatus finalStatusForPrediction = null;
 
     private transient Path2D.Double hitbox;
-    // [NEW] History of recent visual positions for PCA calculation.
     private transient List<Point2D.Double> positionHistory;
-
 
     public static void resetGlobalId() { nextPacketId = 0; }
 
@@ -109,10 +106,20 @@ public class Packet implements Serializable {
         this.originalPacketType = type;
         this.idealPosition = new Point2D.Double(startX, startY);
         this.velocity = new Point2D.Double(0, 0);
-        if (this.packetType == NetworkEnums.PacketType.MESSENGER) { this.size = 1; this.baseCoinValue = 1; }
-        else { switch (type) { case SECRET: this.size = 4; this.baseCoinValue = 3; break; case BULK: this.size = 8; this.baseCoinValue = 8; break; case WOBBLE: this.size = 10; this.baseCoinValue = 10; break; case BIT: this.size = 1; this.baseCoinValue = 0; break; default: if (shape == NetworkEnums.PacketShape.SQUARE) { this.size = 2; this.baseCoinValue = 2; } else if (shape == NetworkEnums.PacketShape.TRIANGLE) { this.size = 3; this.baseCoinValue = 3; } else { this.size = 1; this.baseCoinValue = 1; } break; } }
+
+        switch (type) {
+            case SECRET: this.size = 4; this.baseCoinValue = 3; break;
+            case BULK: this.size = 8; this.baseCoinValue = 8; break;
+            case WOBBLE: this.size = 10; this.baseCoinValue = 10; break;
+            case MESSENGER: this.size = 1; this.baseCoinValue = 1; break;
+            default: // NORMAL
+                if (shape == NetworkEnums.PacketShape.SQUARE) { this.size = 2; this.baseCoinValue = 2; }
+                else if (shape == NetworkEnums.PacketShape.TRIANGLE) { this.size = 3; this.baseCoinValue = 3; }
+                else { this.size = 1; this.baseCoinValue = 1; }
+                break;
+        }
+
         this.originalSize = this.size; this.originalBaseCoinValue = this.baseCoinValue; this.initialOffsetSidePreference = this.id % 2; this.momentOfInertia = 0.5f * this.size * this.getDrawSize();
-        // [NEW] Initialize position history
         this.positionHistory = new LinkedList<>();
         updateHitbox();
     }
@@ -138,7 +145,6 @@ public class Packet implements Serializable {
         updateIdealPositionAndVelocity();
         updateHitbox();
 
-        // [NEW] Record visual position for PCA analysis
         Point2D.Double currentVisualPos = getVisualPosition();
         if (currentVisualPos != null) {
             positionHistory.add(currentVisualPos);
@@ -165,8 +171,11 @@ public class Packet implements Serializable {
         if (destinationPort == null || destinationPort.getParentSystem() == null) { gameEngine.packetLostInternal(this, isPredictionRun); return; }
         this.idealPosition = destinationPort.getPrecisePosition();
         com.networkopsim.game.model.core.System targetSystem = destinationPort.getParentSystem();
-        if (this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun) { gameEngine.logBulkPacketWireUsage(this.currentWire); }
+        if (this.packetType == NetworkEnums.PacketType.BULK && !isPredictionRun) {
+            gameEngine.logBulkPacketWireUsage(this.currentWire);
+        }
         boolean enteredCompatibly = packetType == NetworkEnums.PacketType.MESSENGER || packetType == NetworkEnums.PacketType.PROTECTED || packetType == NetworkEnums.PacketType.SECRET || (Port.getShapeEnum(this.shape) == destinationPort.getShape());
+        // [FIXED] Changed 'packet' to 'this' to refer to the current object instance.
         targetSystem.receivePacket(this, gameEngine, isPredictionRun, enteredCompatibly);
     }
 
@@ -188,8 +197,8 @@ public class Packet implements Serializable {
                     double threshold = wire.getRelayPointsCount() > 0 ? LONG_WIRE_THRESHOLD * 0.75 : LONG_WIRE_THRESHOLD;
                     boolean isLongWire = wire.getLength() >= threshold;
                     isAccelerating = isLongWire;
-                    initialSpeed = isAccelerating ? BASE_SPEED_MAGNITUDE : MAX_SPEED_MAGNITUDE;
-                    targetSpeedMagnitude = MAX_SPEED_MAGNITUDE;
+                    initialSpeed = BASE_SPEED_MAGNITUDE;
+                    targetSpeedMagnitude = isLongWire ? MAX_SPEED_MAGNITUDE : BASE_SPEED_MAGNITUDE;
                     break;
                 case WOBBLE: case SECRET: initialSpeed = BASE_SPEED_MAGNITUDE; targetSpeedMagnitude = initialSpeed; break;
                 case MESSENGER:
@@ -220,154 +229,15 @@ public class Packet implements Serializable {
     public void realignToWire() { if (visualOffsetMagnitude > 0) { visualOffsetMagnitude *= (1.0 - ELIPHAS_REALIGNMENT_FACTOR); if (visualOffsetMagnitude < 0.01) visualOffsetMagnitude = 0; } }
     public void applyTorque(Point2D.Double forceVector, double forceMagnitude) { if (momentOfInertia < 1e-6) return; Point2D.Double packetDirection = this.getVelocity(); if (Math.hypot(packetDirection.x, packetDirection.y) < 0.1 && currentWire != null) { Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire); if (pathInfo != null) packetDirection = pathInfo.direction; } double forceMag = Math.hypot(forceVector.x, forceVector.y); if (forceMag < 1e-6) return; Point2D.Double forceDir = new Point2D.Double(forceVector.x / forceMag, forceVector.y / forceMag); double packetDirMag = Math.hypot(packetDirection.x, packetDirection.y); if (packetDirMag < 1e-6) return; Point2D.Double packetDir = new Point2D.Double(packetDirection.x / packetDirMag, packetDirection.y / packetDirMag); double crossProduct = (packetDir.x * forceDir.y) - (packetDir.y * forceDir.x); float angularAcceleration = (float) ((crossProduct * forceMagnitude) / this.momentOfInertia); this.angularVelocity += angularAcceleration; }
     public boolean collidesWith(Packet other) { if (this == other || other == null || this.currentSystem != null || other.currentSystem != null || this.markedForRemoval || other.markedForRemoval) return false; if (this.hitbox == null) this.updateHitbox(); if (other.hitbox == null) other.updateHitbox(); if (this.hitbox == null || other.hitbox == null) return false; Area area1 = new Area(this.hitbox); area1.intersect(new Area(other.hitbox)); return !area1.isEmpty(); }
-
-    // [MODIFIED] Central hitbox update logic to decide between default and PCA-based hitbox.
-    public void updateHitbox() {
-        boolean usePCA = (this.packetType == NetworkEnums.PacketType.WOBBLE || this.noise > PCA_ACTIVATION_NOISE_THRESHOLD)
-                && this.positionHistory != null && this.positionHistory.size() >= 5;
-
-        if (usePCA) {
-            updateHitboxWithPCA();
-        } else {
-            updateHitboxDefault();
-        }
-    }
-
-    private void updateHitboxDefault() {
-        Path2D.Double baseShape;
-        switch (this.shape) {
-            case SQUARE: baseShape = BASE_SQUARE_HITBOX; break;
-            case TRIANGLE: baseShape = BASE_TRIANGLE_HITBOX; break;
-            default: baseShape = BASE_CIRCLE_HITBOX;
-        }
-        AffineTransform tx = new AffineTransform();
-        Point2D.Double visualPos = getVisualPosition();
-        if (visualPos == null) return;
-        tx.translate(visualPos.x, visualPos.y);
-        double totalAngle = this.angle;
-        if (this.shape == NetworkEnums.PacketShape.TRIANGLE) {
-            Point2D.Double direction = getVelocity();
-            if (direction != null && (Math.abs(direction.x) > 0.01 || Math.abs(direction.y) > 0.01)) {
-                double angleFromVelocity = Math.atan2(direction.y, direction.x);
-                if (isReversing) angleFromVelocity += Math.PI;
-                totalAngle += angleFromVelocity;
-            }
-        }
-        tx.rotate(totalAngle);
-        tx.scale(getDrawSize(), getDrawSize());
-        this.hitbox = (Path2D.Double) baseShape.createTransformedShape(tx);
-    }
-
-    // [NEW] Implements the PCA logic to generate a dynamic Oriented Bounding Box.
-    private void updateHitboxWithPCA() {
-        if (positionHistory == null || positionHistory.isEmpty()) {
-            updateHitboxDefault(); // Fallback if no history is available
-            return;
-        }
-
-        // 1. Calculate Mean (Center of the OBB)
-        double meanX = 0, meanY = 0;
-        for (Point2D.Double p : positionHistory) {
-            meanX += p.x;
-            meanY += p.y;
-        }
-        meanX /= positionHistory.size();
-        meanY /= positionHistory.size();
-
-        // 2. Calculate Covariance Matrix
-        double covXX = 0, covXY = 0, covYY = 0;
-        for (Point2D.Double p : positionHistory) {
-            double dx = p.x - meanX;
-            double dy = p.y - meanY;
-            covXX += dx * dx;
-            covXY += dx * dy;
-            covYY += dy * dy;
-        }
-        covXX /= positionHistory.size();
-        covXY /= positionHistory.size();
-        covYY /= positionHistory.size();
-
-        // 3. Find Eigenvalues and Eigenvectors for the 2x2 Covariance Matrix
-        double trace = covXX + covYY;
-        double det = covXX * covYY - covXY * covXY;
-        double discriminant = Math.sqrt(trace * trace - 4 * det);
-        double eigVal1 = (trace + discriminant) / 2;
-        double eigVal2 = (trace - discriminant) / 2;
-
-        Point2D.Double eigVec1 = new Point2D.Double(covXY, eigVal1 - covXX);
-        Point2D.Double eigVec2 = new Point2D.Double(covXY, eigVal2 - covXX);
-
-        // Normalize eigenvectors
-        double mag1 = eigVec1.distance(0, 0);
-        if (mag1 > 1e-6) { eigVec1.x /= mag1; eigVec1.y /= mag1; }
-        double mag2 = eigVec2.distance(0, 0);
-        if (mag2 > 1e-6) { eigVec2.x /= mag2; eigVec2.y /= mag2; }
-
-        // 4. Calculate half-lengths of the OBB axes
-        double halfWidth = PCA_SCALE_FACTOR * Math.sqrt(eigVal1) + getDrawSize() / 2.0;
-        double halfHeight = PCA_SCALE_FACTOR * Math.sqrt(eigVal2) + getDrawSize() / 2.0;
-
-        // 5. Calculate the four corners of the OBB
-        Point2D.Double center = new Point2D.Double(meanX, meanY);
-        Point2D.Double axis1 = new Point2D.Double(eigVec1.x * halfWidth, eigVec1.y * halfWidth);
-        Point2D.Double axis2 = new Point2D.Double(eigVec2.x * halfHeight, eigVec2.y * halfHeight);
-
-        Point2D.Double c1 = new Point2D.Double(center.x + axis1.x + axis2.x, center.y + axis1.y + axis2.y);
-        Point2D.Double c2 = new Point2D.Double(center.x - axis1.x + axis2.x, center.y - axis1.y + axis2.y);
-        Point2D.Double c3 = new Point2D.Double(center.x - axis1.x - axis2.x, center.y - axis1.y - axis2.y);
-        Point2D.Double c4 = new Point2D.Double(center.x + axis1.x - axis2.x, center.y + axis1.y - axis2.y);
-
-        // 6. Create the Path2D hitbox
-        Path2D.Double pcaHitbox = new Path2D.Double();
-        pcaHitbox.moveTo(c1.x, c1.y);
-        pcaHitbox.lineTo(c2.x, c2.y);
-        pcaHitbox.lineTo(c3.x, c3.y);
-        pcaHitbox.lineTo(c4.x, c4.y);
-        pcaHitbox.closePath();
-        this.hitbox = pcaHitbox;
-    }
-
+    public void updateHitbox() { boolean usePCA = (this.packetType == NetworkEnums.PacketType.WOBBLE || this.noise > PCA_ACTIVATION_NOISE_THRESHOLD) && this.positionHistory != null && this.positionHistory.size() >= 5; if (usePCA) { updateHitboxWithPCA(); } else { updateHitboxDefault(); } }
+    private void updateHitboxDefault() { Path2D.Double baseShape; switch (this.shape) { case SQUARE: baseShape = BASE_SQUARE_HITBOX; break; case TRIANGLE: baseShape = BASE_TRIANGLE_HITBOX; break; default: baseShape = BASE_CIRCLE_HITBOX; } AffineTransform tx = new AffineTransform(); Point2D.Double visualPos = getVisualPosition(); if (visualPos == null) return; tx.translate(visualPos.x, visualPos.y); double totalAngle = this.angle; if (this.shape == NetworkEnums.PacketShape.TRIANGLE) { Point2D.Double direction = getVelocity(); if (direction != null && (Math.abs(direction.x) > 0.01 || Math.abs(direction.y) > 0.01)) { double angleFromVelocity = Math.atan2(direction.y, direction.x); if (isReversing) angleFromVelocity += Math.PI; totalAngle += angleFromVelocity; } } tx.rotate(totalAngle); tx.scale(getDrawSize(), getDrawSize()); this.hitbox = (Path2D.Double) baseShape.createTransformedShape(tx); }
+    private void updateHitboxWithPCA() { if (positionHistory == null || positionHistory.isEmpty()) { updateHitboxDefault(); return; } double meanX = 0, meanY = 0; for (Point2D.Double p : positionHistory) { meanX += p.x; meanY += p.y; } meanX /= positionHistory.size(); meanY /= positionHistory.size(); double covXX = 0, covXY = 0, covYY = 0; for (Point2D.Double p : positionHistory) { double dx = p.x - meanX; double dy = p.y - meanY; covXX += dx * dx; covXY += dx * dy; covYY += dy * dy; } covXX /= positionHistory.size(); covXY /= positionHistory.size(); covYY /= positionHistory.size(); double trace = covXX + covYY; double det = covXX * covYY - covXY * covXY; double discriminant = Math.sqrt(trace * trace - 4 * det); double eigVal1 = (trace + discriminant) / 2; double eigVal2 = (trace - discriminant) / 2; Point2D.Double eigVec1 = new Point2D.Double(covXY, eigVal1 - covXX); Point2D.Double eigVec2 = new Point2D.Double(covXY, eigVal2 - covXX); double mag1 = eigVec1.distance(0, 0); if (mag1 > 1e-6) { eigVec1.x /= mag1; eigVec1.y /= mag1; } double mag2 = eigVec2.distance(0, 0); if (mag2 > 1e-6) { eigVec2.x /= mag2; eigVec2.y /= mag2; } double halfWidth = PCA_SCALE_FACTOR * Math.sqrt(eigVal1) + getDrawSize() / 2.0; double halfHeight = PCA_SCALE_FACTOR * Math.sqrt(eigVal2) + getDrawSize() / 2.0; Point2D.Double center = new Point2D.Double(meanX, meanY); Point2D.Double axis1 = new Point2D.Double(eigVec1.x * halfWidth, eigVec1.y * halfWidth); Point2D.Double axis2 = new Point2D.Double(eigVec2.x * halfHeight, eigVec2.y * halfHeight); Point2D.Double c1 = new Point2D.Double(center.x + axis1.x + axis2.x, center.y + axis1.y + axis2.y); Point2D.Double c2 = new Point2D.Double(center.x - axis1.x + axis2.x, center.y - axis1.y + axis2.y); Point2D.Double c3 = new Point2D.Double(center.x - axis1.x - axis2.x, center.y - axis1.y - axis2.y); Point2D.Double c4 = new Point2D.Double(center.x + axis1.x - axis2.x, center.y + axis1.y - axis2.y); Path2D.Double pcaHitbox = new Path2D.Double(); pcaHitbox.moveTo(c1.x, c1.y); pcaHitbox.lineTo(c2.x, c2.y); pcaHitbox.lineTo(c3.x, c3.y); pcaHitbox.lineTo(c4.x, c4.y); pcaHitbox.closePath(); this.hitbox = pcaHitbox; }
     private void updateIdealPositionAndVelocity() { if (currentWire == null) return; Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(progressOnWire); if (pathInfo != null) { this.idealPosition = pathInfo.position; double dx = pathInfo.direction.x * currentSpeedMagnitude; double dy = pathInfo.direction.y * currentSpeedMagnitude; this.velocity = new Point2D.Double(isReversing ? -dx : dx, isReversing ? -dy : dy); } else if (currentWire.getStartPort() != null) { this.idealPosition = currentWire.getStartPort().getPrecisePosition(); this.velocity = new Point2D.Double(0, 0); } }
     public void setVisualOffsetDirectionFromForce(Point2D.Double forceDirection) { if (currentWire == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0, 1); return; } Wire.PathInfo pathInfo = currentWire.getPathInfoAtProgress(this.progressOnWire); if (pathInfo == null) { if (this.visualOffsetDirection == null) this.visualOffsetDirection = new Point2D.Double(0, 1); return; } Point2D.Double wireDir = pathInfo.direction; if (forceDirection == null || (forceDirection.x == 0 && forceDirection.y == 0)) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(0, 1); } } return; } Point2D.Double perp1 = new Point2D.Double(-wireDir.y, wireDir.x); double dotProductWithPerp1 = (forceDirection.x * perp1.x) + (forceDirection.y * perp1.y); if (Math.abs(dotProductWithPerp1) < 1e-6) { if (this.visualOffsetDirection == null) { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } } } else if (dotProductWithPerp1 > 0) this.visualOffsetDirection = perp1; else this.visualOffsetDirection = new Point2D.Double(-perp1.x, -perp1.y); double mag = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (mag > 1e-6) { this.visualOffsetDirection.x /= mag; this.visualOffsetDirection.y /= mag; } else { this.visualOffsetDirection = new Point2D.Double(-wireDir.y, wireDir.x); if (this.initialOffsetSidePreference == 1) { this.visualOffsetDirection.x *= -1; this.visualOffsetDirection.y *= -1; } double m = Math.hypot(this.visualOffsetDirection.x, this.visualOffsetDirection.y); if (m > 1e-6) { this.visualOffsetDirection.x /= m; this.visualOffsetDirection.y /= m; } else { this.visualOffsetDirection = new Point2D.Double(0,1); } } }
-
-    // [MODIFIED] Initializes the position history when loading from a save file.
-    public void rebuildTransientReferences(Map<Integer, com.networkopsim.game.model.core.System> systemMap, Map<Integer, Wire> wireMap) {
-        if (this.currentSystemId != -1) this.currentSystem = systemMap.get(this.currentSystemId);
-        if (this.currentWireId != -1) this.currentWire = wireMap.get(this.currentWireId);
-        if (this.currentWire != null) updateIdealPositionAndVelocity();
-        if (this.positionHistory == null) {
-            this.positionHistory = new LinkedList<>();
-        }
-        updateHitbox();
-    }
-
-    public void transformToProtected(int vpnSystemId) {
-        this.originalPacketType = this.packetType;
-        this.originalSize = this.size;
-        this.originalBaseCoinValue = this.baseCoinValue;
-        this.packetType = NetworkEnums.PacketType.PROTECTED;
-        this.size = this.originalSize * 2;
-        this.baseCoinValue = 5;
-        this.protectedMovementMode = null;
-        this.protectedBySystemId = vpnSystemId;
-    }
-
-    public void upgradeSecretPacket() {
-        if (this.packetType == NetworkEnums.PacketType.SECRET && !this.isUpgradedSecret) {
-            this.isUpgradedSecret = true;
-            this.size = 6;
-            this.baseCoinValue = 4;
-        }
-    }
-
-    public void revertToOriginalType() {
-        this.packetType = this.originalPacketType;
-        this.size = this.originalSize;
-        this.baseCoinValue = this.originalBaseCoinValue;
-        this.protectedMovementMode = null;
-        this.protectedBySystemId = -1;
-    }
-
+    public void rebuildTransientReferences(Map<Integer, com.networkopsim.game.model.core.System> systemMap, Map<Integer, Wire> wireMap) { if (this.currentSystemId != -1) this.currentSystem = systemMap.get(this.currentSystemId); if (this.currentWireId != -1) this.currentWire = wireMap.get(this.currentWireId); if (this.currentWire != null) updateIdealPositionAndVelocity(); if (this.positionHistory == null) { this.positionHistory = new LinkedList<>(); } updateHitbox(); }
+    public void transformToProtected(int vpnSystemId) { this.originalPacketType = this.packetType; this.originalSize = this.size; this.originalBaseCoinValue = this.baseCoinValue; this.packetType = NetworkEnums.PacketType.PROTECTED; this.size = this.originalSize * 2; this.baseCoinValue = 5; this.protectedMovementMode = null; this.protectedBySystemId = vpnSystemId; }
+    public void upgradeSecretPacket() { if (this.packetType == NetworkEnums.PacketType.SECRET && !this.isUpgradedSecret) { this.isUpgradedSecret = true; this.size = 6; this.baseCoinValue = 4; } }
+    public void revertToOriginalType() { this.packetType = this.originalPacketType; this.size = this.originalSize; this.baseCoinValue = this.originalBaseCoinValue; this.protectedMovementMode = null; this.protectedBySystemId = -1; }
     public void reverseDirection(GameEngine gameEngine) { if (this.isReversing) return; this.isReversing = true; this.isAccelerating = false; this.isDecelerating = false; if (!gameEngine.getGame().isMuted()) gameEngine.getGame().playSoundEffect("packet_reverse"); }
     public void setEnteredViaIncompatiblePort(boolean status) { this.enteredViaIncompatiblePort = status; }
     public NetworkEnums.PacketType getPacketType() { return packetType; }
@@ -393,7 +263,13 @@ public class Packet implements Serializable {
     public int getDrawSize() { return BASE_DRAW_SIZE + (size * 2); }
     public double getCurrentSpeedMagnitude() { return currentSpeedMagnitude; }
     public void setCurrentSpeedMagnitude(double speed) { this.currentSpeedMagnitude = speed; }
-    public void configureAsBit(int parentId, int totalBits) { if(this.packetType == NetworkEnums.PacketType.BIT){ this.bulkParentId = parentId; this.totalBitsInGroup = totalBits; } }
+    public void configureAsBulkPart(int parentId, int totalParts) {
+        if(this.packetType == NetworkEnums.PacketType.MESSENGER){
+            this.bulkParentId = parentId;
+            this.totalBitsInGroup = totalParts;
+            this.baseCoinValue = 0;
+        }
+    }
     public PredictedPacketStatus getFinalStatusForPrediction() { return this.finalStatusForPrediction; }
     public void setFinalStatusForPrediction(PredictedPacketStatus status) { this.finalStatusForPrediction = status; }
     public Point2D.Double getVelocity() { if (this.velocity == null) return new Point2D.Double(0,0); return (Point2D.Double) this.velocity.clone(); }

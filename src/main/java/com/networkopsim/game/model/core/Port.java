@@ -1,3 +1,5 @@
+// ===== File: Port.java (Final Corrected with randomizeShape method) =====
+
 package com.networkopsim.game.model.core;
 
 import com.networkopsim.game.model.enums.NetworkEnums;
@@ -34,6 +36,7 @@ public class Port implements Serializable {
         this.position = calculatePosition(parent.getX(), parent.getY(), estInputCount, estOutputCount, type, index);
     }
 
+    // [MODIFIED] Method to randomize the shape of a port.
     public void randomizeShape() {
         Random rand = System.getGlobalRandom();
         int pick = rand.nextInt(NetworkEnums.PortShape.values().length - 1); // Exclude ANY
@@ -86,7 +89,6 @@ public class Port implements Serializable {
         }
     }
 
-    // NEWLY ADDED STATIC METHOD
     public static NetworkEnums.PacketShape getPacketShapeFromPortShapeStatic(NetworkEnums.PortShape portShape) {
         if (portShape == null) return null;
         switch (portShape) {

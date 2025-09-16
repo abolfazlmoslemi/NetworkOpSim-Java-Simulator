@@ -1,33 +1,33 @@
+// ===== File: PacketDrawer.java (FINAL - Colors special MESSENGERs) =====
+
 package com.networkopsim.game.view.rendering;
 
 import com.networkopsim.game.model.core.Packet;
 import com.networkopsim.game.model.core.Port;
-import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.enums.NetworkEnums;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.Random;
 
-/**
- * A helper class dedicated to rendering Packet objects.
- * This encapsulates the drawing logic that was previously in the Packet class.
- */
 public final class PacketDrawer {
 
     private PacketDrawer() {}
 
-    /**
-     * Draws the main body of the packet (shape and primary color).
-     */
     public static void drawPacketBody(Graphics2D g2d, Packet packet, int drawX, int drawY, int drawSize, int halfSize) {
         NetworkEnums.PacketType packetType = packet.getPacketType();
         NetworkEnums.PacketShape shape = packet.getShape();
 
+        // [MODIFIED] Check if it's a MESSENGER packet.
         if (packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) {
-            drawMessengerBody(g2d, drawSize);
+            Color messengerColor = null;
+            // If this MESSENGER is part of a BULK group, color it.
+            if (packet.getBulkParentId() != -1) {
+                messengerColor = new Color(Color.HSBtoRGB((packet.getBulkParentId() * 0.27f) % 1.0f, 0.9f, 0.95f));
+            }
+            // A null color will default to white inside drawMessengerBody.
+            drawMessengerBody(g2d, drawSize, messengerColor);
         } else {
+            // Drawing logic for all other packet types.
             switch (packetType) {
                 case PROTECTED:
                     drawProtectedBody(g2d, drawSize);
@@ -41,45 +41,26 @@ public final class PacketDrawer {
                 case WOBBLE:
                     drawWobbleBody(g2d, drawSize);
                     break;
-                default: // NORMAL, TROJAN, BIT
-                    drawDefaultBody(g2d, packet, shape, drawX, drawY, drawSize, halfSize);
+                default: // NORMAL, TROJAN
+                    drawDefaultBody(g2d, shape, drawX, drawY, drawSize, halfSize);
                     break;
             }
         }
     }
 
-    /**
-     * Draws overlays and decorations on top of the packet body (e.g., Trojan outlines, Bit numbers).
-     */
     public static void drawPacketOverlays(Graphics2D g2d, Packet packet, int drawX, int drawY, int drawSize, int halfSize) {
         Stroke defaultStroke = g2d.getStroke();
-        if (packet.getPacketType() != NetworkEnums.PacketType.PROTECTED && packet.getPacketType() != NetworkEnums.PacketType.BULK &&
-                packet.getPacketType() != NetworkEnums.PacketType.WOBBLE && !(packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getShape() == NetworkEnums.PacketShape.CIRCLE) &&
-                packet.getPacketType() != NetworkEnums.PacketType.SECRET) {
-
-            switch (packet.getPacketType()) {
-                case TROJAN:
-                    g2d.setColor(new Color(255, 50, 50, 200));
-                    g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{3f, 3f}, 0.0f));
-                    if (packet.getShape() == NetworkEnums.PacketShape.SQUARE) g2d.drawRect(drawX, drawY, drawSize, drawSize);
-                    else g2d.drawOval(drawX, drawY, drawSize, drawSize);
-                    break;
-                case BIT:
-                    g2d.setColor(new Color(255, 255, 255, 180));
-                    g2d.setFont(new Font("Monospaced", Font.BOLD, 9));
-                    String bitId = String.valueOf(packet.getBulkParentId());
-                    g2d.drawString(bitId, drawX + 2, drawY + 9);
-                    break;
-            }
+        if (packet.getPacketType() == NetworkEnums.PacketType.TROJAN) {
+            g2d.setColor(new Color(255, 50, 50, 200));
+            g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{3f, 3f}, 0.0f));
+            if (packet.getShape() == NetworkEnums.PacketShape.SQUARE) g2d.drawRect(drawX, drawY, drawSize, drawSize);
+            else g2d.drawOval(drawX, drawY, drawSize, drawSize);
         }
         g2d.setStroke(defaultStroke);
     }
 
-    private static void drawDefaultBody(Graphics2D g2d, Packet packet, NetworkEnums.PacketShape shape, int drawX, int drawY, int drawSize, int halfSize) {
+    private static void drawDefaultBody(Graphics2D g2d, NetworkEnums.PacketShape shape, int drawX, int drawY, int drawSize, int halfSize) {
         Color packetColor = Port.getColorFromShape(shape);
-        if (packet.getPacketType() == NetworkEnums.PacketType.BIT) {
-            packetColor = new Color(Color.HSBtoRGB((packet.getBulkParentId() * 0.27f) % 1.0f, 0.7f, 0.95f));
-        }
         g2d.setColor(packetColor);
 
         switch (shape) {
@@ -98,7 +79,7 @@ public final class PacketDrawer {
         }
     }
 
-    private static void drawMessengerBody(Graphics2D g2d, int drawSize) {
+    private static void drawMessengerBody(Graphics2D g2d, int drawSize, Color colorOverride) {
         double scale = drawSize * 1.8;
         Path2D.Double leftPolygon = new Path2D.Double();
         leftPolygon.moveTo(-0.45 * scale, 0.15 * scale); leftPolygon.lineTo(-0.20 * scale, 0.35 * scale);
@@ -112,7 +93,7 @@ public final class PacketDrawer {
         rightPolygon.lineTo(0.20 * scale, 0.35 * scale); rightPolygon.lineTo(0.45 * scale, 0.15 * scale);
         rightPolygon.closePath();
 
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(colorOverride != null ? colorOverride : Color.WHITE);
         g2d.fill(leftPolygon);
         g2d.fill(rightPolygon);
     }
@@ -128,7 +109,7 @@ public final class PacketDrawer {
 
     private static void drawSecretBody(Graphics2D g2d, boolean isUpgraded, int drawX, int drawY, int drawSize) {
         Color[] blueCamoPalette = { new Color(30, 40, 80), new Color(60, 80, 130), new Color(110, 120, 150) }; Color[] grayCamoPalette = { new Color(50, 50, 50), new Color(100, 100, 100), new Color(150, 150, 150) }; Color[] selectedPalette = isUpgraded ? grayCamoPalette : blueCamoPalette;
-        Shape oldClip = g2d.getClip(); g2d.setClip(new java.awt.geom.Ellipse2D.Double(drawX, drawY, drawSize, drawSize)); int pixelSize = Math.max(2, drawSize / 6); Random rand = System.getGlobalRandom();
+        Shape oldClip = g2d.getClip(); g2d.setClip(new java.awt.geom.Ellipse2D.Double(drawX, drawY, drawSize, drawSize)); int pixelSize = Math.max(2, drawSize / 6); java.util.Random rand = com.networkopsim.game.model.core.System.getGlobalRandom();
         for (int py = drawY; py < drawY + drawSize; py += pixelSize) { for (int px = drawX; px < drawX + drawSize; px += pixelSize) { g2d.setColor(selectedPalette[rand.nextInt(selectedPalette.length)]); g2d.fillRect(px, py, pixelSize, pixelSize); } }
         g2d.setClip(oldClip); g2d.setColor(Color.BLACK); g2d.setStroke(new BasicStroke(1.0f)); g2d.drawOval(drawX, drawY, drawSize, drawSize);
     }
@@ -136,9 +117,9 @@ public final class PacketDrawer {
     private static void drawBulkBody(Graphics2D g2d, int drawSize) {
         Color darkBlue = new Color(20, 40, 100); Color midBlue = new Color(40, 80, 160); Color lightBlue = new Color(80, 140, 220); Color outlineColor = new Color(200, 220, 255, 150);
         double radius = drawSize / 3.5; double h_offset = radius * 1.5; double v_offset = radius * Math.sqrt(3.0) / 2.0;
-        Point2D.Double[] centers = { new Point2D.Double(0, -v_offset * 2), new Point2D.Double(-h_offset / 2, -v_offset), new Point2D.Double(h_offset / 2, -v_offset), new Point2D.Double(-h_offset, 0), new Point2D.Double(0, 0), new Point2D.Double(h_offset, 0), new Point2D.Double(-h_offset / 2, v_offset), new Point2D.Double(h_offset / 2, v_offset), new Point2D.Double(0, v_offset * 2) };
+        java.awt.geom.Point2D.Double[] centers = { new java.awt.geom.Point2D.Double(0, -v_offset * 2), new java.awt.geom.Point2D.Double(-h_offset / 2, -v_offset), new java.awt.geom.Point2D.Double(h_offset / 2, -v_offset), new java.awt.geom.Point2D.Double(-h_offset, 0), new java.awt.geom.Point2D.Double(0, 0), new java.awt.geom.Point2D.Double(h_offset, 0), new java.awt.geom.Point2D.Double(-h_offset / 2, v_offset), new java.awt.geom.Point2D.Double(h_offset / 2, v_offset), new java.awt.geom.Point2D.Double(0, v_offset * 2) };
         g2d.setStroke(new BasicStroke(1.5f));
-        for (Point2D.Double centerOffset : centers) { Color fillColor = (centerOffset.y < -v_offset * 1.5) ? darkBlue : (centerOffset.y > v_offset * 1.5) ? lightBlue : midBlue; Path2D hexagonPath = createHexagon(centerOffset.x, centerOffset.y, radius); g2d.setColor(fillColor); g2d.fill(hexagonPath); g2d.setColor(outlineColor); g2d.draw(hexagonPath); }
+        for (java.awt.geom.Point2D.Double centerOffset : centers) { Color fillColor = (centerOffset.y < -v_offset * 1.5) ? darkBlue : (centerOffset.y > v_offset * 1.5) ? lightBlue : midBlue; Path2D hexagonPath = createHexagon(centerOffset.x, centerOffset.y, radius); g2d.setColor(fillColor); g2d.fill(hexagonPath); g2d.setColor(outlineColor); g2d.draw(hexagonPath); }
     }
 
     private static Path2D createHexagon(double centerX, double centerY, double radius) { Path2D hexagon = new Path2D.Double(); for (int i = 0; i < 6; i++) { double angle = Math.toRadians(60 * i); double x = centerX + radius * Math.cos(angle); double y = centerY + radius * Math.sin(angle); if (i == 0) hexagon.moveTo(x, y); else hexagon.lineTo(x, y); } hexagon.closePath(); return hexagon; }

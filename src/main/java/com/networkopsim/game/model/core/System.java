@@ -1,4 +1,4 @@
-// ===== File: System.java (Final Corrected with Improved Disabled System Logic) =====
+// ===== File: System.java (Final Corrected with Explicit BULK Packet Logic) =====
 
 package com.networkopsim.game.model.core;
 
@@ -89,7 +89,6 @@ public class System implements Serializable {
     public void receivePacket(Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
         if (packet == null || gameEngine == null) return;
 
-        // Defines which packet types can be reversed instead of being lost when hitting a disabled system.
         boolean isReversible = List.of(
                 NetworkEnums.PacketType.MESSENGER,
                 NetworkEnums.PacketType.NORMAL,
@@ -97,18 +96,15 @@ public class System implements Serializable {
                 NetworkEnums.PacketType.BULK
         ).contains(packet.getPacketType());
 
-        // [MODIFIED] First, check if the system is ALREADY disabled.
-        // This handles packets arriving while the system is down.
         if (this.isDisabled) {
             if (isReversible) {
-                packet.reverseDirection(gameEngine); // Reverse subsequent packets
+                packet.reverseDirection(gameEngine);
             } else {
-                gameEngine.packetLostInternal(packet, isPredictionRun); // Other packets are lost
+                gameEngine.packetLostInternal(packet, isPredictionRun);
             }
             return;
         }
 
-        // [MODIFIED] Second, check if the CURRENT packet is too fast and will cause a shutdown.
         double maxSafeSpeed = gameEngine.getGameState().getMaxSafeEntrySpeed();
         if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > maxSafeSpeed) {
             this.isDisabled = true;
@@ -116,23 +112,42 @@ public class System implements Serializable {
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
                 gameEngine.getGame().playSoundEffect("system_shutdown");
             }
-            // The offending packet is always lost.
             gameEngine.packetLostInternal(packet, isPredictionRun);
             return;
         }
 
-        // If the system is active and the packet speed is safe, proceed normally.
-        if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && getSystemType() == NetworkEnums.SystemType.NODE) {
-            packet.setEnteredViaIncompatiblePort(!enteredCompatibly);
+        // [CRITICAL FIX] Explicitly separate the logic for BULK packets from all other packet types.
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+            // Case 1: The BULK packet arrives at the correct system (a Distributor).
+            if (getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR) {
+                packet.setCurrentSystem(this);
+                gameEngine.addRoutingCoinsInternal(packet, isPredictionRun);
+                getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
+            } else {
+                // Case 2: The BULK packet arrives at any other system (incorrect routing).
+                // It performs its destructive action and is then consumed.
+                synchronized(packetQueue) {
+                    for(Packet p : packetQueue) {
+                        gameEngine.packetLostInternal(p, isPredictionRun);
+                    }
+                    packetQueue.clear();
+                }
+                if(packet.getCurrentWire() != null) {
+                    Port entryPort = packet.getCurrentWire().getEndPort();
+                    if (entryPort != null) entryPort.randomizeShape();
+                }
+                // The offending BULK packet is now lost and does not proceed further.
+                gameEngine.packetLostInternal(packet, isPredictionRun);
+            }
+        } else {
+            // This is the normal flow for any packet that is NOT a BULK packet.
+            if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && getSystemType() == NetworkEnums.SystemType.NODE) {
+                packet.setEnteredViaIncompatiblePort(!enteredCompatibly);
+            }
+            packet.setCurrentSystem(this);
+            gameEngine.addRoutingCoinsInternal(packet, isPredictionRun);
+            getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
         }
-
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK){
-            synchronized(packetQueue) { for(Packet p : packetQueue) { gameEngine.packetLostInternal(p, isPredictionRun); } packetQueue.clear(); }
-            if(packet.getCurrentWire() != null) { Port entryPort = packet.getCurrentWire().getEndPort(); entryPort.randomizeShape(); }
-        }
-        packet.setCurrentSystem(this);
-        gameEngine.addRoutingCoinsInternal(packet, isPredictionRun);
-        getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
     }
 
     public void processQueue(GameEngine gameEngine, boolean isPredictionRun) { getBehavior().processQueue(this, gameEngine, isPredictionRun); }

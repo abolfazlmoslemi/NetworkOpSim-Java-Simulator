@@ -1,54 +1,56 @@
+// ===== File: DistributorBehavior.java (FINAL - Corrected with getSystemType) =====
+
 package com.networkopsim.game.controller.logic.behaviors;
 
 import com.networkopsim.game.controller.logic.GameEngine;
 import com.networkopsim.game.model.core.Packet;
 import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.enums.NetworkEnums;
-import com.networkopsim.game.controller.logic.SystemBehavior;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Behavior for DISTRIBUTOR systems. Breaks down a single BULK packet into multiple BIT packets.
- * Other packet types are routed normally.
- */
 public class DistributorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        if (packet.getPacketType() != NetworkEnums.PacketType.BULK) {
-            // If it's not a BULK packet, just treat it like a normal node.
-            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
-            return;
-        }
-
-        int numBits = packet.getSize();
-        if (numBits <= 0) {
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK && !system.packetQueue.isEmpty()) {
             gameEngine.packetLostInternal(packet, isPredictionRun);
             return;
         }
 
-        List<Packet> bitPackets = new ArrayList<>();
-        for (int i = 0; i < numBits; i++) {
-            // Create a new BIT packet. Position doesn't matter much as it will be queued immediately.
-            Packet bit = new Packet(NetworkEnums.PacketShape.CIRCLE, system.getX(), system.getY(), NetworkEnums.PacketType.BIT);
-            bit.configureAsBit(packet.getId(), numBits);
-            bitPackets.add(bit);
+        if (packet.getPacketType() != NetworkEnums.PacketType.BULK) {
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+            return;
         }
 
-        // The original BULK packet is consumed and removed from the game.
+        int numParts = packet.getSize();
+        if (numParts <= 0) {
+            gameEngine.packetLostInternal(packet, isPredictionRun);
+            return;
+        }
+
+        List<Packet> messengerParts = new ArrayList<>();
+        for (int i = 0; i < numParts; i++) {
+            // Create a MESSENGER packet.
+            Packet part = new Packet(NetworkEnums.PacketShape.CIRCLE, system.getX(), system.getY(), NetworkEnums.PacketType.MESSENGER);
+            // Configure it to be part of a BULK group.
+            part.configureAsBulkPart(packet.getId(), numParts);
+            messengerParts.add(part);
+        }
+
         gameEngine.packetLostInternal(packet, isPredictionRun);
 
-        // Queue all the newly created BIT packets.
-        for (Packet bit : bitPackets) {
-            // Bit packets need a system context before being queued.
-            bit.setCurrentSystem(system);
-            // This will attempt to route them immediately if possible, or queue them.
-            processOrQueuePacket(system, bit, gameEngine, isPredictionRun);
+        synchronized (system.packetQueue) {
+            for (Packet part : messengerParts) {
+                // Use the special queuePacket method which now bypasses capacity for Distributors.
+                queuePacket(system, part, gameEngine, isPredictionRun);
+            }
         }
     }
 
+    // By not overriding processQueue, we use the reliable, one-by-one logic from the parent class.
+
+    // [FIXED] Added the missing getSystemType method.
     @Override
     public NetworkEnums.SystemType getSystemType() {
         return NetworkEnums.SystemType.DISTRIBUTOR;

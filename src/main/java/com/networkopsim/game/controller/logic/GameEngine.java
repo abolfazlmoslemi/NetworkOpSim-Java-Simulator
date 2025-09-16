@@ -1,4 +1,4 @@
-// ===== File: GameEngine.java (Final Corrected for Configurable Speed Limit) =====
+// ===== File: GameEngine.java (FINAL RE-ARCHITECTED TICK LOGIC) =====
 
 package com.networkopsim.game.controller.logic;
 
@@ -6,7 +6,6 @@ import com.networkopsim.game.controller.core.NetworkGame;
 import com.networkopsim.game.model.core.Packet;
 import com.networkopsim.game.model.core.Port;
 import com.networkopsim.game.model.core.Wire;
-// Note: We will use the fully qualified name for our System class to avoid ambiguity
 import com.networkopsim.game.model.enums.NetworkEnums;
 import com.networkopsim.game.model.state.GameState;
 import com.networkopsim.game.model.state.PredictedPacketStatus;
@@ -27,8 +26,6 @@ public class GameEngine {
     private static final Logger logger = LoggerFactory.getLogger(GameEngine.class);
 
     public static final long SYSTEM_DISABLE_DURATION_MS = 3500;
-    // [REMOVED] The MAX_SAFE_ENTRY_SPEED constant is now moved to GameState for configurability.
-    // public static final double MAX_SAFE_ENTRY_SPEED = 4.0;
     private static final double IMPACT_WAVE_RADIUS = 180.0;
     private static final double IMPACT_WAVE_MAX_NOISE = 1.0;
     private static final double DIRECT_COLLISION_NOISE_PER_PACKET = 1.0;
@@ -38,7 +35,6 @@ public class GameEngine {
     private GameState gameState;
     private final GamePanel gamePanel;
     private int currentLevel;
-    // Use the fully qualified name for the list type
     private List<com.networkopsim.game.model.core.System> systems = new ArrayList<>();
     private List<Wire> wires = new ArrayList<>();
     private List<Packet> packets = new ArrayList<>();
@@ -72,21 +68,17 @@ public class GameEngine {
     public boolean initializeLevel(int level) {
         logger.info("GameEngine: Initializing level {}.", level);
         stopAndCleanupLevel();
-
         com.networkopsim.game.utils.LevelLoader.LevelLayout layout = com.networkopsim.game.utils.LevelLoader.loadLevel(level, gameState, game);
         if (layout == null) {
             logger.error("GameEngine: Failed to load level layout for level {}.", level);
             return false;
         }
-
         gameState.resetForNewLevel();
         this.currentLevel = layout.levelNumber;
-
         Packet.resetGlobalId();
         com.networkopsim.game.model.core.System.resetGlobalId();
         Port.resetGlobalId();
         com.networkopsim.game.model.core.System.resetGlobalRandomSeed(gamePanel.getPredictionSeed());
-
         systems.addAll(layout.systems);
         wires.addAll(layout.wires);
         return true;
@@ -149,58 +141,66 @@ public class GameEngine {
         simulationPaused = true;
     }
 
+    // [CRITICAL FIX] The logic of this method has been re-architected to ensure a stable, predictable order of operations.
+    // This prevents race conditions where a system's queue is processed in the same tick it receives a packet.
     public void runSimulationTickLogic(boolean isPredictionRun, long currentTotalSimTimeMs, boolean isAtarActive, boolean isAiryamanActive, boolean isSpeedLimiterActive) {
         if (!isPredictionRun) { UIManager.put("game.time.ms", currentTotalSimTimeMs); }
+
+        // === PHASE 1: System State & Packet Generation ===
+        // Systems update their internal states (like cooldowns) and Sources generate new packets.
+        for (com.networkopsim.game.model.core.System s : systems) {
+            s.updateSystemState(currentTotalSimTimeMs, this);
+            if (s.getSystemType() == NetworkEnums.SystemType.SOURCE) {
+                s.attemptPacketGeneration(this, currentTotalSimTimeMs, isPredictionRun);
+            }
+        }
         processBuffersInternal();
-        for (com.networkopsim.game.model.core.System s : systems) s.updateSystemState(currentTotalSimTimeMs, this);
-        for (com.networkopsim.game.model.core.System s : systems) if (s.getSystemType() == NetworkEnums.SystemType.SOURCE) s.attemptPacketGeneration(this, currentTotalSimTimeMs, isPredictionRun);
-        processBuffersInternal();
+
+        // === PHASE 2: Packet Movement & Arrival ===
+        // All packets on wires move. Packets that arrive at a system are received,
+        // which might fill up queues (like in a Distributor).
         for (Packet p : new ArrayList<>(packets)) {
-            if (!isPredictionRun) gamePanel.applyWireEffectsToPacket(p);
+            if (!isPredictionRun) {
+                gamePanel.applyWireEffectsToPacket(p);
+            }
             p.update(this, isAiryamanActive, isSpeedLimiterActive, isPredictionRun);
         }
         processBuffersInternal();
-        for (com.networkopsim.game.model.core.System s : systems) if (s.getSystemType() != NetworkEnums.SystemType.SOURCE && s.getSystemType() != NetworkEnums.SystemType.SINK) s.processQueue(this, isPredictionRun);
+
+        // === PHASE 3: Queue Processing & Packet Dispatch ===
+        // NOW, after all arrivals are handled, systems process ONE item from their queue.
+        // This is the crucial change that prevents instant-emptying.
+        for (com.networkopsim.game.model.core.System s : systems) {
+            if (s.getSystemType() != NetworkEnums.SystemType.SOURCE) {
+                s.processQueue(this, isPredictionRun);
+            }
+        }
         processBuffersInternal();
-        for (com.networkopsim.game.model.core.System s : systems) if (s.getSystemType() == NetworkEnums.SystemType.ANTITROJAN) s.updateAntiTrojan(this, isPredictionRun);
-        if (!isAiryamanActive) detectAndHandleCollisions(isPredictionRun, isAtarActive);
+
+        // === PHASE 4: Special Systems, Collisions & Cleanup ===
+        for (com.networkopsim.game.model.core.System s : systems) {
+            if (s.getSystemType() == NetworkEnums.SystemType.ANTITROJAN) {
+                s.updateAntiTrojan(this, isPredictionRun);
+            }
+        }
+        if (!isAiryamanActive) {
+            detectAndHandleCollisions(isPredictionRun, isAtarActive);
+        }
         processWireDestruction(isPredictionRun);
         processBuffersInternal();
     }
 
+
     private void processBuffersInternal() { if (!packetsToRemove.isEmpty()) { packets.removeAll(packetsToRemove); packetsToRemove.clear(); } if (!packetsToAdd.isEmpty()) { packets.addAll(packetsToAdd); packetsToAdd.clear(); } if (!wiresToRemove.isEmpty()) { for (Wire w : wiresToRemove) { if(wires.remove(w)){ w.destroy(); logger.warn("Wire {} destroyed.", w.getId()); if (!game.isMuted()) game.playSoundEffect("wire_disconnect"); } } wiresToRemove.clear(); gamePanel.validateAndSetPredictionFlag(); } }
-
     private void processWireDestruction(boolean isPredictionRun) { if(isPredictionRun) return; if (!wiresUsedByBulkPacketsThisTick.isEmpty()) { for (Wire w : wiresUsedByBulkPacketsThisTick) { w.recordBulkPacketTraversal(); if (w.isDestroyed() && !wiresToRemove.contains(w)) wiresToRemove.add(w); } wiresUsedByBulkPacketsThisTick.clear(); } }
-
     public void addPacketInternal(Packet packet, boolean isPredictionRun) { if (packet != null) { if (!isPredictionRun) logger.debug("Generated: {}", packet); packetsToAdd.add(packet); if (isPredictionRun) { gamePanel.getPredictionContext().registerGeneratedPacket(packet); } else { gameState.recordPacketGeneration(packet); } } }
-
     public void packetLostInternal(Packet packet, boolean isPredictionRun) { if (packet != null && !packet.isMarkedForRemoval()) { if (!isPredictionRun) logger.warn("Lost: {}", packet); packet.markForRemoval(); packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST); packetsToRemove.add(packet); if (isPredictionRun) { gamePanel.getPredictionContext().registerLostPacket(packet); } else { gameState.increasePacketLoss(packet); if (!game.isMuted()) game.playSoundEffect("packet_loss"); } } }
-
     public void packetSuccessfullyDeliveredInternal(Packet packet, boolean isPredictionRun) { if (packet != null && !packet.isMarkedForRemoval()) { if (!isPredictionRun) logger.info("Delivered: {}", packet); packet.markForRemoval(); packet.setFinalStatusForPrediction(PredictedPacketStatus.DELIVERED); packetsToRemove.add(packet); if (!isPredictionRun) { totalPacketsSuccessfullyDelivered++; } } }
-
     public void addRoutingCoinsInternal(Packet packet, boolean isPredictionRun) { if (packet != null && !isPredictionRun) { gameState.addCoins(packet.getBaseCoinValue()); } }
-
-    private void detectAndHandleCollisions(boolean isPredictionRun, boolean isAtarActive) {
-        if (packets.isEmpty()) return;
-        Map<Point, List<Packet>> spatialGrid = new HashMap<>();
-        for (Packet p : packets) { if (p.getCurrentSystem() == null) { Point2D.Double pos = p.getVisualPosition(); if(pos == null) continue; int cellX = (int) (pos.x / SPATIAL_GRID_CELL_SIZE); int cellY = (int) (pos.y / SPATIAL_GRID_CELL_SIZE); spatialGrid.computeIfAbsent(new Point(cellX, cellY), k -> new ArrayList<>()).add(p); } }
-        Set<Pair<Integer, Integer>> currentTickCollisions = new HashSet<>(); Set<Pair<Integer, Integer>> checkedPairsThisTick = new HashSet<>();
-        for (List<Packet> cellPackets : spatialGrid.values()) { for (int i = 0; i < cellPackets.size(); i++) { for (int j = i + 1; j < cellPackets.size(); j++) { Packet p1 = cellPackets.get(i); Packet p2 = cellPackets.get(j); Pair<Integer, Integer> currentPair = new Pair<>(Math.min(p1.getId(), p2.getId()), Math.max(p1.getId(), p2.getId())); if (checkedPairsThisTick.contains(currentPair)) continue; if (p1.collidesWith(p2)) { currentTickCollisions.add(currentPair); if (!activelyCollidingPairs.contains(currentPair)) { handleCollision(p1, p2, isPredictionRun, isAtarActive); } } checkedPairsThisTick.add(currentPair); } } }
-        activelyCollidingPairs.removeIf(pair -> !currentTickCollisions.contains(pair)); activelyCollidingPairs.addAll(currentTickCollisions);
-    }
-
+    private void detectAndHandleCollisions(boolean isPredictionRun, boolean isAtarActive) { if (packets.isEmpty()) return; Map<Point, List<Packet>> spatialGrid = new HashMap<>(); for (Packet p : packets) { if (p.getCurrentSystem() == null) { Point2D.Double pos = p.getVisualPosition(); if(pos == null) continue; int cellX = (int) (pos.x / SPATIAL_GRID_CELL_SIZE); int cellY = (int) (pos.y / SPATIAL_GRID_CELL_SIZE); spatialGrid.computeIfAbsent(new Point(cellX, cellY), k -> new ArrayList<>()).add(p); } } Set<Pair<Integer, Integer>> currentTickCollisions = new HashSet<>(); Set<Pair<Integer, Integer>> checkedPairsThisTick = new HashSet<>(); for (List<Packet> cellPackets : spatialGrid.values()) { for (int i = 0; i < cellPackets.size(); i++) { for (int j = i + 1; j < cellPackets.size(); j++) { Packet p1 = cellPackets.get(i); Packet p2 = cellPackets.get(j); Pair<Integer, Integer> currentPair = new Pair<>(Math.min(p1.getId(), p2.getId()), Math.max(p1.getId(), p2.getId())); if (checkedPairsThisTick.contains(currentPair)) continue; if (p1.collidesWith(p2)) { currentTickCollisions.add(currentPair); if (!activelyCollidingPairs.contains(currentPair)) { handleCollision(p1, p2, isPredictionRun, isAtarActive); } } checkedPairsThisTick.add(currentPair); } } } activelyCollidingPairs.removeIf(pair -> !currentTickCollisions.contains(pair)); activelyCollidingPairs.addAll(currentTickCollisions); }
     private void handleCollision(Packet p1, Packet p2, boolean isPredictionRun, boolean isAtarActive) { if (!isPredictionRun) { logger.info("Collision between Packet {} and {}", p1.getId(), p2.getId()); if (!game.isMuted()) game.playSoundEffect("collision"); } p1.addNoise(DIRECT_COLLISION_NOISE_PER_PACKET); p2.addNoise(DIRECT_COLLISION_NOISE_PER_PACKET); Point2D.Double p1VisPos = p1.getVisualPosition(); Point2D.Double p2VisPos = p2.getVisualPosition(); p1.setVisualOffsetDirectionFromForce(new Point2D.Double(p1VisPos.x - p2VisPos.x, p1VisPos.y - p2VisPos.y)); p2.setVisualOffsetDirectionFromForce(new Point2D.Double(p2VisPos.x - p1VisPos.x, p2VisPos.y - p1VisPos.y)); if (p1.getPacketType() == NetworkEnums.PacketType.MESSENGER && p1.getShape() == NetworkEnums.PacketShape.CIRCLE) p1.reverseDirection(this); if (p2.getPacketType() == NetworkEnums.PacketType.MESSENGER && p2.getShape() == NetworkEnums.PacketShape.CIRCLE) p2.reverseDirection(this); if (!isAtarActive) { handleImpactWave(new Point((int)((p1VisPos.x + p2VisPos.x)/2), (int)((p1VisPos.y + p2VisPos.y)/2)), p1, p2); } }
-
     private void handleImpactWave(Point center, Packet ignore1, Packet ignore2) { double waveRadiusSq = IMPACT_WAVE_RADIUS * IMPACT_WAVE_RADIUS; for (Packet p : packets) { if (p == ignore1 || p == ignore2 || p.getCurrentSystem() != null) continue; Point2D.Double pVisPos = p.getVisualPosition(); if(pVisPos == null) continue; double distSq = center.distanceSq(pVisPos); if (distSq < waveRadiusSq && distSq > 1e-6) { double distance = Math.sqrt(distSq); double normalizedDistance = distance / IMPACT_WAVE_RADIUS; double noiseAmount = IMPACT_WAVE_MAX_NOISE * (1.0 - normalizedDistance); Point2D.Double forceDirection = new Point2D.Double(pVisPos.x - center.x, pVisPos.y - center.y); p.setVisualOffsetDirectionFromForce(forceDirection); p.addNoise(noiseAmount); double torqueMagnitude = IMPACT_WAVE_TORQUE_FACTOR * (1.0 - normalizedDistance); p.applyTorque(forceDirection, torqueMagnitude); } } }
-
-    public void rebuildTransientReferences() {
-        Map<Integer, com.networkopsim.game.model.core.System> systemMap = systems.stream().collect(Collectors.toMap(com.networkopsim.game.model.core.System::getId, s -> s));
-        Map<Integer, Wire> wireMap = wires.stream().collect(Collectors.toMap(Wire::getId, w -> w));
-        for (com.networkopsim.game.model.core.System s : systems) s.reinitializeBehavior();
-        for (Wire w : wires) w.rebuildTransientReferences(systemMap);
-        for (Packet p : packets) p.rebuildTransientReferences(systemMap, wireMap);
-    }
-
+    public void rebuildTransientReferences() { Map<Integer, com.networkopsim.game.model.core.System> systemMap = systems.stream().collect(Collectors.toMap(com.networkopsim.game.model.core.System::getId, s -> s)); Map<Integer, Wire> wireMap = wires.stream().collect(Collectors.toMap(Wire::getId, w -> w)); for (com.networkopsim.game.model.core.System s : systems) s.reinitializeBehavior(); for (Wire w : wires) w.rebuildTransientReferences(systemMap); for (Packet p : packets) p.rebuildTransientReferences(systemMap, wireMap); }
     public NetworkGame getGame() { return game; }
     public GamePanel getGamePanel() { return gamePanel; }
     public GameState getGameState() { return gameState; }

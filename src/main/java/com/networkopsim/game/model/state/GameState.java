@@ -1,4 +1,4 @@
-// ===== File: GameState.java (Final Corrected Version 2 with Typo Fix) =====
+// ===== File: GameState.java (Final Corrected with MAX_LEVELS = 6) =====
 
 package com.networkopsim.game.model.state;
 
@@ -6,7 +6,8 @@ import java.io.Serializable;
 
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final int MAX_LEVELS = 5;
+    // [MODIFIED] Increased max levels to include the new test level.
+    public static final int MAX_LEVELS = 6;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
     private int totalPacketLossUnits = 0;
@@ -17,10 +18,10 @@ public class GameState implements Serializable {
     private int remainingWireLength = maxWireLengthPerLevel;
     private int currentSelectedLevel = 1;
 
-    // Configurable maximum safe entry speed for systems.
     private double maxSafeEntrySpeed = 4.0;
 
     public GameState() {
+        // Unlock all levels by default for testing purposes
         for (int i = 0; i < unlockedLevels.length; i++) {
             unlockedLevels[i] = true;
         }
@@ -103,7 +104,6 @@ public class GameState implements Serializable {
 
     public void resetForNewLevel() {
         resetPacketStatsForSimulationAttempt();
-        // [CORRECTED] Fixed the typo from 'maxWireLengthForLevel' to 'maxWireLengthPerLevel'
         this.remainingWireLength = this.maxWireLengthPerLevel;
         java.lang.System.out.println("GameState: Full reset for new level.");
     }

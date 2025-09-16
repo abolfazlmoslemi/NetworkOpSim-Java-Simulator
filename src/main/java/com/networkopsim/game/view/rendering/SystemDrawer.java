@@ -1,3 +1,5 @@
+// ===== File: SystemDrawer.java (Final Corrected with Custom Distributor Queue Display) =====
+
 package com.networkopsim.game.view.rendering;
 
 import com.networkopsim.game.model.core.Port;
@@ -80,8 +82,23 @@ public final class SystemDrawer {
         for (Port p : system.getInputPorts()) if(p!=null) p.draw(g2d);
         for (Port p : system.getOutputPorts()) if(p!=null) p.draw(g2d);
 
+        // [MODIFIED] Rule: Custom queue display logic for different system types.
         if (!system.isReferenceSystem() && system.getQueueSize() > 0) {
-            String queueText = String.format("%d/%d", system.getQueueSize(), System.QUEUE_CAPACITY);
+            String queueText;
+            Color queueColor;
+
+            if (system.getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR) {
+                // For Distributors, show only the current count without capacity.
+                queueText = String.format("%d", system.getQueueSize());
+                queueColor = Color.CYAN;
+            } else {
+                // For all other systems, show count vs capacity.
+                queueText = String.format("%d/%d", system.getQueueSize(), System.QUEUE_CAPACITY);
+                if (system.getQueueSize() == System.QUEUE_CAPACITY) queueColor = Color.RED;
+                else if (system.getQueueSize() > System.QUEUE_CAPACITY / 2) queueColor = Color.ORANGE;
+                else queueColor = Color.YELLOW;
+            }
+
             g2d.setFont(new Font("Consolas", Font.BOLD, 11));
             fm = g2d.getFontMetrics();
             textWidth = fm.stringWidth(queueText);
@@ -91,10 +108,6 @@ public final class SystemDrawer {
             int qy = system.getY() + System.SYSTEM_HEIGHT - bgHeight - 3;
             g2d.setColor(new Color(0, 0, 0, 180));
             g2d.fillRoundRect(qx, qy, bgWidth, bgHeight, 5, 5);
-            Color queueColor;
-            if (system.getQueueSize() == System.QUEUE_CAPACITY) queueColor = Color.RED;
-            else if (system.getQueueSize() > System.QUEUE_CAPACITY / 2) queueColor = Color.ORANGE;
-            else queueColor = Color.YELLOW;
             g2d.setColor(queueColor);
             g2d.drawString(queueText, qx + 2, qy + fm.getAscent() -1);
         }
