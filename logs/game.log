@@ -5652,3 +5652,929 @@
 2025-09-16 04:39:47.777 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
 2025-09-16 04:40:04.079 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
 2025-09-16 04:40:08.391 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 04:44:04.569 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-16 04:44:04.569 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-16 04:44:05.956 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 1.
+2025-09-16 04:44:05.979 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-16 04:44:05.981 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 1.
+2025-09-16 04:44:05.981 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-16 04:44:05.981 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 04:44:05.981 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-16 04:44:07.651 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-16 04:44:07.652 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-16 04:44:08.706 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-16 04:44:09.612 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 2.
+2025-09-16 04:44:09.612 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 2.
+2025-09-16 04:44:09.613 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-16 04:44:09.620 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 2.
+2025-09-16 04:44:09.620 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-16 04:44:09.620 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 04:44:09.621 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-16 04:44:26.308 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-16 04:44:27.276 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:28.498 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 7.
+2025-09-16 04:44:29.327 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:30.652 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 8.
+2025-09-16 04:44:31.534 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:33.031 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 12.
+2025-09-16 04:44:35.154 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:36.850 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-16 04:44:37.574 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:38.994 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 1.
+2025-09-16 04:44:40.283 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:41.909 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 16.
+2025-09-16 04:44:42.803 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:44.172 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-16 04:44:44.745 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:46.062 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 3.
+2025-09-16 04:44:47.622 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:49.136 [Thread-112] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:44:51.647 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 20.
+2025-09-16 04:44:53.287 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:55.034 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 19.
+2025-09-16 04:44:58.153 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:44:59.517 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 15.
+2025-09-16 04:45:01.544 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:02.837 [Thread-116] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:45:05.338 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 11.
+2025-09-16 04:45:06.654 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:09.059 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 32.
+2025-09-16 04:45:10.298 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:11.842 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 31.
+2025-09-16 04:45:15.717 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:18.436 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 36.
+2025-09-16 04:45:18.462 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:20.616 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 36.
+2025-09-16 04:45:21.895 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:24.429 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 25.
+2025-09-16 04:45:26.174 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:27.657 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 35.
+2025-09-16 04:45:30.087 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:34.227 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 26.
+2025-09-16 04:45:36.435 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:39.081 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-16 04:45:40.357 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:45:57.068 [Thread-126] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-16 04:45:58.970 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 27.
+2025-09-16 04:46:00.150 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:46:01.810 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 11.
+2025-09-16 04:46:03.199 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 04:46:03.201 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:46:12.294 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 04:46:15.295 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 04:46:23.642 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 04:46:27.515 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 2.
+2025-09-16 04:46:27.532 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:27.533 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:27.533 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1050.0,93.0) Vel:(-0.9,0.5 (Mag:1.00)) St:ON_WIRE(W:36 P:0.0%)}
+2025-09-16 04:46:28.784 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:3, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:28.951 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:4, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:29.405 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:5, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:30.033 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:6, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:30.369 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:7, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:30.735 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 1 and 2
+2025-09-16 04:46:30.867 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 1 and 2
+2025-09-16 04:46:30.884 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(883.4,202.3) Vel:(1.0,0.1 (Mag:1.00)) St:ON_WIRE(W:34 P:61.7%)}
+2025-09-16 04:46:30.884 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(877.9,198.8) Vel:(-0.9,0.5 (Mag:1.00)) St:ON_WIRE(W:36 P:33.6%)}
+2025-09-16 04:46:31.267 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:8, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:31.283 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:31.789 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:10, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:32.540 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:11, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:33.138 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:12, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:33.204 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:13, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:33.319 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.4/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:46:33.320 [Thread-133] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:33.787 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:14, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:33.820 [Thread-135] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/packet_reverse.wav
+2025-09-16 04:46:33.886 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:3, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:33.887 [Thread-136] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:34.623 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:15, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1050.0,93.0) Vel:(-0.9,0.5 (Mag:1.00)) St:ON_WIRE(W:36 P:0.0%)}
+2025-09-16 04:46:35.007 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:16, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:35.125 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:11, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(600.0,114.0) Vel:(-0.5,-0.9 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-16 04:46:36.011 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:17, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:36.044 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:18, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:36.881 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:19, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:36.977 [Thread-137] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:37.010 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:4, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:1.2/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:37.011 [Thread-138] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:37.260 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:20, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:37.460 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:21, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:37.524 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:46:37.530 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:46:38.509 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:22, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:38.743 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:23, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:38.875 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:24, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:38.942 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:46:38.943 [Thread-139] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:38.976 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 0 and 14
+2025-09-16 04:46:39.175 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 0 and 14
+2025-09-16 04:46:39.191 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(434.2,506.5) Vel:(-0.8,0.6 (Mag:1.00)) St:ON_WIRE(W:48 P:64.3%)}
+2025-09-16 04:46:39.274 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:9, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:46:39.275 [Thread-144] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:40.291 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:25, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:40.610 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:26, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:40.725 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:27, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:40.759 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:12, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.2/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:40.760 [Thread-145] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:41.311 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(320.0,590.0) Vel:(-3.3,2.4 (Mag:4.10)) St:ON_WIRE(W:48 P:100.0%)}
+2025-09-16 04:46:41.312 [Thread-146] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:41.712 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:28, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:42.326 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:10, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:46:42.327 [Thread-148] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:42.376 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 6 and 16
+2025-09-16 04:46:42.475 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:29, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:42.592 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:30, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:42.593 [Thread-150] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:42.760 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:14, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:2.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:46:42.761 [Thread-151] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:43.126 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:31, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:43.659 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:22, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:43.660 [Thread-152] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:43.842 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:32, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:43.944 [Thread-153] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/packet_reverse.wav
+2025-09-16 04:46:44.344 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:33, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:44.543 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:34, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:44.559 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:21, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:46:44.560 [Thread-154] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:44.965 [Thread-156] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:45.531 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:34, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1000.0,200.0) Vel:(-1.5,1.3 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:45.698 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:15, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:46:45.699 [Thread-158] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:45.967 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:35, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1050.0,93.0) Vel:(-0.9,0.5 (Mag:1.00)) St:ON_WIRE(W:36 P:0.0%)}
+2025-09-16 04:46:46.068 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:36, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:46.219 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:37, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:46.501 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 6 and 8
+2025-09-16 04:46:46.517 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(564.9,410.9) Vel:(-0.8,0.6 (Mag:1.00)) St:ON_WIRE(W:48 P:23.5%)}
+2025-09-16 04:46:46.567 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:16, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:46.567 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 26 and 27
+2025-09-16 04:46:46.568 [Thread-161] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:46.882 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 8 and 27
+2025-09-16 04:46:46.899 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(592.2,383.7) Vel:(1.5,-1.3 (Mag:2.00)) St:ON_WIRE(W:46 P:14.9%)}
+2025-09-16 04:46:46.950 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 23 and 32
+2025-09-16 04:46:46.966 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:26, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(628.9,414.7) Vel:(-0.5,1.9 (Mag:2.00)) St:ON_WIRE(W:47 P:13.9%)}
+2025-09-16 04:46:46.966 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:27, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:3.0/3, V:3, Ideal:(590.9,391.9) Vel:(-2.0,1.5 (Mag:2.49)) St:ON_WIRE(W:48 P:15.3%)}
+2025-09-16 04:46:47.384 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:38, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:47.517 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:46:47.523 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:46:48.003 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:19, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.4/2, V:2, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:46:48.004 [Thread-168] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:48.086 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:39, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:48.220 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:40, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:48.221 [Thread-169] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:48.799 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:41, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:49.463 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:42, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:49.783 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:41, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1000.0,200.0) Vel:(-1.5,1.3 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:49.869 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:18, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:1.1/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:49.870 [Thread-171] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:49.950 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:43, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:50.187 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:25, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:46:50.194 [Thread-172] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:50.222 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:44, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:50.388 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:36, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.2/3, V:3, Ideal:(320.0,590.0) Vel:(-3.3,2.4 (Mag:4.10)) St:ON_WIRE(W:48 P:100.0%)}
+2025-09-16 04:46:50.389 [Thread-174] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:51.637 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:45, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:51.687 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:46, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:51.769 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:5, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(190.0,696.0) Vel:(-1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:46:51.771 [Thread-176] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:51.820 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:47, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:52.619 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:45, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1000.0,200.0) Vel:(-1.5,1.3 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:52.687 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:32, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:1.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:46:52.688 [Thread-178] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:52.770 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:33, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:52.771 [Thread-179] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:52.851 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:40, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1000.0,200.0) Vel:(1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:53.052 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:48, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:53.685 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:49, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:53.836 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:50, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:53.837 [Thread-181] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:54.037 [Thread-182] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:54.070 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 39 and 42
+2025-09-16 04:46:54.473 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:51, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:55.089 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:52, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:55.561 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:53, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:55.678 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:24, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:55.679 [Thread-184] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:55.813 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:28, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:46:55.814 [Thread-185] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:46:55.895 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:54, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:56.886 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:54, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1000.0,200.0) Vel:(-1.5,1.3 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:57.052 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:35, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:46:57.053 [Thread-188] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:57.322 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:55, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:46:57.322 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:56, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:46:57.440 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:57, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:57.518 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:46:57.523 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:46:58.311 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:56, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1000.0,200.0) Vel:(-1.5,1.3 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:58.494 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:50, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1000.0,200.0) Vel:(1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:46:58.593 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:37, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:46:58.594 [Thread-191] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:58.725 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:29, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.5/2, V:2, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:46:58.726 [Thread-192] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:46:58.743 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:58, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1050.0,93.0) Vel:(-0.9,0.5 (Mag:1.00)) St:ON_WIRE(W:36 P:0.0%)}
+2025-09-16 04:46:59.305 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:59, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:46:59.470 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:60, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:46:59.471 [Thread-193] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:46:59.839 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:42, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:1.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:46:59.840 [Thread-194] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:00.159 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:61, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:47:00.723 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:62, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:01.173 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:63, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:01.439 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:38, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:47:01.440 [Thread-195] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:47:01.488 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:47, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:01.489 [Thread-197] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:01.572 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:64, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:47:02.806 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:52, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(320.0,590.0) Vel:(-3.3,2.4 (Mag:4.10)) St:ON_WIRE(W:48 P:100.0%)}
+2025-09-16 04:47:02.807 [Thread-198] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:47:02.942 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:65, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:02.992 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:66, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:47:03.042 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:67, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:03.326 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:46, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:03.327 [Thread-200] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:03.993 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:39, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(600.0,715.0) Vel:(0.8,0.6 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:03.993 [Thread-201] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:04.079 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:20, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.8/2, V:2, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:47:04.079 [Thread-202] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:04.112 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:60, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1000.0,200.0) Vel:(1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:47:04.395 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:31, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:04.396 [Thread-204] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:04.413 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:68, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:47:04.513 [Thread-205] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/packet_reverse.wav
+2025-09-16 04:47:04.613 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:23, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(190.0,696.0) Vel:(-1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:04.615 [Thread-206] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:04.910 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:69, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:05.092 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:70, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:47:05.093 [Thread-207] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:47:05.828 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:71, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1050.0,113.0) Vel:(-1.5,1.3 (Mag:2.00)) St:ON_WIRE(W:35 P:0.0%)}
+2025-09-16 04:47:05.878 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:55, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:47:05.879 [Thread-208] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:06.343 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:72, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:06.463 [Thread-209] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:47:06.778 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:73, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:06.810 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:71, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1000.0,200.0) Vel:(-1.5,1.3 (Mag:0.00)) St:QUEUED(Sys:6)}
+2025-09-16 04:47:07.062 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:48, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:47:07.063 [Thread-211] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:47:07.097 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 43 and 62
+2025-09-16 04:47:07.130 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 43 and 62
+2025-09-16 04:47:07.147 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:43, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(563.0,408.0) Vel:(1.5,-1.3 (Mag:2.00)) St:ON_WIRE(W:46 P:24.1%)}
+2025-09-16 04:47:07.298 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:53, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:07.299 [Thread-216] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:07.447 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 44 and 67
+2025-09-16 04:47:07.528 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:47:07.533 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:47:08.565 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:74, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:08.581 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:62, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:2.3/3, V:3, Ideal:(320.0,590.0) Vel:(-3.3,2.4 (Mag:4.10)) St:ON_WIRE(W:48 P:100.0%)}
+2025-09-16 04:47:08.581 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:63, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.8/2, V:2, Ideal:(600.0,350.0) Vel:(0.3,1.0 (Mag:0.00)) St:QUEUED(Sys:7)}
+2025-09-16 04:47:08.582 [Thread-218] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:47:08.648 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:75, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:09.980 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 49 and 58
+2025-09-16 04:47:10.046 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 49 and 58
+2025-09-16 04:47:10.063 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:49, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(796.6,604.1) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:44 P:97.9%)}
+2025-09-16 04:47:10.063 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:58, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(802.7,600.2) Vel:(-1.0,0.1 (Mag:1.00)) St:ON_WIRE(W:45 P:10.6%)}
+2025-09-16 04:47:10.195 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:59, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.5/2, V:2, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:10.196 [Thread-225] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:10.512 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:76, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:10.631 [Thread-226] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/packet_reverse.wav
+2025-09-16 04:47:10.713 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:77, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:47:10.714 [Thread-227] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:47:11.654 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:51, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(600.0,350.0) Vel:(-1.9,0.5 (Mag:0.00)) St:QUEUED(Sys:7)}
+2025-09-16 04:47:11.970 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:78, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:12.238 [Thread-229] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:47:12.385 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:79, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(230.0,103.0) Vel:(-0.6,0.8 (Mag:1.00)) St:ON_WIRE(W:28 P:0.0%)}
+2025-09-16 04:47:12.686 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:61, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:47:12.687 [Thread-230] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:47:13.002 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 30 and 44
+2025-09-16 04:47:13.018 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:44, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:3.0/3, V:3, Ideal:(547.7,423.5) Vel:(-2.3,1.7 (Mag:2.85)) St:ON_WIRE(W:48 P:28.8%)}
+2025-09-16 04:47:13.100 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:65, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:13.100 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 67 and 72
+2025-09-16 04:47:13.101 [Thread-234] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:13.116 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:30, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(549.2,419.5) Vel:(1.5,-1.3 (Mag:2.00)) St:ON_WIRE(W:46 P:28.4%)}
+2025-09-16 04:47:13.116 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:67, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(635.2,359.5) Vel:(-0.8,0.6 (Mag:1.00)) St:ON_WIRE(W:48 P:1.5%)}
+2025-09-16 04:47:13.149 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 73 and 74
+2025-09-16 04:47:14.183 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:80, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:16.002 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:72, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:2.3/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:16.003 [Thread-239] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:16.333 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:81, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(640.0,124.0) Vel:(0.5,0.9 (Mag:1.00)) St:ON_WIRE(W:32 P:0.0%)}
+2025-09-16 04:47:16.334 [Thread-240] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:47:17.526 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:47:17.530 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:47:17.584 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:82, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(640.0,104.0) Vel:(-0.6,1.9 (Mag:2.00)) St:ON_WIRE(W:33 P:0.0%)}
+2025-09-16 04:47:18.299 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:68, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(680.0,170.0) Vel:(-4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:38 P:100.0%)}
+2025-09-16 04:47:18.299 [Thread-241] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:47:18.891 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:74, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:1.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:18.891 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:78, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.6/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:18.892 [Thread-244] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:18.892 [Thread-243] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:19.573 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 79 and 82
+2025-09-16 04:47:20.406 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 75 and 80
+2025-09-16 04:47:20.625 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Collision between Packet 75 and 80
+2025-09-16 04:47:20.642 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:75, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(596.4,387.9) Vel:(-0.8,0.6 (Mag:1.00)) St:ON_WIRE(W:48 P:13.6%)}
+2025-09-16 04:47:21.792 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:64, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.3/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:21.793 [Thread-249] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:21.808 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:69, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:47:21.810 [Thread-250] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:21.942 [Thread-251] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:47:22.375 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:76, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:22.376 [Thread-252] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:23.042 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:73, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(600.0,715.0) Vel:(0.8,0.6 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:23.043 [Thread-253] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:23.609 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:82, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:1.0/3, V:3, Ideal:(1010.0,696.0) Vel:(1.4,1.4 (Mag:0.00)) St:QUEUED(Sys:12)}
+2025-09-16 04:47:23.610 [Thread-254] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:24.693 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:66, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.8/3, V:3, Ideal:(600.0,715.0) Vel:(-0.5,1.9 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:24.695 [Thread-255] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:25.855 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:80, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:2.0/3, V:3, Ideal:(190.0,696.0) Vel:(-1.8,0.8 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:25.856 [Thread-256] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:27.522 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:47:27.526 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:47:27.691 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:57, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.2/2, V:2, Ideal:(190.0,696.0) Vel:(-1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:27.692 [Thread-257] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:30.562 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:79, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(600.0,715.0) Vel:(0.8,0.6 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:30.563 [Thread-258] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:37.525 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:47:37.528 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:47:38.233 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:81, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(600.0,715.0) Vel:(0.8,0.6 (Mag:0.00)) St:QUEUED(Sys:11)}
+2025-09-16 04:47:38.234 [Thread-259] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:41.785 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:70, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(190.0,696.0) Vel:(-1.0,0.1 (Mag:0.00)) St:QUEUED(Sys:10)}
+2025-09-16 04:47:41.786 [Thread-260] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 04:47:42.925 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-16 04:47:42.942 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-16 04:47:46.760 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'O' Atar' for 3 coins.
+2025-09-16 04:47:46.762 [Thread-261] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:47:47.777 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'O' Airyaman' for 4 coins.
+2025-09-16 04:47:47.779 [Thread-262] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:47:48.965 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-16 04:47:57.525 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:47:57.530 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:48:07.522 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:48:07.526 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:48:17.523 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:48:17.526 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:48:27.524 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:48:27.527 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:48:37.524 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:48:37.528 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:48:47.530 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:48:47.534 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:48:57.526 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:48:57.534 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:49:07.526 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:49:07.531 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:49:17.537 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:49:17.540 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:49:27.538 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:49:27.542 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:49:37.542 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:49:37.542 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:49:47.542 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:49:47.542 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:49:57.544 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:49:57.544 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:50:07.553 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:50:07.559 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:50:17.567 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:50:17.567 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:50:27.578 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:50:27.583 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:50:37.570 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:50:37.573 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:50:47.574 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:50:47.577 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:50:57.576 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:50:57.579 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:51:07.572 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:51:07.575 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:51:09.961 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 04:51:13.130 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 3.
+2025-09-16 04:51:13.130 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 3.
+2025-09-16 04:51:13.130 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 3.
+2025-09-16 04:51:13.130 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-16 04:51:13.130 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 04:51:13.132 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-16 04:51:21.812 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-16 04:51:22.707 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:31.735 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 1.
+2025-09-16 04:51:32.567 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:35.446 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-16 04:51:36.646 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:38.236 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 3.
+2025-09-16 04:51:38.828 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:42.081 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-16 04:51:43.451 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:44.793 [Thread-269] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:51:49.160 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 17.
+2025-09-16 04:51:50.016 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:51.591 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 16.
+2025-09-16 04:51:53.008 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:51:56.368 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 20.
+2025-09-16 04:51:57.357 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:01.402 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 19.
+2025-09-16 04:52:02.996 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:04.289 [Thread-274] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:52:07.518 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 13.
+2025-09-16 04:52:08.917 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:10.940 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 12.
+2025-09-16 04:52:14.817 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:17.203 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 25.
+2025-09-16 04:52:18.898 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:22.954 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 32.
+2025-09-16 04:52:24.187 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:25.643 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 37.
+2025-09-16 04:52:27.029 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:28.557 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 33.
+2025-09-16 04:52:29.366 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:32.350 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 46.
+2025-09-16 04:52:33.506 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:34.974 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 45.
+2025-09-16 04:52:35.937 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:37.144 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 42.
+2025-09-16 04:52:37.937 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:39.517 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 41.
+2025-09-16 04:52:41.617 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:45.317 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 29.
+2025-09-16 04:52:47.070 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:48.812 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-16 04:52:52.263 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:54.202 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 40.
+2025-09-16 04:52:55.187 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:52:57.367 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 51.
+2025-09-16 04:52:58.539 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:53:05.108 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 24.
+2025-09-16 04:53:08.007 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:53:12.551 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 36.
+2025-09-16 04:53:14.027 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:53:18.679 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 22.
+2025-09-16 04:53:24.707 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:53:26.424 [Thread-291] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:53:26.754 [Thread-292] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-16 04:53:27.264 [Thread-293] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-16 04:53:28.965 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 22.
+2025-09-16 04:53:29.877 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:53:31.928 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-16 04:53:34.195 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 04:53:34.197 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:53:35.227 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 3.
+2025-09-16 04:53:35.245 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:35.246 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(1.4,-1.4 (Mag:2.00)) St:ON_WIRE(W:54 P:0.0%)}
+2025-09-16 04:53:35.246 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:36.202 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:37.345 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:37.872 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:38.397 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:38.397 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:2.00)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:53:38.748 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:54 P:100.0%)}
+2025-09-16 04:53:38.749 [Thread-298] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:53:39.352 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:39.434 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:53:39.783 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(600.5,241.9) Vel:(0.5,1.9 (Mag:1.96)) St:ON_WIRE(W:73 P:0.4%)}
+2025-09-16 04:53:40.082 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:2.00)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:53:40.498 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:41.515 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:41.533 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:42.402 [Thread-303] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:53:42.484 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:42.567 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:53:43.114 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:43.131 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:53:43.600 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:44.582 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.6) Vel:(1.1,1.6 (Mag:1.96)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:53:44.675 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:45.228 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:53:45.234 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:53:45.615 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:45.681 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:45.731 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:46.733 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:53:47.769 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:47.802 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:47.934 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:53:48.352 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(1.4,-1.4 (Mag:2.00)) St:ON_WIRE(W:54 P:0.0%)}
+2025-09-16 04:53:48.754 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.6) Vel:(1.1,1.6 (Mag:1.96)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:53:48.754 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:49.302 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(798.5,191.2) Vel:(-1.5,1.2 (Mag:1.96)) St:ON_WIRE(W:63 P:0.5%)}
+2025-09-16 04:53:49.853 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:18, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:53:50.239 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:53:50.941 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:50.975 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:51.843 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:54 P:100.0%)}
+2025-09-16 04:53:51.844 [Thread-315] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:53:51.892 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:51.942 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:21, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:53:52.288 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:18, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(600.5,241.9) Vel:(0.5,1.9 (Mag:1.96)) St:ON_WIRE(W:73 P:0.4%)}
+2025-09-16 04:53:53.594 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:22, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:53.610 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:53:54.030 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:23, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:54.081 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:24, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:55.013 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:21, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(600.5,241.9) Vel:(0.5,1.9 (Mag:1.96)) St:ON_WIRE(W:73 P:0.4%)}
+2025-09-16 04:53:55.030 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:24, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:55.237 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:53:55.240 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:53:55.495 [Thread-322] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:53:56.108 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:25, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:56.209 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:26, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(1.4,-1.4 (Mag:2.00)) St:ON_WIRE(W:54 P:0.0%)}
+2025-09-16 04:53:57.159 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:23, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:53:57.208 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:27, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:53:57.575 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:22, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(720.0,190.0) Vel:(3.1,-2.7 (Mag:4.10)) St:ON_WIRE(W:58 P:100.0%)}
+2025-09-16 04:53:57.575 [Thread-324] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:53:58.161 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:27, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:53:58.194 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:28, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:53:58.542 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:25, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.6) Vel:(1.1,1.6 (Mag:1.96)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:53:58.828 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:29, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:53:59.701 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:26, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:54 P:100.0%)}
+2025-09-16 04:53:59.702 [Thread-328] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:54:00.284 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:30, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:00.351 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:31, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:01.240 [Thread-330] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:54:01.308 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:31, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:01.340 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:28, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:54:01.458 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:32, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:01.474 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:29, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:2.00)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:02.379 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:33, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:03.362 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:30, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.7) Vel:(1.1,1.7 (Mag:2.00)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:54:03.363 [Thread-334] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:54:03.494 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:34, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:04.074 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:35, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(1.4,-1.4 (Mag:2.00)) St:ON_WIRE(W:54 P:0.0%)}
+2025-09-16 04:54:04.448 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:34, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:04.465 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:36, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:05.232 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:54:05.237 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:54:05.518 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:33, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:54:06.548 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:37, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:54:06.629 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:38, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:06.698 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:39, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:07.536 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:36, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(600.5,241.9) Vel:(0.5,1.9 (Mag:1.96)) St:ON_WIRE(W:73 P:0.4%)}
+2025-09-16 04:54:07.568 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:35, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:54 P:100.0%)}
+2025-09-16 04:54:07.569 [Thread-339] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:54:07.586 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:38, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:07.638 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:32, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(798.5,191.2) Vel:(-1.5,1.2 (Mag:1.96)) St:ON_WIRE(W:63 P:0.5%)}
+2025-09-16 04:54:08.632 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:40, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:54:09.321 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:41, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:09.338 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:39, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:09.689 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:37, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:09.770 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:42, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:10.718 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:43, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:54:10.718 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:42, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:11.067 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:40, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(600.5,241.9) Vel:(0.5,1.9 (Mag:1.96)) St:ON_WIRE(W:73 P:0.4%)}
+2025-09-16 04:54:11.217 [Thread-347] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:54:11.935 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:44, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(1.4,-1.4 (Mag:2.00)) St:ON_WIRE(W:54 P:0.0%)}
+2025-09-16 04:54:11.951 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:41, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:2.00)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:54:12.803 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:45, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:12.904 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:46, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:13.152 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:43, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.6) Vel:(1.1,1.6 (Mag:1.96)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:54:13.851 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:46, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:14.550 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:47, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:14.887 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:48, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:15.233 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:54:15.236 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:54:15.422 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:44, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:54 P:100.0%)}
+2025-09-16 04:54:15.422 [Thread-351] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:54:15.878 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:45, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.6) Vel:(1.1,1.6 (Mag:1.96)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:54:16.042 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:49, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:16.762 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:47, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:54:16.978 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:50, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:16.995 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:49, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:17.177 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:51, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:18.024 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:48, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:19.064 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:52, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:19.080 [Thread-357] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 04:54:19.179 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:53, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(1.8,0.8 (Mag:2.00)) St:ON_WIRE(W:50 P:0.0%)}
+2025-09-16 04:54:19.376 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:51, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:1.96)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:54:19.411 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:50, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(600.5,241.9) Vel:(0.5,1.9 (Mag:1.96)) St:ON_WIRE(W:73 P:0.4%)}
+2025-09-16 04:54:19.793 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:54, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:20.130 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:53, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(341.6,171.1) Vel:(1.6,1.1 (Mag:1.96)) St:ON_WIRE(W:60 P:0.4%)}
+2025-09-16 04:54:21.146 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:55, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:54:22.130 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:52, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.7) Vel:(1.1,1.7 (Mag:2.00)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:54:22.412 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:56, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:53 P:0.0%)}
+2025-09-16 04:54:22.429 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:54, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:23.230 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:57, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:51 P:0.0%)}
+2025-09-16 04:54:23.617 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:55, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:24.614 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:56, SHP:CIRCLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(601.7,621.0) Vel:(1.7,1.0 (Mag:2.00)) St:ON_WIRE(W:64 P:1.4%)}
+2025-09-16 04:54:25.029 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:58, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(1.4,-1.4 (Mag:2.00)) St:ON_WIRE(W:54 P:0.0%)}
+2025-09-16 04:54:25.237 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 04:54:25.240 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 04:54:25.310 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:59, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:52 P:0.0%)}
+2025-09-16 04:54:26.359 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:57, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(599.1,598.2) Vel:(-0.9,-1.8 (Mag:1.96)) St:ON_WIRE(W:62 P:1.1%)}
+2025-09-16 04:54:28.378 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:59, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(601.1,261.6) Vel:(1.1,1.6 (Mag:1.96)) St:ON_WIRE(W:61 P:0.9%)}
+2025-09-16 04:54:28.513 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:58, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:54 P:100.0%)}
+2025-09-16 04:54:28.514 [Thread-367] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 04:54:28.514 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 04:59:14.416 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-16 04:59:14.417 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-16 04:59:14.417 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-16 04:59:14.418 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-16 04:59:14.459 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-16 04:59:14.459 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-16 04:59:15.047 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-16 04:59:15.047 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-16 04:59:15.179 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-16 04:59:15.269 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-16 04:59:15.269 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-16 04:59:18.705 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-16 04:59:18.706 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-16 04:59:18.706 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-16 04:59:20.683 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-16 04:59:21.543 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 3.
+2025-09-16 04:59:21.544 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 3.
+2025-09-16 04:59:21.544 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-16 04:59:21.546 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 3.
+2025-09-16 04:59:21.546 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-16 04:59:21.546 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 04:59:21.557 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-16 04:59:27.164 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-16 04:59:29.910 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:32.493 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-16 04:59:33.028 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:34.543 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 1.
+2025-09-16 04:59:35.275 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:36.954 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 3.
+2025-09-16 04:59:37.585 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:40.561 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-16 04:59:41.771 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:43.291 [Thread-7] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 04:59:45.540 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 20.
+2025-09-16 04:59:46.383 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:47.860 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 19.
+2025-09-16 04:59:49.187 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:50.607 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 22.
+2025-09-16 04:59:51.935 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:53.557 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 16.
+2025-09-16 04:59:54.668 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:57.479 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 17.
+2025-09-16 04:59:58.716 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 04:59:59.826 [Thread-13] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 05:00:04.897 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-16 05:00:09.044 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:13.441 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 29.
+2025-09-16 05:00:14.226 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:15.499 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 42.
+2025-09-16 05:00:16.446 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:17.975 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 40.
+2025-09-16 05:00:18.916 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:20.887 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 51.
+2025-09-16 05:00:22.259 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:24.990 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 46.
+2025-09-16 05:00:26.036 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:29.750 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 32.
+2025-09-16 05:00:30.675 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:35.567 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 13.
+2025-09-16 05:00:36.866 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:38.489 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-16 05:00:40.090 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:41.655 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 25.
+2025-09-16 05:00:42.876 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:44.531 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 25.
+2025-09-16 05:00:45.567 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:47.268 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 24.
+2025-09-16 05:00:48.579 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:52.130 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 41.
+2025-09-16 05:00:54.137 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:55.567 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 45.
+2025-09-16 05:00:56.679 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:00:59.490 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 33.
+2025-09-16 05:01:00.808 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:01:05.230 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 37.
+2025-09-16 05:01:06.484 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:01:08.229 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 36.
+2025-09-16 05:01:10.126 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:01:13.574 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 12.
+2025-09-16 05:01:15.637 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-16 05:01:16.843 [Thread-30] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 05:01:19.999 [Thread-31] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-16 05:01:25.424 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-16 05:01:36.084 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 3.
+2025-09-16 05:01:36.105 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:36.106 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(2.0,-0.0 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-16 05:01:36.107 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:01:38.189 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:01:38.190 [Thread-32] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:38.206 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:01:38.742 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:39.006 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(720.0,690.0) Vel:(4.1,-0.3 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-16 05:01:39.008 [Thread-34] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:40.294 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:41.361 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:41.845 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:01:41.846 [Thread-36] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:42.381 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:42.665 [Thread-37] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:43.214 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:0, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:01:43.216 [Thread-38] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:01:43.916 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:01:43.928 [Thread-39] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:43.983 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:44.468 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:44.667 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(520.0,250.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:6 P:100.0%)}
+2025-09-16 05:01:44.668 [Thread-41] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:44.953 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:01:44.955 [Thread-43] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:01:45.935 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,600.0) Vel:(-2.2,3.4 (Mag:4.10)) St:ON_WIRE(W:24 P:100.0%)}
+2025-09-16 05:01:45.936 [Thread-44] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:46.086 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:01:46.099 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:01:46.139 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(520.0,620.0) Vel:(3.1,-1.2 (Mag:3.31)) St:ON_WIRE(W:5 P:100.0%)}
+2025-09-16 05:01:46.242 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(970.0,562.0) Vel:(2.9,2.9 (Mag:4.10)) St:ON_WIRE(W:25 P:100.0%)}
+2025-09-16 05:01:46.243 [Thread-47] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:46.560 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:46.609 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(2.0,-0.0 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-16 05:01:47.582 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:01:47.583 [Thread-49] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:48.334 [Thread-50] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:48.664 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:01:49.238 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:49.287 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:01:49.289 [Thread-51] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:01:49.506 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(720.0,690.0) Vel:(4.1,-0.3 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-16 05:01:49.507 [Thread-52] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:49.605 [Thread-54] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:49.653 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:01:49.654 [Thread-55] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:49.905 [Thread-57] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:50.620 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(800.8,191.8) Vel:(0.8,1.8 (Mag:1.96)) St:ON_WIRE(W:23 P:0.5%)}
+2025-09-16 05:01:50.738 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:01:51.864 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:52.832 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:18, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:01:53.167 [Thread-59] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:53.317 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:01:53.318 [Thread-60] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:54.298 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,600.0) Vel:(-2.2,3.4 (Mag:4.10)) St:ON_WIRE(W:24 P:100.0%)}
+2025-09-16 05:01:54.299 [Thread-61] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:54.414 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(520.0,620.0) Vel:(1.9,-0.7 (Mag:2.00)) St:ON_WIRE(W:5 P:100.0%)}
+2025-09-16 05:01:54.481 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:54.916 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:21, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:55.252 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:01:55.253 [Thread-64] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:01:55.388 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:01:55.389 [Thread-65] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:55.753 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:01:55.755 [Thread-67] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:01:56.097 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:01:56.104 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:01:57.002 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:22, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:57.101 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:23, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:01:57.251 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(970.0,562.0) Vel:(2.9,2.9 (Mag:4.10)) St:ON_WIRE(W:25 P:100.0%)}
+2025-09-16 05:01:57.252 [Thread-68] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:01:57.953 [Thread-70] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:59.043 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:24, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:01:59.044 [Thread-71] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:01:59.093 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:25, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:01:59.726 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:26, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(2.0,-0.0 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-16 05:01:59.726 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:18, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:01:59.728 [Thread-72] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:00.905 [Thread-73] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:01.104 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:24, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:01.106 [Thread-74] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:01.172 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:27, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:01.756 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,430.0) Vel:(3.9,1.3 (Mag:0.00)) St:QUEUED(Sys:3)}
+2025-09-16 05:02:01.758 [Thread-76] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:02.343 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:28, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:02.610 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:26, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(720.0,690.0) Vel:(4.1,-0.3 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-16 05:02:02.611 [Thread-77] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:02.645 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:21, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,600.0) Vel:(-2.2,3.4 (Mag:4.10)) St:ON_WIRE(W:24 P:100.0%)}
+2025-09-16 05:02:02.646 [Thread-79] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:02.712 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:23, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:02.714 [Thread-81] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:03.264 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:29, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:04.093 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:22, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:04.094 [Thread-82] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:04.623 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:27, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(720.0,170.0) Vel:(4.0,-0.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-16 05:02:04.624 [Thread-83] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:04.759 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:30, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:04.760 [Thread-85] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:04.959 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:31, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:05.025 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:25, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(970.0,562.0) Vel:(2.9,2.9 (Mag:4.10)) St:ON_WIRE(W:25 P:100.0%)}
+2025-09-16 05:02:05.026 [Thread-86] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:05.344 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:32, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:02:05.645 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:28, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(520.0,250.0) Vel:(1.6,-3.8 (Mag:4.10)) St:ON_WIRE(W:6 P:100.0%)}
+2025-09-16 05:02:05.646 [Thread-88] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:06.088 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:02:06.093 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:02:06.262 [Thread-90] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:06.295 [Thread-91] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:06.831 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:30, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:06.832 [Thread-92] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:07.430 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:33, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:07.579 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:34, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(2.0,-0.0 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-16 05:02:08.279 [Thread-94] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:08.678 [Thread-95] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:09.295 [Thread-96] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:09.515 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:35, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:02:10.149 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:29, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:10.151 [Thread-97] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:10.199 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:36, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:10.466 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:34, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(720.0,690.0) Vel:(4.1,-0.3 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-16 05:02:10.466 [Thread-98] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:10.483 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:37, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:10.484 [Thread-100] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:11.562 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:31, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:11.563 [Thread-101] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:11.595 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:38, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:02:12.331 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:32, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,430.0) Vel:(3.7,-0.1 (Mag:0.00)) St:QUEUED(Sys:3)}
+2025-09-16 05:02:12.332 [Thread-102] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:12.546 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:37, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:12.547 [Thread-103] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:12.813 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:39, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:13.681 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:40, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:14.119 [Thread-105] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:14.518 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:33, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:14.519 [Thread-106] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:15.433 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:41, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(2.0,-0.0 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-16 05:02:15.766 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:42, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:16.015 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:35, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(970.0,562.0) Vel:(2.9,2.9 (Mag:4.10)) St:ON_WIRE(W:25 P:100.0%)}
+2025-09-16 05:02:16.016 [Thread-107] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:16.093 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:02:16.100 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:02:16.198 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:43, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:16.199 [Thread-109] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:17.470 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:36, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,430.0) Vel:(3.9,1.3 (Mag:0.00)) St:QUEUED(Sys:3)}
+2025-09-16 05:02:17.471 [Thread-110] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:17.853 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:44, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:18.051 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:45, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:18.270 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:43, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:18.271 [Thread-111] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:18.320 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:41, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(720.0,690.0) Vel:(4.1,-0.3 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-16 05:02:18.321 [Thread-113] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:18.419 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:39, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:18.420 [Thread-115] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:19.317 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:38, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,600.0) Vel:(-2.2,3.4 (Mag:4.10)) St:ON_WIRE(W:24 P:100.0%)}
+2025-09-16 05:02:19.318 [Thread-116] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:19.672 [Thread-118] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:19.688 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:40, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(800.8,191.8) Vel:(0.8,1.8 (Mag:2.02)) St:ON_WIRE(W:23 P:0.5%)}
+2025-09-16 05:02:19.938 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:46, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:20.602 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:45, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(520.0,620.0) Vel:(1.9,-0.7 (Mag:2.00)) St:ON_WIRE(W:5 P:100.0%)}
+2025-09-16 05:02:20.668 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:47, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:21.303 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:44, SHP:CIRCLE, TYP: PROTECTED, SZ:2, N:0.0/2, V:5, Ideal:(720.0,170.0) Vel:(4.0,-0.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-16 05:02:21.303 [Thread-121] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:21.924 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:48, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:21.925 [Thread-123] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:21.976 [Thread-124] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:22.024 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:49, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:02:22.290 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:42, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:22.291 [Thread-125] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:22.976 [Thread-126] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:23.291 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:50, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,740.0) Vel:(1.8,-0.8 (Mag:2.00)) St:ON_WIRE(W:3 P:0.0%)}
+2025-09-16 05:02:23.994 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:48, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:23.995 [Thread-127] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:24.111 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:51, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,440.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:2 P:0.0%)}
+2025-09-16 05:02:24.960 [Thread-129] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:25.909 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:52, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,720.0) Vel:(2.0,-0.0 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-16 05:02:26.089 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:02:26.094 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:02:26.193 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:53, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,420.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-16 05:02:27.022 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:46, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(0.4,3.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:27.023 [Thread-130] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:27.642 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:54, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:27.643 [Thread-131] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:27.944 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:47, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,430.0) Vel:(3.9,1.3 (Mag:0.00)) St:QUEUED(Sys:3)}
+2025-09-16 05:02:27.945 [Thread-132] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:28.524 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:49, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(970.0,562.0) Vel:(2.9,2.9 (Mag:4.10)) St:ON_WIRE(W:25 P:100.0%)}
+2025-09-16 05:02:28.525 [Thread-133] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:28.790 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:52, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(720.0,690.0) Vel:(4.1,-0.3 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-16 05:02:28.791 [Thread-135] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:29.293 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:50, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,730.0) Vel:(2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-16 05:02:29.295 [Thread-137] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-16 05:02:29.709 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:54, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:29.710 [Thread-138] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:30.243 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:51, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(798.9,171.7) Vel:(-1.1,1.7 (Mag:2.02)) St:ON_WIRE(W:24 P:0.4%)}
+2025-09-16 05:02:32.192 [Thread-141] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:32.455 [Thread-142] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:33.364 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:55, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:33.365 [Thread-143] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:33.911 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:53, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,600.0) Vel:(-2.2,3.4 (Mag:4.10)) St:ON_WIRE(W:24 P:100.0%)}
+2025-09-16 05:02:33.912 [Thread-144] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:35.430 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:55, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:35.444 [Thread-146] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:36.097 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:02:36.103 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:02:37.573 [Thread-148] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:39.084 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:56, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:39.084 [Thread-149] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:41.152 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:56, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:41.153 [Thread-150] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:44.807 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:57, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:44.808 [Thread-152] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:46.090 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:02:46.097 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:02:46.876 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:57, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:46.876 [Thread-153] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:50.529 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:58, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:50.530 [Thread-155] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:52.594 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:58, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:52.595 [Thread-156] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 05:02:56.091 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-16 05:02:56.098 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-16 05:02:56.244 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:59, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,130.0) Vel:(2.0,-0.1 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-16 05:02:56.245 [Thread-158] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-16 05:02:58.316 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:59, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(520.0,110.0) Vel:(4.1,-0.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-16 05:02:58.316 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 05:02:58.316 [Thread-159] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-16 06:19:33.581 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-16 06:19:33.582 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-16 06:19:33.583 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-16 06:46:09.252 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 3.
+2025-09-16 06:46:09.253 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-16 06:46:09.256 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 3.
+2025-09-16 06:46:09.257 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-16 06:46:09.257 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-16 06:46:09.258 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-16 06:47:06.194 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-16 06:47:06.195 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.

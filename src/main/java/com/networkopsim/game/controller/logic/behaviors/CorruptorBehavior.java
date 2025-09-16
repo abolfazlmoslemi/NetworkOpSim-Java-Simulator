@@ -1,3 +1,5 @@
+// ===== File: CorruptorBehavior.java (Final Corrected with Proper PROTECTED Packet Handling) =====
+
 package com.networkopsim.game.controller.logic.behaviors;
 
 import com.networkopsim.game.controller.logic.GameEngine;
@@ -16,10 +18,16 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        // [CORRECTED] Handle PROTECTED packets first and then exit immediately.
         if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
             packet.revertToOriginalType();
+            // After reverting, the Corruptor acts as a simple NODE for this packet.
+            // It does NOT apply its corrupting logic.
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+            return;
         }
 
+        // The following logic only applies to packets that were NOT protected on entry.
         if (packet.getNoise() < 0.01) {
             packet.addNoise(CORRUPTOR_NOISE_ADDITION);
         }

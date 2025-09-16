@@ -1,3 +1,5 @@
+// ===== File: SpyBehavior.java (Final Corrected with Proper PROTECTED Packet Handling) =====
+
 package com.networkopsim.game.controller.logic.behaviors;
 
 import com.networkopsim.game.controller.logic.GameEngine;
@@ -20,10 +22,16 @@ public class SpyBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        // [CORRECTED] Handle PROTECTED packets first. The Spy system should act as a simple passthrough NODE for them.
         if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
             packet.revertToOriginalType();
+            // A Spy system should not affect a protected packet at all, not even teleport it.
+            // So, it acts as a simple node, routing it to one of its OWN outputs.
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+            return;
         }
 
+        // The following logic only applies to packets that were NOT protected on entry.
         if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
             gameEngine.packetLostInternal(packet, isPredictionRun);
             return;
@@ -34,7 +42,8 @@ public class SpyBehavior extends AbstractSystemBehavior {
                 .collect(Collectors.toList());
 
         if (otherSpySystems.isEmpty()) {
-            gameEngine.packetLostInternal(packet, isPredictionRun);
+            // If no other spy systems exist, it should act as a normal node instead of losing the packet.
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
             return;
         }
 
@@ -57,8 +66,8 @@ public class SpyBehavior extends AbstractSystemBehavior {
             // Use the special teleport method to bypass normal port exit speed calculations
             packet.teleportToWire(targetWire);
         } else {
-            // If no valid exit could be found on any spy system, the packet is lost.
-            gameEngine.packetLostInternal(packet, isPredictionRun);
+            // If no valid exit could be found on any spy system, the packet is processed normally from this spy.
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
         }
     }
 
