@@ -1,4 +1,4 @@
-// ===== File: System.java (Final Corrected for Destination Port Effect) =====
+// ===== File: System.java (Final Corrected with Improved Disabled System Logic) =====
 
 package com.networkopsim.game.model.core;
 
@@ -89,6 +89,7 @@ public class System implements Serializable {
     public void receivePacket(Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
         if (packet == null || gameEngine == null) return;
 
+        // Defines which packet types can be reversed instead of being lost when hitting a disabled system.
         boolean isReversible = List.of(
                 NetworkEnums.PacketType.MESSENGER,
                 NetworkEnums.PacketType.NORMAL,
@@ -96,15 +97,18 @@ public class System implements Serializable {
                 NetworkEnums.PacketType.BULK
         ).contains(packet.getPacketType());
 
+        // [MODIFIED] First, check if the system is ALREADY disabled.
+        // This handles packets arriving while the system is down.
         if (this.isDisabled) {
             if (isReversible) {
-                packet.reverseDirection(gameEngine);
+                packet.reverseDirection(gameEngine); // Reverse subsequent packets
             } else {
-                gameEngine.packetLostInternal(packet, isPredictionRun);
+                gameEngine.packetLostInternal(packet, isPredictionRun); // Other packets are lost
             }
             return;
         }
 
+        // [MODIFIED] Second, check if the CURRENT packet is too fast and will cause a shutdown.
         double maxSafeSpeed = gameEngine.getGameState().getMaxSafeEntrySpeed();
         if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > maxSafeSpeed) {
             this.isDisabled = true;
@@ -112,15 +116,12 @@ public class System implements Serializable {
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
                 gameEngine.getGame().playSoundEffect("system_shutdown");
             }
-            if (isReversible) {
-                packet.reverseDirection(gameEngine);
-            } else {
-                gameEngine.packetLostInternal(packet, isPredictionRun);
-            }
+            // The offending packet is always lost.
+            gameEngine.packetLostInternal(packet, isPredictionRun);
             return;
         }
 
-        // [MODIFIED] Set the flag for incompatible entry BEFORE processing, so it can be used for exit speed logic.
+        // If the system is active and the packet speed is safe, proceed normally.
         if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && getSystemType() == NetworkEnums.SystemType.NODE) {
             packet.setEnteredViaIncompatiblePort(!enteredCompatibly);
         }

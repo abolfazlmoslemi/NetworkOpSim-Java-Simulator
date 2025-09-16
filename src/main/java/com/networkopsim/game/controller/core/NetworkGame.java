@@ -1,3 +1,5 @@
+// ===== File: NetworkGame.java (Final Corrected with Fix for Stale GameState Reference in Store) =====
+
 package com.networkopsim.game.controller.core;
 
 import com.networkopsim.game.model.state.GameState;
@@ -186,7 +188,12 @@ public class NetworkGame extends JFrame {
         if (storeDialog == null) {
             storeDialog = new StorePanel(this, gamePanel);
         }
-        storeDialog.updateCoinsDisplay(gameState.getCoins());
+
+        // [CORRECTED] Fetch the current GameState from the GameEngine (via GamePanel)
+        // to avoid using a stale reference, especially after loading a saved game.
+        GameState currentGameState = gamePanel.getGameEngine().getGameState();
+        storeDialog.updateCoinsDisplay(currentGameState.getCoins());
+
         storeDialog.setLocationRelativeTo(this);
         storeDialog.setVisible(true);
         if (gamePanel.isShowing()) {
@@ -242,7 +249,6 @@ public class NetworkGame extends JFrame {
         }
     }
 
-    // ... (All other sound methods: playBackgroundMusicIfNeeded, stopBackgroundMusic, setVolume, playSoundEffect, are unchanged)
     private void playBackgroundMusicIfNeeded() { if (backgroundMusic != null && backgroundMusic.isOpen() && !isMuted && !backgroundMusic.isRunning()) { backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY); logger.debug("Background music started playing."); } }
     private void stopBackgroundMusic() { if (backgroundMusic != null && backgroundMusic.isRunning()) { backgroundMusic.stop(); logger.debug("Background music stopped."); } }
     private void setVolume(Clip clip, float linearVolume) { if (clip == null || !clip.isOpen() || !clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) { return; } try { FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN); float minDbPossible = gainControl.getMinimum(); float maxDbPossible = gainControl.getMaximum(); float clampedLinearVolume = Math.max(0.0f, Math.min(1.0f, linearVolume)); float targetDb; if (clampedLinearVolume <= 0.001f) { targetDb = SILENCE_DB; } else { float perceptuallyScaledVolume = (float) Math.pow(clampedLinearVolume, VOLUME_POWER_FACTOR); float effectiveMaxDb = Math.min(maxDbPossible, 6.0f); float rangeDb = effectiveMaxDb - MIN_AUDIBLE_DB_TARGET; targetDb = MIN_AUDIBLE_DB_TARGET + (rangeDb * perceptuallyScaledVolume); } targetDb = Math.max(minDbPossible, Math.min(targetDb, maxDbPossible)); gainControl.setValue(targetDb); } catch (Exception e) { logger.warn("Could not set volume on clip.", e); } }
