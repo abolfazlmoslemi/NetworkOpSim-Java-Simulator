@@ -1,4 +1,4 @@
-// ===== File: NodeBehavior.java (FINAL - Corrected BULK Passthrough Lifecycle) =====
+// ===== File: NodeBehavior.java (FINAL - Handles all volumetric packets) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -20,25 +20,19 @@ public class NodeBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // The packet's currentSystem is set to this system right before this method is called.
-        // This stops the packet's update() loop. We are now responsible for its fate.
-
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
+        if (packet.isVolumetric()) {
             if (this.systemType == NetworkEnums.SystemType.NODE) {
-                // NODE allows passthrough.
                 handleBulkPassthrough(system, packet, gameEngine, isPredictionRun);
-            } else {
-                // ANTITROJAN is destructive.
+            } else { // ANTITROJAN is destructive.
                 handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
             }
         } else {
-            // Standard behavior for all other packets.
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
         }
     }
 
     protected void handleBulkPassthrough(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
-        // 1. Destroy all packets currently in this system's queue.
         synchronized(system.packetQueue) {
             for(Packet p : system.packetQueue) {
                 gameEngine.getGameState().increasePacketLoss(p);
@@ -46,11 +40,6 @@ public class NodeBehavior extends AbstractSystemBehavior {
             }
             system.packetQueue.clear();
         }
-
-        // 2. The packet is now "owned" by this system. We try to find an exit.
-        // The processOrQueuePacket method will either dispatch it immediately (setting its
-        // currentSystem back to null and assigning a new wire) or queue it.
-        // Since the packet is no longer on a wire, it won't be double-processed.
         processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
     }
 
@@ -62,7 +51,6 @@ public class NodeBehavior extends AbstractSystemBehavior {
             }
             system.packetQueue.clear();
         }
-        // Also destroy the BULK packet itself.
         gameEngine.getGameState().increasePacketLoss(packet);
         gameEngine.packetLostInternal(packet, isPredictionRun);
     }

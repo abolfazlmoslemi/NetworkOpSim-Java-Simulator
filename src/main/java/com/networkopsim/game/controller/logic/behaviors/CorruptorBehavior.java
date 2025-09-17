@@ -1,4 +1,4 @@
-// ===== File: CorruptorBehavior.java (FINAL - Corrected Passthrough and Destruction Logic) =====
+// ===== File: CorruptorBehavior.java (FINAL - Handles all volumetric packets) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -16,13 +16,12 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // [CORRECTED LOGIC] Corruptor is a "destructive" system for BULK packets.
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
+        if (packet.isVolumetric()) {
             handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
             return;
         }
 
-        // --- Standard Corruptor logic for non-BULK packets ---
         if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
             packet.revertToOriginalType();
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
@@ -58,7 +57,6 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
             }
             system.packetQueue.clear();
         }
-        // Also destroy the BULK packet itself.
         gameEngine.getGameState().increasePacketLoss(packet);
         gameEngine.packetLostInternal(packet, isPredictionRun);
     }

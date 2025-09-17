@@ -1,4 +1,4 @@
-// ===== File: System.java (FINAL - Corrected reverseDirection call and receivePacket Logic) =====
+// ===== File: System.java (FINAL - Calls transformToMessenger for AntiTrojan) =====
 
 package com.networkopsim.game.model.core;
 
@@ -66,9 +66,8 @@ public class System implements Serializable {
         if (packet == null || gameEngine == null) return;
 
         if (this.isDisabled) {
-            boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET, NetworkEnums.PacketType.BULK).contains(packet.getPacketType());
+            boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET).contains(packet.getPacketType());
             if (isReversible) {
-                // [FIXED] Pass the gameEngine instance to the reverseDirection method.
                 packet.reverseDirection(gameEngine);
             } else {
                 gameEngine.packetLostInternal(packet, isPredictionRun);
@@ -83,7 +82,16 @@ public class System implements Serializable {
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
                 gameEngine.getGame().playSoundEffect("system_shutdown");
             }
-            gameEngine.packetLostInternal(packet, isPredictionRun);
+            if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+                gameEngine.packetLostInternal(packet, isPredictionRun);
+            } else {
+                boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET).contains(packet.getPacketType());
+                if (isReversible) {
+                    packet.reverseDirection(gameEngine);
+                } else {
+                    gameEngine.packetLostInternal(packet, isPredictionRun);
+                }
+            }
             return;
         }
 
@@ -96,7 +104,6 @@ public class System implements Serializable {
         getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
     }
 
-    // ... (rest of the file is unchanged) ...
     public static void resetGlobalRandomSeed(long seed) { globalRandom = new Random(seed); }
     public static Random getGlobalRandom() { return globalRandom; }
     public static void resetGlobalId() { nextId = 0; }
@@ -108,7 +115,33 @@ public class System implements Serializable {
     public void processQueue(GameEngine gameEngine, boolean isPredictionRun) { getBehavior().processQueue(this, gameEngine, isPredictionRun); }
     public void attemptPacketGeneration(GameEngine gameEngine, long currentSimTimeMs, boolean isPredictionRun) { getBehavior().attemptPacketGeneration(this, gameEngine, currentSimTimeMs, isPredictionRun); }
     public void updateSystemState(long currentTimeMs, GameEngine gameEngine) { if (isDisabled && currentTimeMs >= disabledUntil) { isDisabled = false; disabledUntil = 0; if (!isReferenceSystem && !gameEngine.getGame().isMuted()) gameEngine.getGame().playSoundEffect("system_reboot"); } }
-    public void updateAntiTrojan(GameEngine gameEngine, boolean isPredictionRun) { if (getSystemType() != NetworkEnums.SystemType.ANTITROJAN) return; long currentTime = gameEngine.getSimulationTimeElapsedMs(); if (currentTime < antiTrojanCooldownUntil) return; Packet targetTrojan = null; for (Packet p : gameEngine.getPacketsForRendering()) { if (p != null && p.getPacketType() == NetworkEnums.PacketType.TROJAN) { Point2D.Double pVisPos = p.getVisualPosition(); if (pVisPos != null && this.getPosition().distanceSq(pVisPos) < ANTITROJAN_SCAN_RADIUS * ANTITROJAN_SCAN_RADIUS) { targetTrojan = p; break; } } } if (targetTrojan != null) { targetTrojan.setPacketType(NetworkEnums.PacketType.MESSENGER); this.antiTrojanCooldownUntil = currentTime + ANTITROJAN_COOLDOWN_MS; if (!isPredictionRun && !gameEngine.getGame().isMuted()) { gameEngine.getGame().playSoundEffect("ui_confirm"); } } }
+
+    public void updateAntiTrojan(GameEngine gameEngine, boolean isPredictionRun) {
+        if (getSystemType() != NetworkEnums.SystemType.ANTITROJAN) return;
+        long currentTime = gameEngine.getSimulationTimeElapsedMs();
+        if (currentTime < antiTrojanCooldownUntil) return;
+
+        Packet targetTrojan = null;
+        for (Packet p : gameEngine.getPacketsForRendering()) {
+            if (p != null && p.getPacketType() == NetworkEnums.PacketType.TROJAN) {
+                Point2D.Double pVisPos = p.getVisualPosition();
+                if (pVisPos != null && this.getPosition().distanceSq(pVisPos) < ANTITROJAN_SCAN_RADIUS * ANTITROJAN_SCAN_RADIUS) {
+                    targetTrojan = p;
+                    break;
+                }
+            }
+        }
+
+        if (targetTrojan != null) {
+            // [FIXED] Call the new method to ensure all properties (type, size, value) are correctly reset.
+            targetTrojan.transformToMessenger();
+            this.antiTrojanCooldownUntil = currentTime + ANTITROJAN_COOLDOWN_MS;
+            if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
+                gameEngine.getGame().playSoundEffect("ui_confirm");
+            }
+        }
+    }
+
     public SystemBehavior getBehavior() { if (behavior == null) { reinitializeBehavior(); } return behavior; }
     public NetworkEnums.SystemType getSystemType() { return systemType; }
     public int getId() { return id; }

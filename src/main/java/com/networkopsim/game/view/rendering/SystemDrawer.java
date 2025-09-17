@@ -1,4 +1,4 @@
-// ===== File: SystemDrawer.java (FINAL - With Custom Colored Distributor Queue) =====
+// ===== File: SystemDrawer.java (FINAL - Added WOBBLE source label) =====
 
 package com.networkopsim.game.view.rendering;
 
@@ -51,7 +51,33 @@ public final class SystemDrawer {
         int textY = system.getY() + (System.SYSTEM_HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
         g2d.drawString(systemName, textX, textY);
 
-        // ... (rest of the drawing logic is the same up to the queue drawing)
+        // Add special labels for specific source types
+        if (system.getSystemType() == NetworkEnums.SystemType.SOURCE) {
+            NetworkEnums.PacketType genType = system.getPacketTypeToGenerate();
+            String label = null;
+            Color labelColor = null;
+
+            if (genType == NetworkEnums.PacketType.BULK) {
+                label = "(BULK)";
+                labelColor = new Color(255, 175, 75); // Orange
+            } else if (genType == NetworkEnums.PacketType.SECRET) {
+                label = "(SECRET)";
+                labelColor = new Color(170, 140, 255); // Purple
+            } else if (genType == NetworkEnums.PacketType.WOBBLE) { // [NEW] Add special label for WOBBLE sources
+                label = "(WOBBLE)";
+                labelColor = new Color(150, 255, 150); // Light Green
+            }
+
+            if (label != null) {
+                g2d.setFont(new Font("Arial", Font.BOLD, 10));
+                FontMetrics fmLabel = g2d.getFontMetrics();
+                int labelWidth = fmLabel.stringWidth(label);
+                int labelX = system.getX() + (System.SYSTEM_WIDTH - labelWidth) / 2;
+                int labelY = system.getY() + System.SYSTEM_HEIGHT + fmLabel.getAscent();
+                g2d.setColor(labelColor);
+                g2d.drawString(label, labelX, labelY);
+            }
+        }
 
         int indicatorSize = 8;
         int indicatorX = system.getX() + System.SYSTEM_WIDTH / 2 - indicatorSize / 2;
@@ -64,22 +90,19 @@ public final class SystemDrawer {
         for (Port p : system.getInputPorts()) if(p!=null) p.draw(g2d);
         for (Port p : system.getOutputPorts()) if(p!=null) p.draw(g2d);
 
-        // [MODIFIED] Custom queue display logic.
         if (!system.isReferenceSystem() && system.getQueueSize() > 0) {
             String queueText;
             Color queueColor;
 
             if (system.getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR) {
-                // For Distributors, show only the current count and use the color of the current BULK operation.
                 queueText = String.format("%d", system.getQueueSize());
                 int bulkId = system.getCurrentBulkOperationId();
                 if (bulkId != -1) {
                     queueColor = new Color(Color.HSBtoRGB((bulkId * 0.27f) % 1.0f, 0.9f, 0.95f));
                 } else {
-                    queueColor = Color.CYAN; // Fallback color
+                    queueColor = Color.CYAN;
                 }
             } else {
-                // For all other systems, show count vs capacity with status colors.
                 queueText = String.format("%d/%d", system.getQueueSize(), System.QUEUE_CAPACITY);
                 if (system.getQueueSize() == System.QUEUE_CAPACITY) queueColor = Color.RED;
                 else if (system.getQueueSize() > System.QUEUE_CAPACITY / 2) queueColor = Color.ORANGE;

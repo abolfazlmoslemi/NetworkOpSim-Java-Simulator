@@ -1,4 +1,4 @@
-// ===== File: LevelLoader.java (FINAL - Added a Node to Level 6) =====
+// ===== File: LevelLoader.java (FINAL - Level 5 Modified with Extra Sink Port) =====
 
 package com.networkopsim.game.utils;
 
@@ -247,57 +247,161 @@ public class LevelLoader {
     }
     private static void initializeLevel5(List<System> systems) {
         int w = NetworkGame.WINDOW_WIDTH; int h = NetworkGame.WINDOW_HEIGHT; int sysW = System.SYSTEM_WIDTH; int sysH = System.SYSTEM_HEIGHT; int section_width = w / 5;
-        systems.add(createSource(30, h / 2 - 150, NetworkEnums.PacketShape.SQUARE, 20, 2200, NetworkEnums.PacketType.NORMAL));
-        systems.add(createSource(30, h / 2, NetworkEnums.PacketShape.TRIANGLE, 20, 2400, NetworkEnums.PacketType.NORMAL));
-        systems.add(createSource(30, h / 2 + 150, NetworkEnums.PacketShape.CIRCLE, 10, 3500, NetworkEnums.PacketType.SECRET));
-        systems.add(createSource(120, 50, NetworkEnums.PacketShape.CIRCLE, 15, 3000, NetworkEnums.PacketType.MESSENGER));
-        systems.add(createSource(120, h - 100 - sysH, NetworkEnums.PacketShape.CIRCLE, 5, 8000, NetworkEnums.PacketType.BULK));
-        systems.add(createSource(30, 50, NetworkEnums.PacketShape.CIRCLE, 8, 5000, NetworkEnums.PacketType.WOBBLE));
-        systems.add(createSink(w - sysW - 30, h / 2 - 100, NetworkEnums.PortShape.SQUARE));
+
+        // --- SOURCE AND SINK DEFINITIONS ---
+        systems.add(createSource(30, h / 2 - 150, NetworkEnums.PacketShape.CIRCLE, 5, 8000, NetworkEnums.PacketType.BULK));
+        systems.add(createSource(30, h / 2, NetworkEnums.PacketShape.CIRCLE, 8, 5000, NetworkEnums.PacketType.WOBBLE));
+        systems.add(createSource(120, 50, NetworkEnums.PacketShape.CIRCLE, 10, 3500, NetworkEnums.PacketType.SECRET));
+        systems.add(createSource(30, h / 2 + 150, NetworkEnums.PacketShape.TRIANGLE, 20, 2400, NetworkEnums.PacketType.NORMAL));
+        systems.add(createSource(120, h - 100 - sysH, NetworkEnums.PacketShape.SQUARE, 15, 2800, NetworkEnums.PacketType.NORMAL));
+        systems.add(createSource(30, 50, NetworkEnums.PacketShape.TRIANGLE, 15, 3200, NetworkEnums.PacketType.NORMAL));
+
+        // Sinks
+        System sink1 = createSink(w - sysW - 30, h / 2 - 100, NetworkEnums.PortShape.SQUARE);
+        sink1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); // [MODIFIED] Add a second input port to this sink.
+        systems.add(sink1);
         systems.add(createSink(w - sysW - 30, h / 2 + 100, NetworkEnums.PortShape.TRIANGLE));
         systems.add(createSink(w - sysW - 30, 50, NetworkEnums.PortShape.CIRCLE));
         systems.add(createSink(w - sysW - 30, h - 100 - sysH, NetworkEnums.PortShape.CIRCLE));
-        System corr1 = new System(section_width, 100, NetworkEnums.SystemType.CORRUPTOR);
-        corr1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); corr1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); corr1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); corr1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); systems.add(corr1);
+
+
+        // --- SYSTEM DEFINITIONS ---
+        int newDistributorY = 100;
+        System newDistributor = new System(section_width, newDistributorY, NetworkEnums.SystemType.DISTRIBUTOR);
+        newDistributor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        newDistributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(newDistributor);
+
+        System corr1 = new System(section_width, 220, NetworkEnums.SystemType.CORRUPTOR);
+        corr1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        corr1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        corr1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        corr1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        systems.add(corr1);
+
         System distributor = new System(section_width, h / 2 - 20, NetworkEnums.SystemType.DISTRIBUTOR);
-        distributor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(distributor);
+        distributor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(distributor);
+
         System new_corr_1 = new System(section_width, h - 150 - sysH, NetworkEnums.SystemType.CORRUPTOR);
-        new_corr_1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); new_corr_1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); new_corr_1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(new_corr_1);
+        new_corr_1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        new_corr_1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        new_corr_1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(new_corr_1);
+
         int spy_section_x = section_width * 2;
         System spy1 = new System(spy_section_x, h / 2 - 250, NetworkEnums.SystemType.SPY);
-        spy1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); spy1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(spy1);
+        spy1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        spy1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(spy1);
+
         System spy2 = new System(spy_section_x, h / 2 + 150, NetworkEnums.SystemType.SPY);
-        spy2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); spy2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); systems.add(spy2);
+        spy2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        spy2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        spy2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        systems.add(spy2);
+
         System spy3 = new System(spy_section_x + 80, 50, NetworkEnums.SystemType.SPY);
-        spy3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); spy3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); spy3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); spy3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); systems.add(spy3);
+        spy3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        spy3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        systems.add(spy3);
+
         System spy4 = new System(spy_section_x + 80, h - 80 - sysH, NetworkEnums.SystemType.SPY);
-        spy4.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); spy4.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); spy4.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); spy4.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); systems.add(spy4);
+        spy4.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        spy4.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy4.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        spy4.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        systems.add(spy4);
+
         System spy5 = new System(spy_section_x + 160, h/2 - 100, NetworkEnums.SystemType.SPY);
-        spy5.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); spy5.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); spy5.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); spy5.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(spy5);
+        spy5.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        spy5.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        spy5.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        spy5.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(spy5);
+
         System spy6 = new System(spy_section_x + 160, h/2 + 100, NetworkEnums.SystemType.SPY);
-        spy6.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); spy6.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); spy6.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); spy6.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(spy6);
+        spy6.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy6.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        spy6.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        spy6.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(spy6);
+
         int section4_x = section_width * 3 + 100;
         System antiTrojan = new System(section4_x, 50, NetworkEnums.SystemType.ANTITROJAN);
-        antiTrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); antiTrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); antiTrojan.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); antiTrojan.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); systems.add(antiTrojan);
+        antiTrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        antiTrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        antiTrojan.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        antiTrojan.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        systems.add(antiTrojan);
+
         System vpn1 = new System(section4_x, h / 2 - 100, NetworkEnums.SystemType.VPN);
-        vpn1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); vpn1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); vpn1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); vpn1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(vpn1);
+        vpn1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        vpn1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        vpn1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        vpn1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(vpn1);
+
         System merger = new System(section4_x, h - 120 - sysH, NetworkEnums.SystemType.MERGER);
-        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(merger);
+        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(merger);
+
         System vpn2 = new System(section_width + 150, h - 150 - sysH, NetworkEnums.SystemType.VPN);
-        vpn2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); vpn2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); systems.add(vpn2);
+        vpn2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        vpn2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        systems.add(vpn2);
+
         System new_merger = new System(section_width * 3, h/2 + 200, NetworkEnums.SystemType.MERGER);
-        new_merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); new_merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); new_merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(new_merger);
+        new_merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        new_merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        new_merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(new_merger);
+
         System new_antitrojan = new System(section_width * 3, 200, NetworkEnums.SystemType.ANTITROJAN);
-        new_antitrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); new_antitrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); new_antitrojan.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); systems.add(new_antitrojan);
+        new_antitrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        new_antitrojan.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        new_antitrojan.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        systems.add(new_antitrojan);
+
         int final_nodes_x = section_width * 4 + 50;
         System finalNode1 = new System(final_nodes_x, h/2 - 200, NetworkEnums.SystemType.NODE);
-        finalNode1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); finalNode1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); finalNode1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); finalNode1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(finalNode1);
+        finalNode1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        finalNode1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        finalNode1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        finalNode1.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(finalNode1);
+
         System finalNode2 = new System(final_nodes_x, h/2, NetworkEnums.SystemType.NODE);
-        finalNode2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); finalNode2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); finalNode2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); finalNode2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); systems.add(finalNode2);
+        finalNode2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE);
+        finalNode2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        finalNode2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        finalNode2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        systems.add(finalNode2);
+
         System new_corr_2 = new System(final_nodes_x - 120, h/2 + 120, NetworkEnums.SystemType.CORRUPTOR);
-        new_corr_2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); new_corr_2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); new_corr_2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); new_corr_2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE); systems.add(new_corr_2);
+        new_corr_2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        new_corr_2.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        new_corr_2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        new_corr_2.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(new_corr_2);
+
         System finalNode3 = new System(section_width + 150, h/2 - 50, NetworkEnums.SystemType.NODE);
-        finalNode3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE); finalNode3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); finalNode3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); finalNode3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE); systems.add(finalNode3);
+        finalNode3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.TRIANGLE);
+        finalNode3.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        finalNode3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE);
+        finalNode3.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.SQUARE);
+        systems.add(finalNode3);
     }
 
     private static void initializeLevel6(List<System> systems) {

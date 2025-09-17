@@ -1,8 +1,10 @@
-// ===== File: GameState.java (FINAL - Corrected Double Counting for BULK packets) =====
+// ===== File: GameState.java (FINAL - Modified to track original volumetric packet type) =====
 
 package com.networkopsim.game.model.state;
 
 import com.networkopsim.game.model.core.Packet;
+import com.networkopsim.game.model.enums.NetworkEnums;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,9 +22,21 @@ public class GameState implements Serializable {
     private int remainingWireLength = maxWireLengthPerLevel;
     private int currentSelectedLevel = 1;
     private double maxSafeEntrySpeed = 4.0;
-
     private volatile boolean isDistributorBusy = false;
-    private final Map<Integer, Integer> activeBulkPackets = new ConcurrentHashMap<>();
+
+    // [MODIFIED] Inner class to hold both size and type of the original volumetric packet.
+    public static class BulkPacketInfo implements Serializable {
+        private static final long serialVersionUID = 1L;
+        public final int originalSize;
+        public final NetworkEnums.PacketType originalType;
+        public BulkPacketInfo(int size, NetworkEnums.PacketType type) {
+            this.originalSize = size;
+            this.originalType = type;
+        }
+    }
+
+    // [MODIFIED] Map now stores the info object instead of just the size.
+    private final Map<Integer, BulkPacketInfo> activeBulkPackets = new ConcurrentHashMap<>();
 
     public GameState() {
         for (int i = 0; i < unlockedLevels.length; i++) {
@@ -40,18 +54,17 @@ public class GameState implements Serializable {
     }
 
     public void registerActiveBulkPacket(Packet bulkPacket) {
-        if (bulkPacket != null && bulkPacket.getPacketType() == com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK) {
-            activeBulkPackets.put(bulkPacket.getId(), bulkPacket.getSize());
+        if (bulkPacket != null && bulkPacket.isVolumetric()) {
+            activeBulkPackets.put(bulkPacket.getId(), new BulkPacketInfo(bulkPacket.getSize(), bulkPacket.getPacketType()));
         }
     }
 
     public void resolveBulkPacket(int bulkParentId, int partsMerged) {
-        Integer originalSize = activeBulkPackets.remove(bulkParentId);
-        if (originalSize != null) {
-            int loss = originalSize - partsMerged;
+        BulkPacketInfo info = activeBulkPackets.remove(bulkParentId);
+        if (info != null) {
+            int loss = info.originalSize - partsMerged;
             if (loss > 0) {
                 this.totalPacketLossUnits += loss;
-                // Only count the whole packet as 'lost' if none of its parts made it.
                 if (partsMerged == 0) {
                     this.totalPacketsLostCount++;
                 }
@@ -59,15 +72,21 @@ public class GameState implements Serializable {
         }
     }
 
-    public void recordLostBulkPart(Packet part) {
-        // This logic is handled by the Merger's final resolution.
+    // [NEW] Getter for the Merger to know what type of packet to reconstruct.
+    public NetworkEnums.PacketType getOriginalBulkPacketType(int bulkParentId) {
+        BulkPacketInfo info = activeBulkPackets.get(bulkParentId);
+        if (info != null) {
+            return info.originalType;
+        }
+        // Fallback in case the info is already removed, though this shouldn't happen in normal flow.
+        return NetworkEnums.PacketType.BULK;
     }
+
+    public void recordLostBulkPart(Packet part) {}
 
     public void recordPacketGeneration(Packet packet) {
         if (packet != null) {
-            // [FIXED] Do not count the units of a BULK packet here because its parts'
-            // units will be counted later in recordBulkPartsGeneration. This prevents double-counting.
-            if (packet.getPacketType() != com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK) {
+            if (!packet.isVolumetric()) {
                 totalPacketUnitsGenerated += packet.getSize();
             }
             totalPacketsGeneratedCount++;
@@ -75,26 +94,19 @@ public class GameState implements Serializable {
     }
 
     public void recordBulkPartsGeneration(int bulkParentId, int totalSize) {
-        // The units for the entire original bulk packet are added here.
         this.totalPacketUnitsGenerated += totalSize;
     }
 
     public void increasePacketLoss(Packet packet) {
         if (packet != null) {
-            // For BULK packets destroyed before distribution or parts lost individually.
-            if (packet.getPacketType() == com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK) {
-                // A BULK packet is only "lost" if it hits a destructive system before a Distributor.
+            if (packet.isVolumetric()) {
                 totalPacketLossUnits += packet.getSize();
                 totalPacketsLostCount++;
-                return; // Prevent double-counting below.
+                return;
             }
-            // If a MESSENGER that's part of a bulk operation is lost, its loss is handled
-            // by the resolveBulkPacket logic when the Merger finalizes the count.
             if (packet.getBulkParentId() != -1) {
                 return;
             }
-
-            // Standard packet loss for non-bulk-related packets.
             totalPacketLossUnits += packet.getSize();
             totalPacketsLostCount++;
         }

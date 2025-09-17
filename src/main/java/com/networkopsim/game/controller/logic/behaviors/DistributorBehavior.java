@@ -1,4 +1,4 @@
-// ===== File: DistributorBehavior.java (FINAL - Corrected with Part Registration) =====
+// ===== File: DistributorBehavior.java (FINAL - Handles all volumetric packets) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -15,7 +15,8 @@ public class DistributorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        if (packet.getPacketType() != NetworkEnums.PacketType.BULK) {
+        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
+        if (!packet.isVolumetric()) {
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
             return;
         }
@@ -46,14 +47,8 @@ public class DistributorBehavior extends AbstractSystemBehavior {
             messengerParts.add(part);
         }
 
-        // [CRITICAL FIX] Register all the newly created parts with the central tracker in the GameEngine.
-        // This allows the Merger to know when all parts have been accounted for.
         gameEngine.registerBulkParts(packet.getId(), messengerParts);
-
-        // The original BULK packet is consumed/transformed, not lost.
         gameEngine.removePacketFromWorld(packet);
-
-        // Set the global flag to TRUE, blocking all sources.
         gameState.setDistributorBusy(true);
 
         synchronized (system.packetQueue) {
@@ -70,7 +65,6 @@ public class DistributorBehavior extends AbstractSystemBehavior {
 
         synchronized(system.packetQueue) {
             if (system.packetQueue.isEmpty() && gameEngine.getGameState().isDistributorBusy()) {
-                // The queue is empty, set the global flag to FALSE, unblocking sources.
                 gameEngine.getGameState().setDistributorBusy(false);
                 system.setCurrentBulkOperationId(-1);
             }

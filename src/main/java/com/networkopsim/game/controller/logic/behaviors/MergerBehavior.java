@@ -1,4 +1,4 @@
-// ===== File: MergerBehavior.java (FINAL - Integrates with Part Tracker) =====
+// ===== File: MergerBehavior.java (FINAL - Reassembles both BULK and WOBBLE) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -11,11 +11,10 @@ import java.util.List;
 
 public class MergerBehavior extends AbstractSystemBehavior {
 
-    // Timeout logic is now removed in favor of the more accurate tracking system.
-
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
+        if (packet.isVolumetric()) {
             handleBulkPassthrough(system, packet, gameEngine, isPredictionRun);
             return;
         }
@@ -23,22 +22,15 @@ public class MergerBehavior extends AbstractSystemBehavior {
         if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getBulkParentId() != -1) {
             int parentId = packet.getBulkParentId();
 
-            // Add the part to the merging collection.
             system.getMergingPackets().computeIfAbsent(parentId, k -> new ArrayList<>()).add(packet);
-
-            // Mark this part as "resolved" in the central tracker.
             gameEngine.resolveBulkPart(parentId, packet.getId());
-
-            // Consume the messenger part.
             gameEngine.packetLostInternal(packet, isPredictionRun);
 
-            // [CRITICAL] Check if ALL parts for this bulk packet are now resolved (either arrived or lost).
             if (gameEngine.areAllPartsResolved(parentId)) {
                 List<Packet> collectedParts = system.getMergingPackets().get(parentId);
                 if (collectedParts != null && !collectedParts.isEmpty()) {
                     resolveMerge(system, gameEngine, isPredictionRun, parentId, collectedParts);
                 } else {
-                    // All parts were lost and none arrived here. Resolve with 0.
                     if (!isPredictionRun) {
                         gameEngine.getGameState().resolveBulkPacket(parentId, 0);
                     }
@@ -54,15 +46,16 @@ public class MergerBehavior extends AbstractSystemBehavior {
             gameEngine.getGameState().resolveBulkPacket(parentId, collectedParts.size());
         }
 
-        Packet newBulkPacket = new Packet(NetworkEnums.PacketShape.CIRCLE, system.getX(), system.getY(), NetworkEnums.PacketType.BULK);
-        newBulkPacket.setSize(collectedParts.size());
+        // [MODIFIED] Get the original packet type (BULK or WOBBLE) from the GameState.
+        NetworkEnums.PacketType originalType = gameEngine.getGameState().getOriginalBulkPacketType(parentId);
+        Packet newVolumetricPacket = new Packet(NetworkEnums.PacketShape.CIRCLE, system.getX(), system.getY(), originalType);
+        newVolumetricPacket.setSize(collectedParts.size());
 
-        queuePacket(system, newBulkPacket, gameEngine, isPredictionRun);
+        queuePacket(system, newVolumetricPacket, gameEngine, isPredictionRun);
 
         system.getMergingPackets().remove(parentId);
     }
 
-    // The processQueue no longer needs to check for timeouts.
     @Override
     public void processQueue(System system, GameEngine gameEngine, boolean isPredictionRun) {
         super.processQueue(system, gameEngine, isPredictionRun);
