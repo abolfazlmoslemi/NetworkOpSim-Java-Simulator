@@ -1,4 +1,4 @@
-// ===== File: NodeBehavior.java (FINAL - Implements correct BULK Passthrough) =====
+// ===== File: NodeBehavior.java (FINAL - Corrected BULK Passthrough Lifecycle) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -20,25 +20,51 @@ public class NodeBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // [SCENARIO 2] If a BULK packet arrives at a NODE or ANTITROJAN system.
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
-            // 1. Destroy all packets currently in this system's queue.
-            synchronized(system.packetQueue) {
-                for(Packet p : system.packetQueue) {
-                    // Use the main increasePacketLoss which correctly handles non-bulk packets.
-                    gameEngine.getGameState().increasePacketLoss(p);
-                    gameEngine.packetLostInternal(p, isPredictionRun);
-                }
-                system.packetQueue.clear();
-            }
+        // The packet's currentSystem is set to this system right before this method is called.
+        // This stops the packet's update() loop. We are now responsible for its fate.
 
-            // 2. Immediately try to pass the BULK packet through.
-            // The BULK packet itself is NOT lost.
-            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+            if (this.systemType == NetworkEnums.SystemType.NODE) {
+                // NODE allows passthrough.
+                handleBulkPassthrough(system, packet, gameEngine, isPredictionRun);
+            } else {
+                // ANTITROJAN is destructive.
+                handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
+            }
         } else {
             // Standard behavior for all other packets.
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
         }
+    }
+
+    protected void handleBulkPassthrough(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
+        // 1. Destroy all packets currently in this system's queue.
+        synchronized(system.packetQueue) {
+            for(Packet p : system.packetQueue) {
+                gameEngine.getGameState().increasePacketLoss(p);
+                gameEngine.packetLostInternal(p, isPredictionRun);
+            }
+            system.packetQueue.clear();
+        }
+
+        // 2. The packet is now "owned" by this system. We try to find an exit.
+        // The processOrQueuePacket method will either dispatch it immediately (setting its
+        // currentSystem back to null and assigning a new wire) or queue it.
+        // Since the packet is no longer on a wire, it won't be double-processed.
+        processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+    }
+
+    protected void handleDestructiveArrival(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
+        synchronized(system.packetQueue) {
+            for(Packet p : system.packetQueue) {
+                gameEngine.getGameState().increasePacketLoss(p);
+                gameEngine.packetLostInternal(p, isPredictionRun);
+            }
+            system.packetQueue.clear();
+        }
+        // Also destroy the BULK packet itself.
+        gameEngine.getGameState().increasePacketLoss(packet);
+        gameEngine.packetLostInternal(packet, isPredictionRun);
     }
 
     @Override

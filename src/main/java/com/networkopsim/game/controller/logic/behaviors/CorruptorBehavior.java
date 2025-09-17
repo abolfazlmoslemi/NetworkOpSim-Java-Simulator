@@ -1,8 +1,8 @@
-// ===== File: CorruptorBehavior.java (FINAL - Corrected Build Errors) =====
+// ===== File: CorruptorBehavior.java (FINAL - Corrected Passthrough and Destruction Logic) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
-import com.networkopsim.game.controller.logic.GameEngine; // <-- FIX: IMPORT ADDED
+import com.networkopsim.game.controller.logic.GameEngine;
 import com.networkopsim.game.model.core.*;
 import com.networkopsim.game.model.enums.NetworkEnums;
 import java.util.ArrayList;
@@ -16,11 +16,13 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        // [CORRECTED LOGIC] Corruptor is a "destructive" system for BULK packets.
         if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
             handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
             return;
         }
 
+        // --- Standard Corruptor logic for non-BULK packets ---
         if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
             packet.revertToOriginalType();
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
@@ -48,7 +50,7 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
         }
     }
 
-    protected void handleDestructiveArrival(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) { // <-- FIX: Fully qualified System
+    protected void handleDestructiveArrival(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
         synchronized(system.packetQueue) {
             for(Packet p : system.packetQueue) {
                 gameEngine.getGameState().increasePacketLoss(p);
@@ -56,6 +58,7 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
             }
             system.packetQueue.clear();
         }
+        // Also destroy the BULK packet itself.
         gameEngine.getGameState().increasePacketLoss(packet);
         gameEngine.packetLostInternal(packet, isPredictionRun);
     }

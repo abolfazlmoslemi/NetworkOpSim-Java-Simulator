@@ -1,4 +1,4 @@
-// ===== File: DistributorBehavior.java (FINAL - Uses Global Busy Flag) =====
+// ===== File: DistributorBehavior.java (FINAL - Corrected with Part Registration) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -22,8 +22,6 @@ public class DistributorBehavior extends AbstractSystemBehavior {
 
         GameState gameState = gameEngine.getGameState();
 
-        // If the distributor is already busy, the Source should have been blocked.
-        // This check is a fallback; the packet should be lost if it gets here somehow.
         if (gameState.isDistributorBusy()) {
             gameEngine.getGameState().increasePacketLoss(packet);
             gameEngine.packetLostInternal(packet, isPredictionRun);
@@ -48,9 +46,14 @@ public class DistributorBehavior extends AbstractSystemBehavior {
             messengerParts.add(part);
         }
 
-        gameEngine.packetLostInternal(packet, isPredictionRun);
+        // [CRITICAL FIX] Register all the newly created parts with the central tracker in the GameEngine.
+        // This allows the Merger to know when all parts have been accounted for.
+        gameEngine.registerBulkParts(packet.getId(), messengerParts);
 
-        // [CRITICAL] Set the global flag to TRUE, blocking all sources.
+        // The original BULK packet is consumed/transformed, not lost.
+        gameEngine.removePacketFromWorld(packet);
+
+        // Set the global flag to TRUE, blocking all sources.
         gameState.setDistributorBusy(true);
 
         synchronized (system.packetQueue) {
@@ -67,7 +70,7 @@ public class DistributorBehavior extends AbstractSystemBehavior {
 
         synchronized(system.packetQueue) {
             if (system.packetQueue.isEmpty() && gameEngine.getGameState().isDistributorBusy()) {
-                // [CRITICAL] The queue is empty, set the global flag to FALSE, unblocking sources.
+                // The queue is empty, set the global flag to FALSE, unblocking sources.
                 gameEngine.getGameState().setDistributorBusy(false);
                 system.setCurrentBulkOperationId(-1);
             }

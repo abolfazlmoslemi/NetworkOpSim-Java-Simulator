@@ -1690,3 +1690,1163 @@
 2025-09-17 03:25:20.940 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
 2025-09-17 03:25:20.948 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
 2025-09-17 03:25:29.005 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:28:06.734 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:28:06.735 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 03:28:06.736 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 03:28:06.737 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:28:06.772 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:28:06.772 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 03:28:07.418 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 03:28:07.418 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 03:28:07.555 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 03:28:07.661 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 03:28:07.661 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 03:28:09.119 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 03:28:09.120 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 03:28:09.120 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 03:28:09.938 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 03:28:10.888 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 03:28:10.889 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 03:28:10.890 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 03:28:10.894 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 03:28:10.894 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 03:28:10.894 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:28:10.909 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 03:28:12.832 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:28:14.268 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:28:15.722 [Thread-3] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:28:18.359 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 03:28:19.740 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:28:20.909 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:28:23.185 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 03:28:23.987 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:28:25.212 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 03:28:26.076 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:28:27.599 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 03:28:29.435 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:28:30.327 [Thread-8] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:28:30.941 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 03:28:33.040 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 03:28:33.078 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.6 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:28:33.585 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 03:28:33.799 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 03:28:35.166 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 03:28:35.168 [Thread-9] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:28:36.319 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 03:28:40.419 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(2.5,-0.7 (Mag:2.56)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:28:43.042 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:28:43.062 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:28:44.173 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.6 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:28:50.019 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(1.9,-0.6 (Mag:2.00)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:28:52.530 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.6 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:28:53.046 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:28:53.058 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:28:55.900 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(3.9,-1.2 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:28:55.902 [Thread-12] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 03:28:55.902 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 0 destroyed.
+2025-09-17 03:28:55.904 [Thread-14] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:28:59.593 [Thread-15] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 03:29:03.047 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:29:03.054 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:29:13.047 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:29:13.060 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:29:23.045 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:29:23.050 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:29:33.048 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:29:33.053 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:29:43.074 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:29:43.097 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:29:53.080 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:29:53.087 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:30:03.088 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:30:03.098 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:30:13.090 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:30:13.105 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:30:23.106 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:30:23.113 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:30:33.119 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:30:33.131 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:30:43.127 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:30:43.127 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:30:53.140 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:30:53.148 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:31:03.154 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:31:03.154 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:31:17.998 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:31:17.999 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 03:31:18.000 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 03:31:18.001 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:31:18.033 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:31:18.034 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 03:31:18.656 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 03:31:18.657 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 03:31:18.792 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 03:31:18.883 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 03:31:18.883 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 03:31:20.773 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 03:31:20.775 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 03:31:20.775 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 03:31:21.507 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 03:31:22.279 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 03:31:22.279 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 03:31:22.280 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 03:31:22.287 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 03:31:22.288 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 03:31:22.288 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:31:22.300 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 03:31:23.773 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:31:24.787 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:31:25.874 [Thread-3] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:31:29.172 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 03:31:30.406 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:31:31.681 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:31:34.582 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 03:31:35.228 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:31:36.641 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 03:31:37.682 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:31:38.585 [Thread-8] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:31:39.175 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 03:31:40.547 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 03:31:40.570 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.7 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:31:42.188 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 03:31:42.402 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 03:31:45.161 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Emergency Brake' for 8 coins.
+2025-09-17 03:31:45.162 [Thread-9] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:31:46.069 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 03:31:46.071 [Thread-10] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:31:47.148 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 03:31:50.549 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:31:50.566 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:31:50.819 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(1.9,-0.7 (Mag:2.00)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:31:53.895 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.7 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:31:59.875 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(1.9,-0.7 (Mag:2.00)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:32:00.555 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:32:00.566 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:32:02.259 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.7 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:32:05.765 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(3.8,-1.5 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:32:05.766 [Thread-13] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 03:32:05.766 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 0 destroyed.
+2025-09-17 03:32:05.766 [Thread-15] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:32:09.485 [Thread-16] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 03:32:10.551 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:32:10.554 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:32:20.552 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:32:20.564 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:32:30.553 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:32:30.563 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:32:40.558 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:32:40.564 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:32:50.553 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:32:50.557 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:33:00.559 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:33:00.566 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:33:10.565 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:33:10.568 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:33:13.946 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 03:33:15.554 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:33:15.554 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 03:33:15.554 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 03:33:15.570 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 03:34:12.619 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:34:12.620 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 03:34:12.620 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 03:34:12.622 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:34:12.656 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:34:12.656 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 03:34:13.291 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 03:34:13.291 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 03:34:13.437 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-17 03:34:13.437 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-17 03:34:13.437 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 03:34:15.579 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 03:34:16.473 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 03:34:16.474 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 03:34:16.489 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 03:34:16.492 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 03:34:16.493 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 03:34:16.493 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:34:16.508 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 03:34:17.949 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:34:18.899 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:34:20.094 [Thread-3] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:34:22.538 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 03:34:23.827 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:34:24.863 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:34:27.261 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 03:34:28.190 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:34:30.042 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 03:34:31.181 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:34:32.305 [Thread-8] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:34:32.930 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 03:34:38.513 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 03:34:38.532 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:34:38.869 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 03:34:39.123 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 03:34:40.514 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 03:34:40.516 [Thread-9] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:34:41.726 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 03:34:46.326 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(2.3,-0.7 (Mag:2.36)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:34:48.517 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:34:48.538 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:34:49.755 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:34:55.577 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(2.0,-0.6 (Mag:2.07)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:34:58.254 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 03:34:58.515 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:34:58.528 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:35:01.639 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(3.9,-1.1 (Mag:4.10)) St:ON_WIRE(W:0 P:100.0%)}
+2025-09-17 03:35:01.641 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 0 destroyed.
+2025-09-17 03:35:01.641 [Thread-12] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 03:35:01.644 [Thread-14] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:35:05.369 [Thread-15] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 03:35:08.517 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:35:08.522 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:35:18.518 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:35:18.525 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:35:28.590 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:35:28.611 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:35:38.591 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:35:38.599 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:35:48.592 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:35:48.602 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:35:58.599 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:35:58.607 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:36:08.604 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:36:08.612 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:36:18.609 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:36:18.615 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:36:28.618 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:36:28.627 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:36:38.622 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:36:38.631 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:36:48.631 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:36:48.636 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:36:58.638 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:36:58.643 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:37:08.645 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:37:08.650 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:37:18.653 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:37:18.660 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:37:28.653 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:37:28.653 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:37:38.662 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:37:38.667 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:37:48.677 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:37:48.677 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:44:03.279 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:44:03.282 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 03:44:03.284 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 03:44:03.286 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:44:03.343 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:44:03.344 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 03:44:04.581 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 03:44:04.582 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 03:44:04.920 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 03:44:05.117 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 03:44:05.118 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 03:44:06.803 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 03:44:06.804 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 03:44:06.805 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 03:44:07.550 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 03:44:08.800 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 03:44:08.802 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 03:44:08.802 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 03:44:08.811 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 03:44:08.811 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 03:44:08.811 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:44:08.822 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 03:44:12.310 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:44:13.254 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:44:14.532 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 03:44:17.149 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:44:18.105 [Thread-3] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:44:19.607 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:44:20.970 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:44:22.905 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:44:25.441 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 03:44:26.774 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:44:27.775 [Thread-7] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:44:29.941 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 03:44:30.602 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:44:31.855 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 03:44:33.052 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:44:34.018 [Thread-10] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:44:34.773 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 03:44:36.257 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 03:44:36.276 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-17 03:44:36.549 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 03:44:36.769 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 03:44:38.021 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 03:44:38.022 [Thread-11] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:44:39.183 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 03:44:43.996 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(2.2,-0.8 (Mag:2.31)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 03:44:46.267 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:44:46.282 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:44:47.261 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-17 03:44:53.111 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(2.0,-0.7 (Mag:2.11)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 03:44:55.703 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-17 03:44:56.259 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:44:56.273 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:44:59.196 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(3.9,-1.4 (Mag:4.10)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 03:44:59.197 [Thread-14] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 03:44:59.198 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 1 destroyed.
+2025-09-17 03:44:59.200 [Thread-16] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:45:02.866 [Thread-17] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 03:45:06.264 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:45:06.277 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:45:16.264 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:45:16.269 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:45:26.268 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:45:26.282 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:45:36.275 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:45:36.279 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:45:46.283 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:45:46.291 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:45:56.310 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:45:56.334 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:46:06.313 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:46:06.319 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:46:16.320 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:46:16.329 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:46:26.331 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:46:26.338 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:46:36.334 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:46:36.338 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:46:46.340 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:46:46.353 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:46:56.348 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:46:56.356 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:47:06.354 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:47:06.360 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:47:16.362 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:47:16.367 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:47:26.369 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:47:26.379 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:47:36.376 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:47:36.388 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:47:46.383 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:47:46.393 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:47:56.390 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:47:56.394 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:48:06.399 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:48:06.407 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:48:16.402 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:48:16.408 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:48:26.411 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:48:26.419 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:48:36.416 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:48:36.424 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:48:46.423 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:48:46.432 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:48:56.423 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:48:56.428 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:49:06.438 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:49:06.443 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:49:16.445 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:49:16.450 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:49:26.452 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:49:26.459 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:49:36.457 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:49:36.464 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:49:46.465 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:49:46.471 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:49:51.225 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:55:07.812 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:55:07.813 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 03:55:07.814 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 03:55:07.815 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:55:07.851 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 03:55:07.851 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 03:55:08.860 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 03:55:08.860 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 03:55:09.158 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 03:55:09.336 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 03:55:09.338 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 03:55:11.385 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 03:55:11.386 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 03:55:11.386 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 03:55:12.513 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 03:55:13.848 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 03:55:13.848 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 03:55:13.849 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 03:55:13.852 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 03:55:13.852 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 03:55:13.852 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 03:55:13.863 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 03:55:16.369 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:55:17.211 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:55:19.479 [Thread-3] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:55:20.920 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 03:55:21.966 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:55:23.509 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:55:26.911 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 03:55:28.158 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:55:29.524 [Thread-7] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:55:32.253 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 03:55:33.095 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:55:34.989 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 03:55:36.377 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 03:55:37.338 [Thread-10] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:55:38.013 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 03:55:39.623 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 03:55:39.644 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-17 03:55:39.823 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 03:55:40.050 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 03:55:41.266 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 03:55:41.269 [Thread-11] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 03:55:42.240 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 03:55:47.352 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(2.1,-0.6 (Mag:2.20)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 03:55:49.629 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:55:49.653 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:55:50.439 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-17 03:55:56.228 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(1.9,-0.6 (Mag:2.00)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 03:55:58.781 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:1 P:0.0%)}
+2025-09-17 03:55:59.625 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:55:59.638 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:56:02.118 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(3.9,-1.2 (Mag:4.10)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 03:56:02.118 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 1 destroyed.
+2025-09-17 03:56:02.118 [Thread-14] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 03:56:02.118 [Thread-16] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 03:56:05.968 [Thread-17] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 03:56:09.625 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:56:09.630 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:56:19.626 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:56:19.632 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:56:29.626 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:56:29.629 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:56:39.628 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:56:39.634 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:56:49.650 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:56:49.681 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:56:59.677 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:56:59.681 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:57:09.689 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:57:09.695 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:57:19.691 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:57:19.706 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:57:29.699 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:57:29.706 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:57:39.709 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:57:39.714 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:57:49.739 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:57:49.774 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:57:59.752 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:57:59.759 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:58:09.759 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:58:09.764 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:58:19.819 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:58:19.821 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:58:29.799 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:58:29.799 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:58:39.811 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:58:39.817 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:58:49.821 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:58:49.832 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:58:59.828 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:58:59.835 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:59:09.835 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:59:09.842 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:59:19.877 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:59:19.889 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:59:29.846 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:59:29.855 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:59:39.855 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:59:39.863 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:59:49.860 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:59:49.866 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 03:59:59.868 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 03:59:59.873 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:00:09.868 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:00:09.881 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:00:19.916 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:00:19.930 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:00:29.925 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:00:29.931 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:00:39.943 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:00:39.952 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:00:49.951 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:00:49.960 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:00:58.073 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:11:21.118 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:11:21.120 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 04:11:21.120 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 04:11:21.122 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:11:21.197 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:11:21.197 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 04:11:22.429 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:11:22.430 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 04:11:22.763 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 04:11:22.959 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 04:11:22.959 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 04:11:24.572 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 04:11:24.573 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:11:24.573 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 04:11:25.299 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:11:26.247 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:11:26.247 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:11:26.247 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:11:26.251 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:11:26.251 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:11:26.251 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:11:26.263 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:11:28.352 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:11:29.721 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:11:30.961 [Thread-3] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:11:33.428 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:11:34.879 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:11:36.194 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:11:40.429 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:11:41.259 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:11:44.119 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:11:45.958 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:11:47.114 [Thread-8] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:11:47.987 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:11:48.949 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:11:48.972 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:11:52.079 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:11:52.323 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:11:53.910 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Emergency Brake' for 8 coins.
+2025-09-17 04:11:53.912 [Thread-9] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:11:55.146 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:11:58.550 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(300.0,400.0) Vel:(-4.0,0.9 (Mag:4.10)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 04:11:58.551 [Thread-10] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:11:58.951 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:11:58.971 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:12:00.405 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:12:01.407 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:12:01.434 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:12:02.652 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 04:12:02.653 [Thread-12] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:12:04.522 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:12:05.329 [Thread-13] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:12:08.952 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:12:08.959 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:12:11.862 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:12:12.408 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(-2.0,0.4 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:12:13.829 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:15.251 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:16.679 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:17.715 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 0 destroyed.
+2025-09-17 04:12:17.716 [Thread-18] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:12:18.067 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.4,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:18.953 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:12:18.963 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:12:19.182 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:20.282 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:20.631 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(300.0,400.0) Vel:(-4.0,0.9 (Mag:4.10)) St:ON_WIRE(W:1 P:100.0%)}
+2025-09-17 04:12:20.632 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 1 destroyed.
+2025-09-17 04:12:20.632 [Thread-22] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:12:20.634 [Thread-24] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:12:21.388 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:24.303 [Thread-26] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:12:25.407 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:12:28.955 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:12:28.963 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:12:38.957 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:12:38.965 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:12:48.959 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:12:48.964 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:12:52.031 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:12:52.875 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:12:52.875 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 04:12:52.875 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:12:52.876 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:12:55.292 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:12:56.331 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:12:56.331 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:12:56.332 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:12:56.336 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:12:56.336 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:12:56.336 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:12:56.337 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:12:58.368 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:12:59.653 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:13:02.539 [Thread-29] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:13:05.125 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:13:06.223 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:13:07.495 [Thread-31] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:13:10.118 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:13:10.863 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:13:12.312 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:13:13.412 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:13:15.148 [Thread-34] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:13:15.701 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:13:19.315 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:13:19.333 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-17 04:13:19.592 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:13:19.616 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:13:20.755 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 04:13:20.757 [Thread-35] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:13:21.784 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:13:29.323 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:13:29.330 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:13:29.850 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-17 04:13:31.516 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(-1.9,0.5 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:13:32.165 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:13:32.201 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:13:33.829 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:13:34.602 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:36.018 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:37.436 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:38.851 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:39.317 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:13:39.324 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:13:40.270 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:41.429 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:13:41.446 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:13:42.362 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:13:42.613 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:43.160 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(-1.9,0.5 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:13:44.021 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:44.038 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:10, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(1.9,0.5 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-17 04:13:45.442 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:49.321 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:13:49.327 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:13:49.832 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 4 destroyed.
+2025-09-17 04:13:49.834 [Thread-46] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:13:52.032 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:13:52.059 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:13:53.065 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:13:55.803 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(-1.9,0.5 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:13:55.804 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 5 destroyed.
+2025-09-17 04:13:55.806 [Thread-48] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:13:57.220 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:58.634 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:13:59.320 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:13:59.324 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:14:00.069 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:01.487 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:02.905 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:02.929 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:14:03.440 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:14:03.440 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 04:14:03.441 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:14:03.441 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:14:04.846 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:14:05.879 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:14:05.879 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:14:05.893 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:14:05.896 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:14:05.897 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:14:05.897 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:14:05.897 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:14:07.527 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:14:08.244 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:14:09.481 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:14:10.576 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:14:11.657 [Thread-56] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:14:14.061 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:14:15.144 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:14:16.375 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:14:17.370 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:14:18.331 [Thread-59] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:14:19.052 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:14:20.567 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:14:20.585 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:8 P:0.0%)}
+2025-09-17 04:14:21.989 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:14:22.315 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:14:22.336 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:14:23.547 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 04:14:23.549 [Thread-61] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:14:24.646 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:14:30.272 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:30.570 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:14:30.577 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:14:34.026 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:37.783 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:39.161 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:14:39.175 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:14:40.707 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 04:14:40.709 [Thread-65] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:14:41.895 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:14:43.813 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.4,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:47.389 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:50.571 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:14:50.577 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:14:51.136 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:52.151 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:8 P:0.0%)}
+2025-09-17 04:14:53.562 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:14:54.893 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:57.731 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(-4.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:14:58.205 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:14:58.206 [Thread-72] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:00.574 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:15:00.581 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:15:01.865 [Thread-74] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:04.183 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:04.184 [Thread-75] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:07.831 [Thread-77] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:10.146 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:10.147 [Thread-78] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:10.572 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:15:10.579 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:15:13.805 [Thread-80] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:16.123 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:16.124 [Thread-81] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:19.778 [Thread-83] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:20.578 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:15:20.583 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:15:22.092 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:22.092 [Thread-84] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:26.057 [Thread-86] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:28.366 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:28.367 [Thread-87] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:30.573 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:15:30.577 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:15:32.250 [Thread-89] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:34.689 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:34.689 [Thread-90] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:38.500 [Thread-92] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:38.516 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:18, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:8 P:0.0%)}
+2025-09-17 04:15:39.977 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:18, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:15:39.977 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 8 destroyed.
+2025-09-17 04:15:39.978 [Thread-94] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:15:40.573 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:15:40.575 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:15:40.957 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:40.958 [Thread-95] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:44.838 [Thread-97] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:47.171 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:47.174 [Thread-98] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:50.574 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:15:50.576 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:15:51.001 [Thread-100] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:53.402 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:53.403 [Thread-101] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:15:57.142 [Thread-103] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:15:59.535 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:21, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:15:59.536 [Thread-104] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:16:00.575 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:16:00.583 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:16:03.321 [Thread-106] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:16:05.750 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:22, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:16:05.756 [Thread-107] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:16:09.487 [Thread-109] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:16:10.577 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:16:10.579 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:16:11.890 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:23, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:16:11.891 [Thread-110] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:16:15.615 [Thread-112] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:16:17.992 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:24, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:16:17.993 [Thread-113] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:16:20.579 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:16:20.585 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:16:21.682 [Thread-115] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:16:24.082 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:25, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:16:24.082 [Thread-116] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:16:27.984 [Thread-118] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:16:30.465 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:26, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(800.0,400.0) Vel:(3.7,-1.8 (Mag:4.10)) St:ON_WIRE(W:9 P:100.0%)}
+2025-09-17 04:16:30.466 [Thread-119] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:16:30.579 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:16:30.582 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:16:34.249 [Thread-121] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:16:40.580 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:16:40.586 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:16:50.580 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:16:50.583 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:17:00.581 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:17:00.584 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:17:10.594 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:17:10.597 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:17:20.598 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:17:20.601 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:17:30.625 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:17:30.628 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:17:40.630 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:17:40.636 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:17:50.634 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:17:50.637 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:18:00.642 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:18:00.645 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:18:10.648 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:18:10.653 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:18:20.655 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:18:20.660 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:18:30.662 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:18:30.668 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:18:40.667 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:18:40.670 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:18:50.677 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:18:50.678 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:19:00.683 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:19:00.688 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:19:05.887 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:23:04.556 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:23:04.559 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 04:23:04.559 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 04:23:04.561 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:23:04.619 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:23:04.620 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 04:23:05.798 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:23:05.798 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 04:23:06.069 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 04:23:06.281 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 04:23:06.282 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 04:23:08.234 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 04:23:08.235 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:23:08.236 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 04:23:08.987 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:23:09.835 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:23:09.835 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:23:09.836 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:23:09.843 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:23:09.843 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:23:09.843 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:23:09.856 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:23:11.796 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:23:13.563 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:23:14.728 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:23:15.372 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:23:16.910 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:23:18.158 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:23:19.980 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:23:20.942 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:23:23.527 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:23:24.426 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:23:24.445 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:23:24.909 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:23:24.930 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:23:26.326 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:23:27.449 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:28.559 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:29.661 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:30.763 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:31.868 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:32.977 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:34.080 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:34.098 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:23:34.910 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:23:34.931 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:23:35.201 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:35.521 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:23:36.632 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:37.731 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:38.831 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:39.942 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:41.048 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:42.147 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:43.262 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:43.278 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:18, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:23:44.373 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:44.688 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:18, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:23:44.689 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 0 destroyed.
+2025-09-17 04:23:44.691 [Thread-25] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:23:44.916 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:23:44.933 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:23:45.792 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:46.903 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:23:47.254 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:23:47.796 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:23:47.798 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 04:23:47.798 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:23:47.799 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:23:49.395 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:23:50.484 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:23:50.484 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:23:50.485 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:23:50.491 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:23:50.491 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:23:50.492 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:23:50.492 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:23:52.122 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:23:53.340 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:23:55.007 [Thread-29] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:24:00.669 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:24:02.406 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:24:04.243 [Thread-31] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:24:06.688 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:24:07.523 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:24:08.886 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:24:09.985 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:24:10.984 [Thread-34] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:24:11.554 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:24:12.078 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:24:12.095 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.4 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-17 04:24:13.165 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:24:13.186 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-17 04:24:14.556 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Emergency Brake' for 8 coins.
+2025-09-17 04:24:14.557 [Thread-35] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:24:15.172 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased 'Speed Limiter' for 7 coins.
+2025-09-17 04:24:15.174 [Thread-36] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-17 04:24:16.273 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation resumed.
+2025-09-17 04:24:22.088 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:24:22.095 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:24:23.550 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.4 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-17 04:24:25.585 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(-1.9,0.5 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:24:27.010 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:28.549 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:30.055 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:31.240 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.1,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:32.081 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:24:32.088 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:24:32.394 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:32.903 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(300.0,400.0) Vel:(-4.0,1.0 (Mag:4.10)) St:ON_WIRE(W:5 P:100.0%)}
+2025-09-17 04:24:32.904 [Thread-43] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:24:33.592 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:36.624 [Thread-46] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:24:37.787 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:37.803 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:10, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.4 (Mag:2.00)) St:ON_WIRE(W:4 P:0.0%)}
+2025-09-17 04:24:38.921 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:24:41.174 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(800.0,400.0) Vel:(3.9,-1.2 (Mag:4.10)) St:ON_WIRE(W:4 P:100.0%)}
+2025-09-17 04:24:41.174 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 4 destroyed.
+2025-09-17 04:24:41.174 [Thread-49] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-17 04:24:41.174 [Thread-51] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 04:24:42.086 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:24:42.093 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:24:45.022 [Thread-52] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-17 04:24:52.084 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:24:52.086 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:25:02.084 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:25:02.088 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:25:12.090 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:25:12.094 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:25:22.090 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:25:22.102 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:25:32.102 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:25:32.102 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:25:42.109 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:25:42.114 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:25:52.121 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:25:52.128 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:26:02.120 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:26:02.131 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:26:12.129 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:26:12.136 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:26:22.136 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:26:22.144 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:26:32.140 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:26:32.148 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:26:42.148 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:26:42.158 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:26:52.154 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:26:52.162 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:27:02.162 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:27:02.171 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:27:12.169 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:27:12.177 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:27:22.187 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:27:22.196 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:27:32.185 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:27:32.196 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:27:42.186 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:27:42.192 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:27:52.198 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:27:52.201 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:28:02.199 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:28:02.215 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:28:12.206 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:28:12.212 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:28:22.209 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:28:22.215 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:28:32.248 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:28:32.254 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:28:42.256 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:28:42.263 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:28:52.266 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:28:52.276 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:29:02.262 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:29:02.271 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:29:12.284 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:29:12.290 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:29:22.297 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:29:22.301 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:29:31.768 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:43:00.226 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:43:00.228 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 04:43:00.229 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 04:43:00.231 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:43:00.290 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:43:00.290 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 04:43:01.427 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:43:01.427 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 04:43:01.689 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 04:43:01.868 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 04:43:01.870 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 04:43:03.369 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 04:43:03.370 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:43:03.371 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 04:43:04.002 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:43:04.874 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:43:04.875 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:43:04.891 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:43:04.894 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:43:04.894 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:43:04.894 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:43:04.901 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:43:06.616 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:43:07.367 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:43:08.485 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:43:09.164 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:43:10.302 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:43:11.347 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:43:12.668 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:43:13.839 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:43:13.860 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:43:14.277 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:43:14.297 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:43:15.706 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:43:16.807 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:17.912 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:19.018 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:20.122 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:21.227 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:22.334 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:23.450 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:23.466 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:43:24.284 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 04:43:24.299 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 04:43:24.560 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:24.878 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(340.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:1)}
+2025-09-17 04:43:25.992 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:27.094 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 04:43:28.010 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 04:43:28.563 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:43:28.567 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 04:43:28.567 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:43:28.568 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 04:59:45.504 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:59:45.505 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 04:59:45.505 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 04:59:45.506 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:59:45.549 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 04:59:45.549 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 04:59:46.297 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 04:59:46.298 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 04:59:46.589 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-17 04:59:46.590 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-17 04:59:46.591 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 04:59:48.113 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 04:59:48.959 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 04:59:48.960 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 04:59:48.960 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 04:59:48.962 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 04:59:48.963 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 04:59:48.963 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 04:59:48.977 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 04:59:50.402 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 04:59:51.124 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:59:52.293 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 04:59:53.054 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:59:54.212 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 04:59:55.030 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:59:56.295 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 04:59:56.842 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 04:59:56.910 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 04:59:57.332 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 04:59:57.353 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 04:59:59.868 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:00.978 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:02.080 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:03.191 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:04.296 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:05.398 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:06.500 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:06.516 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 05:00:07.334 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:00:07.367 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:00:07.622 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:09.037 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:10, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:10.134 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:11.235 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:12.334 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:13.442 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:14.544 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:15.652 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:15.669 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:18, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 05:00:16.761 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:17.078 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Wire 0 destroyed.
+2025-09-17 05:00:17.079 [Thread-22] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-17 05:00:17.336 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:00:17.358 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:00:18.186 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:19, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:19.297 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:20, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:20.407 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:21, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:21.507 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:22, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:22.612 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:23, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:23.711 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:24, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:24.828 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:25, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:25.936 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:26, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:00:27.338 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:00:27.348 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:00:37.340 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:00:37.359 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:00:47.341 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:00:47.361 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:00:57.342 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:00:57.350 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:01:07.342 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:01:07.350 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:01:17.343 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:01:17.356 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:01:27.345 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:01:27.361 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:01:37.352 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:01:37.364 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:01:47.358 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:01:47.370 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:01:57.366 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:01:57.374 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:02:07.381 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:02:07.388 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:02:17.386 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:02:17.392 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:02:27.386 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:02:27.397 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:02:44.565 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 05:02:44.567 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 05:02:44.567 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 05:02:44.568 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 05:02:44.602 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 05:02:44.602 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 05:02:45.630 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 05:02:45.630 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 05:02:45.852 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to load game state from 'game_autosave.dat'...
+2025-09-17 05:02:46.056 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Save file loaded and checksum validated successfully.
+2025-09-17 05:02:46.057 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Valid saved game data found. Prompting user to resume.
+2025-09-17 05:02:48.580 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - User chose not to resume. Deleting saved game file.
+2025-09-17 05:02:48.582 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.
+2025-09-17 05:02:48.582 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 05:02:49.354 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 05:02:50.173 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 6.
+2025-09-17 05:02:50.173 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 6.
+2025-09-17 05:02:50.173 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-17 05:02:50.175 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 6.
+2025-09-17 05:02:50.175 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-17 05:02:50.176 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 05:02:50.185 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-17 05:02:51.650 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-17 05:02:52.326 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 05:02:53.398 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-17 05:02:53.998 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 05:02:55.334 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 4.
+2025-09-17 05:02:56.106 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 05:02:58.070 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-17 05:02:59.156 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-17 05:02:59.177 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-17 05:02:59.509 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Starting simulation for level 6.
+2025-09-17 05:02:59.529 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 05:03:02.072 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:1, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:03.167 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:2, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:04.284 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:3, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:05.388 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:4, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:06.491 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:5, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:07.594 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:6, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:08.698 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:7, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:08.715 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:9, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 05:03:09.520 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-17 05:03:09.545 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-17 05:03:09.826 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:8, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:11.240 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:11, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:12.354 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:12, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:12.673 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - Delivered: Packet{ID:10, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(1090.0,400.0) Vel:(2.0,0.0 (Mag:0.00)) St:QUEUED(Sys:4)}
+2025-09-17 05:03:12.675 [Thread-16] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-17 05:03:13.465 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:13, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:14.563 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:14, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:15.664 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:15, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:16.770 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:16, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:17.875 [AWT-EventQueue-0] WARN  c.n.game.controller.logic.GameEngine - Lost: Packet{ID:17, SHP:CIRCLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:0, Ideal:(590.0,400.0) Vel:(3.2,0.0 (Mag:0.00)) St:QUEUED(Sys:2)}
+2025-09-17 05:03:17.892 [AWT-EventQueue-0] DEBUG c.n.game.controller.logic.GameEngine - Generated: Packet{ID:19, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,400.0) Vel:(2.0,0.0 (Mag:2.00)) St:ON_WIRE(W:0 P:0.0%)}
+2025-09-17 05:03:18.690 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Simulation paused.
+2025-09-17 05:03:19.402 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-17 05:03:19.408 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 05:03:19.409 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 05:03:19.410 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Autosave file 'game_autosave.dat' deleted.

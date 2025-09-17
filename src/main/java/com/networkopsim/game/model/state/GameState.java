@@ -1,4 +1,4 @@
-// ===== File: GameState.java (FINAL - Corrected Compilation Error and Reset Logic) =====
+// ===== File: GameState.java (FINAL - Corrected Double Counting for BULK packets) =====
 
 package com.networkopsim.game.model.state;
 
@@ -51,6 +51,7 @@ public class GameState implements Serializable {
             int loss = originalSize - partsMerged;
             if (loss > 0) {
                 this.totalPacketLossUnits += loss;
+                // Only count the whole packet as 'lost' if none of its parts made it.
                 if (partsMerged == 0) {
                     this.totalPacketsLostCount++;
                 }
@@ -64,6 +65,8 @@ public class GameState implements Serializable {
 
     public void recordPacketGeneration(Packet packet) {
         if (packet != null) {
+            // [FIXED] Do not count the units of a BULK packet here because its parts'
+            // units will be counted later in recordBulkPartsGeneration. This prevents double-counting.
             if (packet.getPacketType() != com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK) {
                 totalPacketUnitsGenerated += packet.getSize();
             }
@@ -72,20 +75,26 @@ public class GameState implements Serializable {
     }
 
     public void recordBulkPartsGeneration(int bulkParentId, int totalSize) {
+        // The units for the entire original bulk packet are added here.
         this.totalPacketUnitsGenerated += totalSize;
     }
 
     public void increasePacketLoss(Packet packet) {
         if (packet != null) {
-            if (packet.getPacketType() == com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK || packet.getBulkParentId() != -1) {
-                // For BULK packets that are destroyed before distribution (e.g., hit a non-distributor),
-                // we count the whole packet as lost.
-                if(packet.getPacketType() == com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK) {
-                    totalPacketLossUnits += packet.getSize();
-                    totalPacketsLostCount++;
-                }
+            // For BULK packets destroyed before distribution or parts lost individually.
+            if (packet.getPacketType() == com.networkopsim.game.model.enums.NetworkEnums.PacketType.BULK) {
+                // A BULK packet is only "lost" if it hits a destructive system before a Distributor.
+                totalPacketLossUnits += packet.getSize();
+                totalPacketsLostCount++;
+                return; // Prevent double-counting below.
+            }
+            // If a MESSENGER that's part of a bulk operation is lost, its loss is handled
+            // by the resolveBulkPacket logic when the Merger finalizes the count.
+            if (packet.getBulkParentId() != -1) {
                 return;
             }
+
+            // Standard packet loss for non-bulk-related packets.
             totalPacketLossUnits += packet.getSize();
             totalPacketsLostCount++;
         }
@@ -93,7 +102,6 @@ public class GameState implements Serializable {
 
     public void resetForNewLevel() {
         resetPacketStatsForSimulationAttempt();
-        // [FIXED] Correctly references the member variable.
         this.remainingWireLength = this.maxWireLengthPerLevel;
         activeBulkPackets.clear();
         this.isDistributorBusy = false;
@@ -103,7 +111,6 @@ public class GameState implements Serializable {
     public void resetForSimulationAttemptOnly() {
         resetPacketStatsForSimulationAttempt();
         activeBulkPackets.clear();
-        // [FIXED] Added missing reset for the busy flag.
         this.isDistributorBusy = false;
         java.lang.System.out.println("GameState: Reset for simulation attempt ONLY.");
     }

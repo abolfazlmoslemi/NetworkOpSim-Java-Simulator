@@ -1,8 +1,8 @@
-// ===== File: SpyBehavior.java (FINAL - Corrected Build Errors) =====
+// ===== File: SpyBehavior.java (FINAL - Corrected Destruction Logic) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
-import com.networkopsim.game.controller.logic.GameEngine; // <-- FIX: IMPORT ADDED
+import com.networkopsim.game.controller.logic.GameEngine;
 import com.networkopsim.game.model.core.Packet;
 import com.networkopsim.game.model.core.Port;
 import com.networkopsim.game.model.core.System;
@@ -16,11 +16,13 @@ public class SpyBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        // [CORRECTED LOGIC] Spy is a "destructive" system for BULK packets.
         if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
             handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
             return;
         }
 
+        // --- Standard Spy logic for non-BULK packets ---
         if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
             packet.revertToOriginalType();
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
@@ -56,7 +58,7 @@ public class SpyBehavior extends AbstractSystemBehavior {
         }
     }
 
-    protected void handleDestructiveArrival(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) { // <-- FIX: Fully qualified System
+    protected void handleDestructiveArrival(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
         synchronized(system.packetQueue) {
             for(Packet p : system.packetQueue) {
                 gameEngine.getGameState().increasePacketLoss(p);
@@ -64,6 +66,7 @@ public class SpyBehavior extends AbstractSystemBehavior {
             }
             system.packetQueue.clear();
         }
+        // Also destroy the BULK packet itself.
         gameEngine.getGameState().increasePacketLoss(packet);
         gameEngine.packetLostInternal(packet, isPredictionRun);
     }

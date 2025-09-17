@@ -1,4 +1,4 @@
-// ===== File: System.java (FINAL - With Wire Blocking State) =====
+// ===== File: System.java (FINAL - Corrected reverseDirection call and receivePacket Logic) =====
 
 package com.networkopsim.game.model.core;
 
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Queue;
 import java.util.Objects;
 import java.util.Random;
@@ -27,7 +26,6 @@ public class System implements Serializable {
     public static final int QUEUE_CAPACITY = 5;
     private static int nextId = 0;
     private static Random globalRandom = new Random();
-
     private final int id;
     private int x, y;
     private final boolean isReferenceSystem;
@@ -47,20 +45,12 @@ public class System implements Serializable {
     private static final long ANTITROJAN_COOLDOWN_MS = 8000;
     private long antiTrojanCooldownUntil = 0;
     private boolean vpnIsActive = true;
-
     private final Map<Integer, List<Packet>> mergingPackets = new ConcurrentHashMap<>();
     private final Map<Integer, Long> mergeGroupArrivalTimes = new ConcurrentHashMap<>();
     private volatile int currentBulkOperationId = -1;
-
-    // [NEW] State for Distributor to block its entry wire while busy.
     private volatile int entryWireIdInUse = -1;
-
     private transient SystemBehavior behavior;
     private final NetworkEnums.SystemType systemType;
-
-    public static void resetGlobalRandomSeed(long seed) { globalRandom = new Random(seed); }
-    public static Random getGlobalRandom() { return globalRandom; }
-    public static void resetGlobalId() { nextId = 0; }
 
     public System(int x, int y, NetworkEnums.SystemType type) {
         this.id = nextId++;
@@ -72,42 +62,49 @@ public class System implements Serializable {
         resetForNewRun();
     }
 
-    private static SystemBehavior createBehaviorForType(NetworkEnums.SystemType type) {
-        switch (type) {
-            case SOURCE: return new SourceBehavior();
-            case SINK: return new SinkBehavior();
-            case SPY: return new SpyBehavior();
-            case CORRUPTOR: return new CorruptorBehavior();
-            case VPN: return new VpnBehavior();
-            case DISTRIBUTOR: return new DistributorBehavior();
-            case MERGER: return new MergerBehavior();
-            case NODE:
-            case ANTITROJAN:
-            default: return new NodeBehavior(type);
+    public void receivePacket(Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        if (packet == null || gameEngine == null) return;
+
+        if (this.isDisabled) {
+            boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET, NetworkEnums.PacketType.BULK).contains(packet.getPacketType());
+            if (isReversible) {
+                // [FIXED] Pass the gameEngine instance to the reverseDirection method.
+                packet.reverseDirection(gameEngine);
+            } else {
+                gameEngine.packetLostInternal(packet, isPredictionRun);
+            }
+            return;
         }
+
+        double maxSafeSpeed = gameEngine.getGameState().getMaxSafeEntrySpeed();
+        if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > maxSafeSpeed) {
+            this.isDisabled = true;
+            this.disabledUntil = gameEngine.getSimulationTimeElapsedMs() + GameEngine.SYSTEM_DISABLE_DURATION_MS;
+            if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
+                gameEngine.getGame().playSoundEffect("system_shutdown");
+            }
+            gameEngine.packetLostInternal(packet, isPredictionRun);
+            return;
+        }
+
+        packet.setCurrentSystem(this);
+
+        if(!this.isReferenceSystem) {
+            gameEngine.addRoutingCoinsInternal(packet, isPredictionRun);
+        }
+
+        getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly);
     }
 
-    public void resetForNewRun() {
-        synchronized (packetQueue) { packetQueue.clear(); }
-        this.packetsGeneratedThisRun = 0;
-        this.lastGenerationTimeThisRun = -1;
-        this.antiTrojanCooldownUntil = 0;
-        this.vpnIsActive = true;
-        this.mergingPackets.clear();
-        this.mergeGroupArrivalTimes.clear();
-        this.currentBulkOperationId = -1;
-        this.isDisabled = false;
-        this.disabledUntil = 0;
-        this.entryWireIdInUse = -1; // Reset the wire blocking state
-    }
-
-    // --- Getters and Setters for the new state ---
+    // ... (rest of the file is unchanged) ...
+    public static void resetGlobalRandomSeed(long seed) { globalRandom = new Random(seed); }
+    public static Random getGlobalRandom() { return globalRandom; }
+    public static void resetGlobalId() { nextId = 0; }
+    private static SystemBehavior createBehaviorForType(NetworkEnums.SystemType type) { switch (type) { case SOURCE: return new SourceBehavior(); case SINK: return new SinkBehavior(); case SPY: return new SpyBehavior(); case CORRUPTOR: return new CorruptorBehavior(); case VPN: return new VpnBehavior(); case DISTRIBUTOR: return new DistributorBehavior(); case MERGER: return new MergerBehavior(); case NODE: case ANTITROJAN: default: return new NodeBehavior(type); } }
+    public void resetForNewRun() { synchronized (packetQueue) { packetQueue.clear(); } this.packetsGeneratedThisRun = 0; this.lastGenerationTimeThisRun = -1; this.antiTrojanCooldownUntil = 0; this.vpnIsActive = true; this.mergingPackets.clear(); this.mergeGroupArrivalTimes.clear(); this.currentBulkOperationId = -1; this.isDisabled = false; this.disabledUntil = 0; this.entryWireIdInUse = -1; }
     public int getEntryWireIdInUse() { return entryWireIdInUse; }
     public void setEntryWireIdInUse(int wireId) { this.entryWireIdInUse = wireId; }
-
-    // ... (The rest of the file is identical to the previous correct version) ...
     public void reinitializeBehavior() { if (this.behavior == null) { this.behavior = createBehaviorForType(this.systemType); } }
-    public void receivePacket(Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) { if (packet == null || gameEngine == null) return; if (this.isDisabled) { boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET, NetworkEnums.PacketType.BULK).contains(packet.getPacketType()); if (isReversible) packet.reverseDirection(gameEngine); else gameEngine.packetLostInternal(packet, isPredictionRun); return; } double maxSafeSpeed = gameEngine.getGameState().getMaxSafeEntrySpeed(); if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > maxSafeSpeed) { this.isDisabled = true; this.disabledUntil = gameEngine.getSimulationTimeElapsedMs() + GameEngine.SYSTEM_DISABLE_DURATION_MS; if (!isPredictionRun && !gameEngine.getGame().isMuted()) gameEngine.getGame().playSoundEffect("system_shutdown"); gameEngine.packetLostInternal(packet, isPredictionRun); return; } if (packet.getPacketType() == NetworkEnums.PacketType.BULK) { if (getSystemType() == NetworkEnums.SystemType.DISTRIBUTOR) { packet.setCurrentSystem(this); gameEngine.addRoutingCoinsInternal(packet, isPredictionRun); getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly); } else { synchronized(packetQueue) { for(Packet p : packetQueue) { gameEngine.packetLostInternal(p, isPredictionRun); } packetQueue.clear(); } if(packet.getCurrentWire() != null) { Port entryPort = packet.getCurrentWire().getEndPort(); if (entryPort != null) entryPort.randomizeShape(); } gameEngine.packetLostInternal(packet, isPredictionRun); } } else { if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && getSystemType() == NetworkEnums.SystemType.NODE) { packet.setEnteredViaIncompatiblePort(!enteredCompatibly); } packet.setCurrentSystem(this); gameEngine.addRoutingCoinsInternal(packet, isPredictionRun); getBehavior().receivePacket(this, packet, gameEngine, isPredictionRun, enteredCompatibly); } }
     public void processQueue(GameEngine gameEngine, boolean isPredictionRun) { getBehavior().processQueue(this, gameEngine, isPredictionRun); }
     public void attemptPacketGeneration(GameEngine gameEngine, long currentSimTimeMs, boolean isPredictionRun) { getBehavior().attemptPacketGeneration(this, gameEngine, currentSimTimeMs, isPredictionRun); }
     public void updateSystemState(long currentTimeMs, GameEngine gameEngine) { if (isDisabled && currentTimeMs >= disabledUntil) { isDisabled = false; disabledUntil = 0; if (!isReferenceSystem && !gameEngine.getGame().isMuted()) gameEngine.getGame().playSoundEffect("system_reboot"); } }
