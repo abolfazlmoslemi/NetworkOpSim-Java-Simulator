@@ -1,4 +1,4 @@
-// ===== File: GameState.java (FINAL - Corrected unit generation counting) =====
+// ===== File: GameState.java (FINAL - Levels are now locked by default and max is 5) =====
 
 package com.networkopsim.game.model.state;
 
@@ -8,11 +8,11 @@ import com.networkopsim.game.model.enums.NetworkEnums;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Arrays;
 
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final int MAX_LEVELS = 6;
+    // [MODIFIED] Total number of levels is now 5.
+    public static final int MAX_LEVELS = 5;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
     private int totalPacketLossUnits = 0;
@@ -38,7 +38,11 @@ public class GameState implements Serializable {
     private final Map<Integer, BulkPacketInfo> activeBulkPackets = new ConcurrentHashMap<>();
 
     public GameState() {
-        Arrays.fill(unlockedLevels, true);
+        // [MODIFIED] Only unlock level 1 by default. All other levels start locked.
+        unlockedLevels[0] = true;
+        for (int i = 1; i < unlockedLevels.length; i++) {
+            unlockedLevels[i] = false;
+        }
         currentSelectedLevel = 1;
     }
 
@@ -81,16 +85,10 @@ public class GameState implements Serializable {
 
     public void recordPacketGeneration(Packet packet) {
         if (packet != null) {
-            // [MODIFIED] Always count the units of ANY generated packet immediately, including volumetric ones.
-            // This ensures the loss percentage denominator is always correct from the moment of generation.
             totalPacketUnitsGenerated += packet.getSize();
             totalPacketsGeneratedCount++;
         }
     }
-
-    // [REMOVED] This method is redundant and was the source of the bug.
-    // Unit generation is now handled entirely and correctly by recordPacketGeneration.
-    // public void recordBulkPartsGeneration(int bulkParentId, int totalSize) { ... }
 
     public void increasePacketLoss(Packet packet) {
         if (packet != null) {

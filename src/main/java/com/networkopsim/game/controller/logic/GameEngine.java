@@ -1,4 +1,4 @@
-// ===== File: GameEngine.java (FINAL - Including registerBulkParts method) =====
+// ===== File: GameEngine.java (FINAL - Added dedicated Prediction constructor) =====
 
 package com.networkopsim.game.controller.logic;
 
@@ -57,11 +57,23 @@ public class GameEngine {
         @Override public int hashCode() { return Objects.hash(first, second); }
     }
 
+    // Main constructor for the actual game
     public GameEngine(NetworkGame game, GamePanel gamePanel) {
         this.game = game;
         this.gamePanel = gamePanel;
         this.gameState = game.getGameState();
     }
+
+    // [NEW] Special constructor for isolated prediction runs
+    public GameEngine(GamePanel gamePanel, GameState gameState, List<System> systems, List<Wire> wires, List<Packet> packets) {
+        this.game = gamePanel.getGame(); // Still need a reference for sound effects etc.
+        this.gamePanel = gamePanel;
+        this.gameState = gameState;
+        this.systems = systems;
+        this.wires = wires;
+        this.packets = packets;
+    }
+
 
     private void handleCollision(Packet p1, Packet p2, boolean isPredictionRun, boolean isAtarActive) {
         if (!isPredictionRun) {

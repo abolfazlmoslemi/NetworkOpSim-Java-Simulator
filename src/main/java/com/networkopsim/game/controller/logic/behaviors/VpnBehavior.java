@@ -1,4 +1,4 @@
-// ===== File: VpnBehavior.java (FINAL - Corrected loss counting) =====
+// ===== File: VpnBehavior.java (FINAL - Now protects NORMAL packets of any shape) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -17,7 +17,9 @@ public class VpnBehavior extends AbstractSystemBehavior {
         }
 
         if (system.isVpnActive()) {
-            if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) {
+            // [MODIFIED] Now, both MESSENGER and NORMAL packets are transformed into PROTECTED packets.
+            // This ensures Square packets also get the lock appearance and protected behavior.
+            if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER || packet.getPacketType() == NetworkEnums.PacketType.NORMAL) {
                 packet.transformToProtected(system.getId());
             } else if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
                 packet.upgradeSecretPacket();
@@ -29,13 +31,10 @@ public class VpnBehavior extends AbstractSystemBehavior {
     protected void handleDestructiveArrival(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
         synchronized(system.packetQueue) {
             for(Packet p : system.packetQueue) {
-                // [MODIFIED] Loss is handled by packetLostInternal
                 gameEngine.packetLostInternal(p, isPredictionRun);
             }
             system.packetQueue.clear();
         }
-        // [MODIFIED] Removed direct call to increasePacketLoss.
-        // packetLostInternal will handle the loss counting correctly.
         gameEngine.packetLostInternal(packet, isPredictionRun);
     }
 

@@ -365,19 +365,36 @@ public class GamePanel extends JPanel {
             repaint();
             return;
         }
-        GameEngine predictionEngine = new GameEngine(this.game, this);
-        predictionEngine.setSystems(getSystemsDeepCopy());
-        predictionEngine.setWires(getWiresDeepCopy());
-        predictionEngine.setGameState(getGameStateDeepCopy());
+
+        // Create copies of the state FIRST.
+        GameState gameStateCopy = getGameStateDeepCopy();
+        List<System> systemsCopy = getSystemsDeepCopy();
+        List<Wire> wiresCopy = getWiresDeepCopy();
+        List<Packet> packetsCopy = new ArrayList<>(); // Prediction always starts with an empty packet list.
+
+        // The copied GameState must be reset to a clean state for the simulation to start correctly.
+        gameStateCopy.resetForSimulationAttemptOnly();
+
+        // Use the new, isolated constructor for the prediction engine.
+        GameEngine predictionEngine = new GameEngine(this, gameStateCopy, systemsCopy, wiresCopy, packetsCopy);
+
+        // The transient references MUST be rebuilt after deep copying.
+        predictionEngine.rebuildTransientReferences();
+
         predictionContext.reset();
         System.resetGlobalRandomSeed(PREDICTION_SEED);
+
+        // Also reset the static packet ID counter for a clean prediction run.
+        Packet.resetGlobalId();
+
         for(System s : predictionEngine.getSystems()) s.resetForNewRun();
+
         long internalTime = 0;
-        while(internalTime < viewedTimeMs) {
-            long timeStep = Math.min(GAME_TICK_MS, viewedTimeMs - internalTime);
+        while (internalTime <= viewedTimeMs) {
             predictionEngine.runSimulationTickLogic(true, internalTime, false, false, false);
-            internalTime += timeStep;
+            internalTime += GAME_TICK_MS;
         }
+
         predictedPacketStates.clear();
         for (Packet p : predictionContext.getTempGeneratedPackets()) {
             PredictedPacketStatus status = p.getFinalStatusForPrediction();
@@ -451,6 +468,7 @@ public class GamePanel extends JPanel {
     @SuppressWarnings("unchecked") private <T extends Serializable> T deepCopy(T original) { try { java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream(); java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos); oos.writeObject(original); oos.close(); java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(baos.toByteArray()); java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bais); return (T) ois.readObject(); } catch (Exception e) { logger.error("Deep copy failed", e); return null; } }
     public List<System> getSystemsDeepCopy() { return deepCopy(new ArrayList<>(getSystems())); }
     public List<Wire> getWiresDeepCopy() { return deepCopy(new ArrayList<>(getWires())); }
+    public List<Packet> getPacketsDeepCopy() { return deepCopy(new ArrayList<>(getPackets())); }
     public GameState getGameStateDeepCopy() { return deepCopy(gameState); }
     public boolean isGameRunning() { return gameEngine.isSimulationRunning(); }
     public boolean isGamePaused() { return gameEngine.isSimulationPaused(); }
@@ -460,6 +478,7 @@ public class GamePanel extends JPanel {
     public int getCurrentLevel() { return gameState.getCurrentSelectedLevel(); }
     public List<System> getSystems() { return gameEngine.getSystems(); }
     public List<Wire> getWires() { return gameEngine.getWires(); }
+    public List<Packet> getPackets() { return gameEngine.getPackets(); }
     public List<PacketSnapshot> getPredictedPacketStates() { return predictedPacketStates; }
     public PredictionRunStats getDisplayedPredictionStats() { return displayedPredictionStats; }
     public long getSimulationTimeElapsedMs() { return gameEngine.getSimulationTimeElapsedMs(); }
