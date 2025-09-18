@@ -1,4 +1,4 @@
-// ===== File: System.java (FINAL - Calls transformToMessenger for AntiTrojan) =====
+// ===== File: System.java (FINAL - Bulk-part Messengers are now lost on speed collision) =====
 
 package com.networkopsim.game.model.core;
 
@@ -82,7 +82,9 @@ public class System implements Serializable {
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
                 gameEngine.getGame().playSoundEffect("system_shutdown");
             }
-            if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
+
+            // [MODIFIED] Check for volumetric packets OR messenger packets that are part of a bulk operation.
+            if (packet.isVolumetric() || (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getBulkParentId() != -1)) {
                 gameEngine.packetLostInternal(packet, isPredictionRun);
             } else {
                 boolean isReversible = List.of(NetworkEnums.PacketType.MESSENGER, NetworkEnums.PacketType.NORMAL, NetworkEnums.PacketType.SECRET).contains(packet.getPacketType());
@@ -133,7 +135,6 @@ public class System implements Serializable {
         }
 
         if (targetTrojan != null) {
-            // [FIXED] Call the new method to ensure all properties (type, size, value) are correctly reset.
             targetTrojan.transformToMessenger();
             this.antiTrojanCooldownUntil = currentTime + ANTITROJAN_COOLDOWN_MS;
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {

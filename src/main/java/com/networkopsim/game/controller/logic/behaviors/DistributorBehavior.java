@@ -1,4 +1,4 @@
-// ===== File: DistributorBehavior.java (FINAL - Handles all volumetric packets) =====
+// ===== File: DistributorBehavior.java (FINAL - Corrected unit generation counting) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -15,7 +15,6 @@ public class DistributorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
         if (!packet.isVolumetric()) {
             processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
             return;
@@ -37,7 +36,8 @@ public class DistributorBehavior extends AbstractSystemBehavior {
 
         if (!isPredictionRun) {
             gameState.registerActiveBulkPacket(packet);
-            gameState.recordBulkPartsGeneration(packet.getId(), packet.getSize());
+            // [MODIFIED] The call to recordBulkPartsGeneration has been removed.
+            // Unit generation is now correctly handled at the source.
         }
 
         List<Packet> messengerParts = new ArrayList<>();

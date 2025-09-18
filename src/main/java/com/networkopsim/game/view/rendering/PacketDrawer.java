@@ -1,4 +1,4 @@
-// ===== File: PacketDrawer.java (FINAL - Colors special MESSENGERs) =====
+// ===== File: PacketDrawer.java (FINAL - Improved Messenger coloring) =====
 
 package com.networkopsim.game.view.rendering;
 
@@ -17,17 +17,17 @@ public final class PacketDrawer {
         NetworkEnums.PacketType packetType = packet.getPacketType();
         NetworkEnums.PacketShape shape = packet.getShape();
 
-        // [MODIFIED] Check if it's a MESSENGER packet.
         if (packetType == NetworkEnums.PacketType.MESSENGER && shape == NetworkEnums.PacketShape.CIRCLE) {
             Color messengerColor = null;
-            // If this MESSENGER is part of a BULK group, color it.
             if (packet.getBulkParentId() != -1) {
-                messengerColor = new Color(Color.HSBtoRGB((packet.getBulkParentId() * 0.27f) % 1.0f, 0.9f, 0.95f));
+                // [MODIFIED] Use a more complex hash to generate a wider variety of colors.
+                // This helps differentiate messenger groups from different parent packets (e.g., multiple WOBBLEs).
+                // Multiplying by a prime number and adding a constant helps spread out the hue values.
+                float hue = ((packet.getBulkParentId() * 31) + 17) % 100 / 100.0f;
+                messengerColor = new Color(Color.HSBtoRGB(hue, 0.9f, 0.95f));
             }
-            // A null color will default to white inside drawMessengerBody.
             drawMessengerBody(g2d, drawSize, messengerColor);
         } else {
-            // Drawing logic for all other packet types.
             switch (packetType) {
                 case PROTECTED:
                     drawProtectedBody(g2d, drawSize);

@@ -1,4 +1,4 @@
-// ===== File: GameState.java (FINAL - Levels are now locked by default) =====
+// ===== File: GameState.java (FINAL - Corrected unit generation counting) =====
 
 package com.networkopsim.game.model.state;
 
@@ -8,11 +8,11 @@ import com.networkopsim.game.model.enums.NetworkEnums;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Arrays;
 
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
-    // [MODIFIED] Total number of levels is now 5.
-    public static final int MAX_LEVELS = 5;
+    public static final int MAX_LEVELS = 6;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
     private int totalPacketLossUnits = 0;
@@ -38,11 +38,7 @@ public class GameState implements Serializable {
     private final Map<Integer, BulkPacketInfo> activeBulkPackets = new ConcurrentHashMap<>();
 
     public GameState() {
-        // [MODIFIED] Only unlock level 1 by default. All other levels start locked.
-        unlockedLevels[0] = true;
-        for (int i = 1; i < unlockedLevels.length; i++) {
-            unlockedLevels[i] = false;
-        }
+        Arrays.fill(unlockedLevels, true);
         currentSelectedLevel = 1;
     }
 
@@ -85,29 +81,25 @@ public class GameState implements Serializable {
 
     public void recordPacketGeneration(Packet packet) {
         if (packet != null) {
-            if (!packet.isVolumetric()) {
-                totalPacketUnitsGenerated += packet.getSize();
-            }
+            // [MODIFIED] Always count the units of ANY generated packet immediately, including volumetric ones.
+            // This ensures the loss percentage denominator is always correct from the moment of generation.
+            totalPacketUnitsGenerated += packet.getSize();
             totalPacketsGeneratedCount++;
         }
     }
 
-    public void recordBulkPartsGeneration(int bulkParentId, int totalSize) {
-        this.totalPacketUnitsGenerated += totalSize;
-    }
+    // [REMOVED] This method is redundant and was the source of the bug.
+    // Unit generation is now handled entirely and correctly by recordPacketGeneration.
+    // public void recordBulkPartsGeneration(int bulkParentId, int totalSize) { ... }
 
     public void increasePacketLoss(Packet packet) {
         if (packet != null) {
-            if (packet.isVolumetric()) {
+            if (packet.getBulkParentId() != -1) {
+                totalPacketLossUnits += packet.getSize();
+            } else {
                 totalPacketLossUnits += packet.getSize();
                 totalPacketsLostCount++;
-                return;
             }
-            if (packet.getBulkParentId() != -1) {
-                return;
-            }
-            totalPacketLossUnits += packet.getSize();
-            totalPacketsLostCount++;
         }
     }
 

@@ -1,4 +1,4 @@
-// ===== File: CorruptorBehavior.java (FINAL - Handles all volumetric packets) =====
+// ===== File: CorruptorBehavior.java (FINAL - Corrected loss counting) =====
 
 package com.networkopsim.game.controller.logic.behaviors;
 
@@ -16,7 +16,6 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
 
     @Override
     public void receivePacket(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
-        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
         if (packet.isVolumetric()) {
             handleDestructiveArrival(system, packet, gameEngine, isPredictionRun);
             return;
@@ -52,12 +51,13 @@ public class CorruptorBehavior extends AbstractSystemBehavior {
     protected void handleDestructiveArrival(com.networkopsim.game.model.core.System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
         synchronized(system.packetQueue) {
             for(Packet p : system.packetQueue) {
-                gameEngine.getGameState().increasePacketLoss(p);
+                // [MODIFIED] Loss is handled by packetLostInternal
                 gameEngine.packetLostInternal(p, isPredictionRun);
             }
             system.packetQueue.clear();
         }
-        gameEngine.getGameState().increasePacketLoss(packet);
+        // [MODIFIED] Removed direct call to increasePacketLoss.
+        // packetLostInternal will handle the loss counting correctly.
         gameEngine.packetLostInternal(packet, isPredictionRun);
     }
 

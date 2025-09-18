@@ -12,13 +12,14 @@ public class SinkBehavior extends AbstractSystemBehavior {
     @Override
     public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
 
-        // [SCENARIO 1] A BULK packet arrives.
-        if (packet.getPacketType() == NetworkEnums.PacketType.BULK) {
-            // A BULK packet arriving at a Sink is ALWAYS considered a success,
+        // [SCENARIO 1] A volumetric (BULK or WOBBLE) packet arrives.
+        // [MODIFIED] This now handles any volumetric packet.
+        if (packet.isVolumetric()) {
+            // A volumetric packet arriving at a Sink is ALWAYS considered a success,
             // because it could only have been created by a Merger. The actual
             // packet loss calculation for its original parts has already been
             // handled by the Merger reporting to the GameState.
-            // We treat this as a successful delivery of the merged payload.
+            // A raw volumetric packet from a source cannot reach here without being processed.
             gameEngine.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
             if (!isPredictionRun && !gameEngine.getGame().isMuted()) {
                 gameEngine.getGame().playSoundEffect("delivery_success");

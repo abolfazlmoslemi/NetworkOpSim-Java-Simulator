@@ -1,4 +1,4 @@
-// ===== File: LevelLoader.java (FINAL - Level 6 removed) =====
+// ===== File: LevelLoader.java (FINAL - Added Corruptor to Level 6) =====
 
 package com.networkopsim.game.utils;
 
@@ -51,7 +51,9 @@ public class LevelLoader {
                 case 5:
                     initializeLevel5(systems);
                     break;
-                // [MODIFIED] Case 6 has been removed.
+                case 6:
+                    initializeLevel6(systems);
+                    break;
                 default:
                     java.lang.System.err.println("Warning: Invalid level number " + level + ". Loading Level 1 as fallback.");
                     gameState.setMaxWireLengthForLevel(getWireBudgetForLevel(1));
@@ -85,7 +87,7 @@ public class LevelLoader {
             case 3: return 9999;
             case 4: return 30000;
             case 5: return 55000;
-            // [MODIFIED] Wire budget for level 6 removed.
+            case 6: return 60000;
             default: return 1000;
         }
     }
@@ -402,5 +404,49 @@ public class LevelLoader {
         systems.add(finalNode3);
     }
 
-    // [MODIFIED] Method for level 6 and its case in the switch statement have been completely removed.
+    private static void initializeLevel6(List<System> systems) {
+        int w = NetworkGame.WINDOW_WIDTH;
+        int h = NetworkGame.WINDOW_HEIGHT;
+        int sysW = System.SYSTEM_WIDTH;
+        int sysH = System.SYSTEM_HEIGHT;
+        int y_center = h / 2 - sysH / 2;
+
+        // 1. Source system
+        System source = createSource(50, y_center, NetworkEnums.PacketShape.CIRCLE, 10, 6000, NetworkEnums.PacketType.WOBBLE);
+        systems.add(source);
+
+        // 2. Distributor
+        System distributor = new System(250, y_center, NetworkEnums.SystemType.DISTRIBUTOR);
+        distributor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(distributor);
+
+        // [NEW] 3. Corruptor
+        System corruptor = new System(450, y_center, NetworkEnums.SystemType.CORRUPTOR);
+        corruptor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        corruptor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.SQUARE); // Added for variety
+        corruptor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        corruptor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.TRIANGLE); // Added for variety
+        systems.add(corruptor);
+
+        // 4. Node
+        System node = new System(w / 2 + 150 - sysW / 2, y_center, NetworkEnums.SystemType.NODE);
+        node.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        node.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        node.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        node.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(node);
+
+        // 5. Merger
+        System merger = new System(w - 300 - sysW, y_center, NetworkEnums.SystemType.MERGER);
+        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
+        merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
+        systems.add(merger);
+
+        // 6. Sink
+        System sink = createSink(w - 50 - sysW, y_center, NetworkEnums.PortShape.CIRCLE);
+        systems.add(sink);
+    }
 }
