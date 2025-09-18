@@ -1,4 +1,4 @@
-// ===== File: LevelLoader.java (FINAL - Level 5 Modified with Extra Sink Port) =====
+// ===== File: LevelLoader.java (FINAL - Level 6 removed) =====
 
 package com.networkopsim.game.utils;
 
@@ -51,9 +51,7 @@ public class LevelLoader {
                 case 5:
                     initializeLevel5(systems);
                     break;
-                case 6:
-                    initializeLevel6(systems);
-                    break;
+                // [MODIFIED] Case 6 has been removed.
                 default:
                     java.lang.System.err.println("Warning: Invalid level number " + level + ". Loading Level 1 as fallback.");
                     gameState.setMaxWireLengthForLevel(getWireBudgetForLevel(1));
@@ -87,7 +85,7 @@ public class LevelLoader {
             case 3: return 9999;
             case 4: return 30000;
             case 5: return 55000;
-            case 6: return 10000;
+            // [MODIFIED] Wire budget for level 6 removed.
             default: return 1000;
         }
     }
@@ -258,7 +256,7 @@ public class LevelLoader {
 
         // Sinks
         System sink1 = createSink(w - sysW - 30, h / 2 - 100, NetworkEnums.PortShape.SQUARE);
-        sink1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE); // [MODIFIED] Add a second input port to this sink.
+        sink1.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
         systems.add(sink1);
         systems.add(createSink(w - sysW - 30, h / 2 + 100, NetworkEnums.PortShape.TRIANGLE));
         systems.add(createSink(w - sysW - 30, 50, NetworkEnums.PortShape.CIRCLE));
@@ -404,42 +402,5 @@ public class LevelLoader {
         systems.add(finalNode3);
     }
 
-    private static void initializeLevel6(List<System> systems) {
-        int w = NetworkGame.WINDOW_WIDTH;
-        int h = NetworkGame.WINDOW_HEIGHT;
-        int sysHeight = System.SYSTEM_HEIGHT;
-        int y_pos = h / 2 - sysHeight / 2;
-
-        int x1 = 50;
-        int x2 = 300;
-        int x3 = 550;
-        int x4 = 800;
-        int x5 = 1050;
-
-        // 1. BULK Source
-        System source = createSource(x1, y_pos, NetworkEnums.PacketShape.CIRCLE, 5, 8000, NetworkEnums.PacketType.BULK);
-        systems.add(source);
-
-        // 2. Distributor
-        System distributor = new System(x2, y_pos, NetworkEnums.SystemType.DISTRIBUTOR);
-        distributor.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
-        distributor.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
-        systems.add(distributor);
-
-        // 3. Merger
-        System merger = new System(x3, y_pos, NetworkEnums.SystemType.MERGER);
-        merger.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
-        merger.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
-        systems.add(merger);
-
-        // 4. [NEW] Simple Node
-        System simpleNode = new System(x4, y_pos, NetworkEnums.SystemType.NODE);
-        simpleNode.addPort(NetworkEnums.PortType.INPUT, NetworkEnums.PortShape.CIRCLE);
-        simpleNode.addPort(NetworkEnums.PortType.OUTPUT, NetworkEnums.PortShape.CIRCLE);
-        systems.add(simpleNode);
-
-        // 5. SINK
-        System sink = createSink(x5, y_pos, NetworkEnums.PortShape.CIRCLE);
-        systems.add(sink);
-    }
+    // [MODIFIED] Method for level 6 and its case in the switch statement have been completely removed.
 }

@@ -1,4 +1,4 @@
-// ===== File: GameState.java (FINAL - Modified to track original volumetric packet type) =====
+// ===== File: GameState.java (FINAL - Levels are now locked by default) =====
 
 package com.networkopsim.game.model.state;
 
@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final int MAX_LEVELS = 6;
+    // [MODIFIED] Total number of levels is now 5.
+    public static final int MAX_LEVELS = 5;
     private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
     private int totalPacketLossUnits = 0;
@@ -24,7 +25,6 @@ public class GameState implements Serializable {
     private double maxSafeEntrySpeed = 4.0;
     private volatile boolean isDistributorBusy = false;
 
-    // [MODIFIED] Inner class to hold both size and type of the original volumetric packet.
     public static class BulkPacketInfo implements Serializable {
         private static final long serialVersionUID = 1L;
         public final int originalSize;
@@ -35,12 +35,13 @@ public class GameState implements Serializable {
         }
     }
 
-    // [MODIFIED] Map now stores the info object instead of just the size.
     private final Map<Integer, BulkPacketInfo> activeBulkPackets = new ConcurrentHashMap<>();
 
     public GameState() {
-        for (int i = 0; i < unlockedLevels.length; i++) {
-            unlockedLevels[i] = true;
+        // [MODIFIED] Only unlock level 1 by default. All other levels start locked.
+        unlockedLevels[0] = true;
+        for (int i = 1; i < unlockedLevels.length; i++) {
+            unlockedLevels[i] = false;
         }
         currentSelectedLevel = 1;
     }
@@ -72,13 +73,11 @@ public class GameState implements Serializable {
         }
     }
 
-    // [NEW] Getter for the Merger to know what type of packet to reconstruct.
     public NetworkEnums.PacketType getOriginalBulkPacketType(int bulkParentId) {
         BulkPacketInfo info = activeBulkPackets.get(bulkParentId);
         if (info != null) {
             return info.originalType;
         }
-        // Fallback in case the info is already removed, though this shouldn't happen in normal flow.
         return NetworkEnums.PacketType.BULK;
     }
 

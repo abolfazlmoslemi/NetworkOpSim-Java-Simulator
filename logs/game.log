@@ -9701,3 +9701,18 @@
 2025-09-17 05:42:22.972 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
 2025-09-17 05:42:24.519 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
 2025-09-17 05:42:24.520 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 05:49:07.661 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 05:49:07.664 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-17 05:49:07.665 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-17 05:49:07.668 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 05:49:07.727 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-17 05:49:07.728 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-17 05:49:09.929 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-17 05:49:09.929 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-17 05:49:10.175 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-17 05:49:10.176 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-17 05:49:10.177 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-17 05:49:21.817 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-17 05:49:23.707 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-17 05:49:25.824 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Shutdown sequence initiated...
+2025-09-17 05:49:25.859 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application shutdown complete. Exiting.

@@ -1,4 +1,4 @@
-// ===== File: GamePanel.java (Final Corrected for Level Isolation) =====
+// ===== File: GamePanel.java (FINAL - Adjusted level unlock logic) =====
 
 package com.networkopsim.game.view.panels;
 
@@ -150,7 +150,6 @@ public class GamePanel extends JPanel {
         autosaveTimer = new Timer(AUTOSAVE_INTERVAL_MS, e -> { if (isGameRunning() && !isGamePaused() && !isLevelComplete() && !isGameOver()) { GameStateManager.saveGameState(this); } }); autosaveTimer.setRepeats(true);
     }
 
-    // --- Core Game Flow ---
     public void initializeLevel(int level) {
         stopSimulation();
 
@@ -250,7 +249,6 @@ public class GamePanel extends JPanel {
         }
     }
 
-    // --- Network Validation ---
     public String getNetworkValidationErrorMessage() {
         List<System> currentSystemsSnapshot = gameEngine.getSystems();
         List<Wire> currentWiresSnapshot = gameEngine.getWires();
@@ -292,7 +290,6 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
-    // --- End Condition Logic ---
     private void checkEndConditions() {
         if (gameOver || levelComplete || !isSimulationStarted()) return;
         if (getSimulationTimeElapsedMs() >= currentLevelTimeLimitMs) { handleEndOfLevel(); return; }
@@ -325,7 +322,12 @@ public class GamePanel extends JPanel {
             gameOver = true; if (!game.isMuted()) game.playSoundEffect("game_over");
         } else {
             levelComplete = true; if (!game.isMuted()) game.playSoundEffect("level_complete");
-            if (getCurrentLevel() < gameState.getMaxLevels()) gameState.unlockLevel(getCurrentLevel());
+            // [MODIFIED] Unlock the *next* level if it's within bounds.
+            int currentLevelIndex = getCurrentLevel() - 1; // Levels are 1-based, indices are 0-based
+            int nextLevelIndex = currentLevelIndex + 1;
+            if (nextLevelIndex < gameState.getMaxLevels()) {
+                gameState.unlockLevel(nextLevelIndex);
+            }
         }
         SwingUtilities.invokeLater(() -> showEndLevelDialog(!lostTooMany));
     }
@@ -356,7 +358,6 @@ public class GamePanel extends JPanel {
         else { game.returnToMenu(); }
     }
 
-    // --- Prediction Logic ---
     private void updatePrediction() {
         if (isSimulationStarted() || !networkValidatedForPrediction) {
             predictedPacketStates.clear();
@@ -391,7 +392,6 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
-    // --- Interactive UI Methods (Wiring, Dragging, Power-ups) ---
     public void startWiringMode(Port startPort, Point currentMousePos) { if (!wireDrawingMode && startPort != null && !isSimulationStarted() && startPort.getType() == NetworkEnums.PortType.OUTPUT && !startPort.isConnected()) { logger.debug("Starting wire drawing from port {}.", startPort.getId()); this.selectedOutputPort = startPort; this.mouseDragPos.setLocation(currentMousePos); this.wireDrawingMode = true; this.currentWiringColor = DEFAULT_WIRING_COLOR; setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)); repaint(); } else if (isSimulationStarted()) { if(!game.isMuted()) game.playSoundEffect("error"); } }
     public void updateDragPos(Point currentMousePos) { if (wireDrawingMode) this.mouseDragPos.setLocation(currentMousePos); }
     public void updateWiringPreview(Point currentMousePos) { if (!wireDrawingMode || selectedOutputPort == null || selectedOutputPort.getPosition() == null) { this.currentWiringColor = DEFAULT_WIRING_COLOR; repaint(); return; } Point startPos = selectedOutputPort.getPosition(); double wireLength = startPos.distance(currentMousePos); if (gameState.getRemainingWireLength() < wireLength) { this.currentWiringColor = INVALID_WIRING_COLOR; repaint(); return; } Port targetPort = findPortAt(currentMousePos); if (targetPort != null) { if (Objects.equals(targetPort.getParentSystem(), selectedOutputPort.getParentSystem()) || targetPort.getType() != NetworkEnums.PortType.INPUT || targetPort.isConnected()) { this.currentWiringColor = INVALID_WIRING_COLOR; } else { this.currentWiringColor = VALID_WIRING_COLOR_TARGET; } } else { this.currentWiringColor = DEFAULT_WIRING_COLOR; } repaint(); }
