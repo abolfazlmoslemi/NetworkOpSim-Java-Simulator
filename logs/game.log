@@ -1,19 +1,23 @@
-2025-09-20 07:13:51.962 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
-2025-09-20 07:13:51.982 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
-2025-09-20 07:13:51.982 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\faz3
-2025-09-20 07:13:51.984 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
-2025-09-20 07:13:52.022 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
-2025-09-20 07:13:52.022 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
-2025-09-20 07:13:53.047 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
-2025-09-20 07:13:53.048 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
-2025-09-20 07:13:53.199 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
-2025-09-20 07:13:53.200 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
-2025-09-20 07:13:53.200 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
-2025-09-20 07:16:06.569 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 1.
-2025-09-20 07:16:06.572 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
-2025-09-20 07:16:06.575 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 1.
-2025-09-20 07:16:06.575 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
-2025-09-20 07:16:06.576 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
-2025-09-20 07:16:06.749 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
-2025-09-20 07:16:08.414 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 5.
-2025-09-20 07:16:09.217 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-20 07:49:21.790 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-20 07:49:21.807 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-20 07:49:21.807 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\faz3
+2025-09-20 07:49:21.809 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-20 07:49:21.842 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-20 07:49:21.843 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-20 07:49:22.666 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-20 07:49:22.667 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-20 07:49:22.785 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-20 07:49:22.785 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-20 07:49:22.785 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-20 07:49:26.311 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-20 07:49:27.384 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 1.
+2025-09-20 07:49:27.385 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 1.
+2025-09-20 07:49:27.385 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-20 07:49:27.391 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Initializing level 1.
+2025-09-20 07:49:27.392 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation and cleaning up level state.
+2025-09-20 07:49:27.392 [AWT-EventQueue-0] INFO  c.n.game.controller.logic.GameEngine - GameEngine: Stopping simulation timers and flags.
+2025-09-20 07:49:27.438 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Cancelling all interactive modes. Current mode: NONE
+2025-09-20 07:49:29.776 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Returning to main menu.
+2025-09-20 07:49:29.777 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-20 07:49:32.200 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Shutdown sequence initiated...
+2025-09-20 07:49:32.233 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application shutdown complete. Exiting.
