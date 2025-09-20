@@ -1,0 +1,702 @@
+2025-09-12 12:51:03.704 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 12:51:03.705 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-12 12:51:03.705 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-12 12:51:03.706 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 12:51:03.753 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 12:51:03.753 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-12 12:51:04.429 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-12 12:51:04.429 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-12 12:51:04.551 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-12 12:51:04.551 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-12 12:51:04.551 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-12 12:53:51.638 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 12:53:51.639 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-12 12:53:51.640 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-12 12:53:51.641 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 12:53:51.673 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 12:53:51.674 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-12 12:53:52.412 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-12 12:53:52.414 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-12 12:53:52.546 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-12 12:53:52.547 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-12 12:53:52.547 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-12 12:53:56.196 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-12 12:53:58.297 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 4.
+2025-09-12 12:53:58.298 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 4.
+2025-09-12 12:53:58.299 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-12 12:53:58.303 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Initializing level 4.
+2025-09-12 12:53:58.321 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Level 4 initialized successfully with 25 systems and 0 wires.
+2025-09-12 12:54:07.739 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-12 12:54:11.876 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 0 between Port 0 and Port 17. Length: 250
+2025-09-12 12:54:11.876 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 12:54:13.763 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 18.
+2025-09-12 12:54:15.047 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 1 between Port 18 and Port 43. Length: 355
+2025-09-12 12:54:15.048 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 12:54:16.429 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 45.
+2025-09-12 12:54:17.585 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 2 between Port 45 and Port 54. Length: 625
+2025-09-12 12:54:17.586 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 12:54:19.458 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 2
+2025-09-12 12:54:19.460 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 12:54:22.272 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 44.
+2025-09-12 12:54:24.026 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 12:54:26.676 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 44.
+2025-09-12 12:54:28.640 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 3 between Port 44 and Port 55. Length: 665
+2025-09-12 12:54:28.641 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 12:54:33.251 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 3
+2025-09-12 12:54:33.253 [Thread-7] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 12:54:37.202 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 56.
+2025-09-12 12:54:44.476 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 4 between Port 56 and Port 25. Length: 214
+2025-09-12 12:54:44.477 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:05:59.735 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-12 13:06:01.168 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:06:02.961 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-12 13:06:03.514 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:06:05.076 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 6.
+2025-09-12 13:06:06.895 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:55:31.073 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 13:55:31.074 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-12 13:55:31.074 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-12 13:55:31.075 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 13:55:31.101 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 13:55:31.102 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-12 13:55:31.582 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-12 13:55:31.582 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-12 13:55:31.698 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-12 13:55:31.699 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-12 13:55:31.699 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-12 13:55:35.955 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-12 13:55:37.553 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 4.
+2025-09-12 13:55:37.554 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 4.
+2025-09-12 13:55:37.555 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-12 13:55:37.559 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Initializing level 4.
+2025-09-12 13:55:37.583 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Level 4 initialized successfully with 22 systems and 0 wires.
+2025-09-12 13:56:21.269 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-12 13:56:21.979 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 0 between Port 0 and Port 8. Length: 71
+2025-09-12 13:56:21.981 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:23.782 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 9.
+2025-09-12 13:56:25.277 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 1 between Port 9 and Port 47. Length: 641
+2025-09-12 13:56:25.278 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:26.582 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 1
+2025-09-12 13:56:26.584 [Thread-4] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 13:56:30.501 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 10.
+2025-09-12 13:56:32.015 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 2 between Port 10 and Port 50. Length: 649
+2025-09-12 13:56:32.016 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:38.561 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 1.
+2025-09-12 13:56:40.466 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 3 between Port 1 and Port 11. Length: 177
+2025-09-12 13:56:40.467 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:43.796 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 12.
+2025-09-12 13:56:47.537 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 4 between Port 12 and Port 27. Length: 161
+2025-09-12 13:56:47.537 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:49.241 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-12 13:56:50.435 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 5 between Port 28 and Port 14. Length: 424
+2025-09-12 13:56:50.436 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:53.316 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 16.
+2025-09-12 13:56:55.096 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 6 between Port 16 and Port 31. Length: 240
+2025-09-12 13:56:55.097 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:56:56.930 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 17.
+2025-09-12 13:56:59.956 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 7 between Port 17 and Port 36. Length: 175
+2025-09-12 13:56:59.957 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:02.101 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-12 13:57:04.074 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 8 between Port 2 and Port 15. Length: 121
+2025-09-12 13:57:04.075 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:08.803 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 39.
+2025-09-12 13:57:10.258 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 9 between Port 39 and Port 24. Length: 112
+2025-09-12 13:57:10.259 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:11.557 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 25.
+2025-09-12 13:57:13.406 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 10 between Port 25 and Port 41. Length: 208
+2025-09-12 13:57:13.407 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:14.528 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 10
+2025-09-12 13:57:14.531 [Thread-14] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 13:57:17.342 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 46.
+2025-09-12 13:57:19.219 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 11 between Port 46 and Port 6. Length: 385
+2025-09-12 13:57:19.220 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:20.701 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 45.
+2025-09-12 13:57:21.726 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 12 between Port 45 and Port 7. Length: 340
+2025-09-12 13:57:21.727 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:23.594 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 30.
+2025-09-12 13:57:24.345 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 13 between Port 30 and Port 44. Length: 177
+2025-09-12 13:57:24.346 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:26.320 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 3.
+2025-09-12 13:57:27.909 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 14 between Port 3 and Port 29. Length: 275
+2025-09-12 13:57:27.910 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:29.268 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Deleted wire 13. Returned 177 length.
+2025-09-12 13:57:29.270 [Thread-19] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-12 13:57:31.020 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 30.
+2025-09-12 13:57:32.292 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 15 between Port 30 and Port 19. Length: 313
+2025-09-12 13:57:32.293 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:33.611 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 21.
+2025-09-12 13:57:34.616 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 16 between Port 21 and Port 44. Length: 392
+2025-09-12 13:57:34.617 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:37.352 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 20.
+2025-09-12 13:57:39.236 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 17 between Port 20 and Port 37. Length: 50
+2025-09-12 13:57:39.237 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:44.975 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 35.
+2025-09-12 13:57:46.698 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 18 between Port 35 and Port 18. Length: 454
+2025-09-12 13:57:46.700 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:48.202 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 18
+2025-09-12 13:57:48.204 [Thread-24] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 13:57:53.052 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 38.
+2025-09-12 13:57:54.786 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 19 between Port 38 and Port 22. Length: 291
+2025-09-12 13:57:54.787 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:57:56.348 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 23.
+2025-09-12 13:57:58.407 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 20 between Port 23 and Port 32. Length: 122
+2025-09-12 13:57:58.407 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:00.132 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 34.
+2025-09-12 13:58:02.812 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 21 between Port 34 and Port 40. Length: 86
+2025-09-12 13:58:02.813 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:07.081 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 33.
+2025-09-12 13:58:15.167 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 22 between Port 33 and Port 5. Length: 491
+2025-09-12 13:58:15.168 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:16.309 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 22
+2025-09-12 13:58:16.311 [Thread-29] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 13:58:20.850 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 13.
+2025-09-12 13:58:22.157 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 23 between Port 13 and Port 51. Length: 641
+2025-09-12 13:58:22.158 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:24.914 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 42.
+2025-09-12 13:58:27.432 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 24 between Port 42 and Port 26. Length: 426
+2025-09-12 13:58:27.432 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:30.158 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 43.
+2025-09-12 13:58:31.666 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 25 between Port 43 and Port 48. Length: 294
+2025-09-12 13:58:31.667 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:33.177 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 49.
+2025-09-12 13:58:33.968 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 26 between Port 49 and Port 4. Length: 92
+2025-09-12 13:58:33.976 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 13:58:58.357 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Attempting to start simulation for level 4.
+2025-09-12 13:58:58.358 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Network validation failed: All ports on every system (Sources, Nodes, Sinks, etc.) must be connected.
+2025-09-12 14:02:40.352 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 14:02:40.354 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-12 14:02:40.354 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-12 14:02:40.355 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 14:02:40.390 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 14:02:40.390 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-12 14:02:41.158 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-12 14:02:41.159 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-12 14:02:41.279 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-12 14:02:41.280 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-12 14:02:41.280 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-12 14:02:43.016 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-12 14:02:44.621 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 4.
+2025-09-12 14:02:44.622 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 4.
+2025-09-12 14:02:44.622 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-12 14:02:44.626 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Initializing level 4.
+2025-09-12 14:02:44.652 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Level 4 initialized successfully with 24 systems and 0 wires.
+2025-09-12 14:05:17.760 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 14:05:17.762 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application starting up...
+2025-09-12 14:05:17.763 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current Working Directory: C:\Users\Abolfazl\Ap 1403_4\pgit - Copy
+2025-09-12 14:05:17.765 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 14:05:17.819 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - ========================================================
+2025-09-12 14:05:17.819 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Network Operator Simulator is starting up...
+2025-09-12 14:05:19.065 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music started playing.
+2025-09-12 14:05:19.066 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Sound system initialized successfully.
+2025-09-12 14:05:19.436 [AWT-EventQueue-0] DEBUG c.n.game.utils.GameStateManager - No save file found at 'game_autosave.dat'.
+2025-09-12 14:05:19.437 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - No existing save file found. Starting fresh.
+2025-09-12 14:05:19.437 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Application initialized successfully. Showing main menu.
+2025-09-12 14:05:20.722 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing level selection panel.
+2025-09-12 14:05:21.728 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Current level set to 4.
+2025-09-12 14:05:21.729 [AWT-EventQueue-0] INFO  c.n.game.controller.core.NetworkGame - Attempting to start game for level 4.
+2025-09-12 14:05:21.729 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Background music stopped.
+2025-09-12 14:05:21.732 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Initializing level 4.
+2025-09-12 14:05:21.748 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Level 4 initialized successfully with 24 systems and 0 wires.
+2025-09-12 14:07:30.996 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 0.
+2025-09-12 14:07:31.523 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 0 between Port 0 and Port 8. Length: 71
+2025-09-12 14:07:31.526 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:07:32.958 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 9.
+2025-09-12 14:07:34.974 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 1 between Port 9 and Port 59. Length: 653
+2025-09-12 14:07:34.975 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:07:36.365 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 1
+2025-09-12 14:07:36.368 [Thread-4] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:07:41.364 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 1
+2025-09-12 14:07:41.365 [Thread-5] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:07:45.658 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 61.
+2025-09-12 14:07:46.512 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 2 between Port 61 and Port 4. Length: 120
+2025-09-12 14:07:46.513 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:07:50.763 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 12.
+2025-09-12 14:07:54.703 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 3 between Port 12 and Port 56. Length: 644
+2025-09-12 14:07:54.703 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:07:58.947 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 10.
+2025-09-12 14:08:00.722 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 4 between Port 10 and Port 11. Length: 120
+2025-09-12 14:08:00.722 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:06.746 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 1.
+2025-09-12 14:08:08.132 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 5 between Port 1 and Port 27. Length: 375
+2025-09-12 14:08:08.133 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:11.695 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 28.
+2025-09-12 14:08:12.892 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 6 between Port 28 and Port 14. Length: 424
+2025-09-12 14:08:12.893 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:14.657 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 13.
+2025-09-12 14:08:15.761 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 7 between Port 13 and Port 26. Length: 184
+2025-09-12 14:08:15.762 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:17.307 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 16.
+2025-09-12 14:08:18.563 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 8 between Port 16 and Port 22. Length: 172
+2025-09-12 14:08:18.563 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:19.987 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 23.
+2025-09-12 14:08:20.952 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 9 between Port 23 and Port 47. Length: 192
+2025-09-12 14:08:20.953 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:22.357 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 49.
+2025-09-12 14:08:25.242 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 10 between Port 49 and Port 40. Length: 170
+2025-09-12 14:08:25.243 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:26.812 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 45.
+2025-09-12 14:08:28.392 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 11 between Port 45 and Port 7. Length: 340
+2025-09-12 14:08:28.393 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:32.543 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 43.
+2025-09-12 14:08:34.252 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 12 between Port 43 and Port 5. Length: 340
+2025-09-12 14:08:34.252 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:36.155 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 3.
+2025-09-12 14:08:39.432 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:41.188 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 3.
+2025-09-12 14:08:42.292 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 13 between Port 3 and Port 29. Length: 275
+2025-09-12 14:08:42.293 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:43.652 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 30.
+2025-09-12 14:08:45.051 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 14 between Port 30 and Port 19. Length: 313
+2025-09-12 14:08:45.052 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:47.137 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 21.
+2025-09-12 14:08:48.172 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 15 between Port 21 and Port 37. Length: 64
+2025-09-12 14:08:48.173 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:49.438 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 39.
+2025-09-12 14:08:50.695 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 16 between Port 39 and Port 53. Length: 274
+2025-09-12 14:08:50.695 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:52.608 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 55.
+2025-09-12 14:08:54.455 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 17 between Port 55 and Port 44. Length: 161
+2025-09-12 14:08:54.455 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:08:56.189 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 54.
+2025-09-12 14:08:57.342 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 18 between Port 54 and Port 32. Length: 259
+2025-09-12 14:08:57.343 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:00.635 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 17.
+2025-09-12 14:09:03.853 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 19 between Port 17 and Port 24. Length: 161
+2025-09-12 14:09:03.854 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:05.715 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 20.
+2025-09-12 14:09:09.222 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 20 between Port 20 and Port 31. Length: 339
+2025-09-12 14:09:09.223 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:10.705 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 20
+2025-09-12 14:09:10.706 [Thread-25] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:09:13.678 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 38.
+2025-09-12 14:09:20.262 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 21 between Port 38 and Port 41. Length: 342
+2025-09-12 14:09:20.263 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:21.314 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 21
+2025-09-12 14:09:21.315 [Thread-27] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:09:24.093 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 25.
+2025-09-12 14:09:27.117 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 22 between Port 25 and Port 51. Length: 174
+2025-09-12 14:09:27.118 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:30.028 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 2.
+2025-09-12 14:09:31.296 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 23 between Port 2 and Port 15. Length: 121
+2025-09-12 14:09:31.297 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:38.546 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 33.
+2025-09-12 14:09:47.611 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:09:49.434 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 42.
+2025-09-12 14:09:56.737 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:03.665 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 50.
+2025-09-12 14:10:03.682 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:06.075 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 50.
+2025-09-12 14:10:07.973 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 24 between Port 50 and Port 18. Length: 686
+2025-09-12 14:10:07.974 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:09.279 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 24
+2025-09-12 14:10:09.281 [Thread-33] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:10:18.038 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 33.
+2025-09-12 14:10:20.635 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:22.147 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 42.
+2025-09-12 14:10:23.962 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 25 between Port 42 and Port 36. Length: 488
+2025-09-12 14:10:23.964 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:25.415 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 25
+2025-09-12 14:10:25.417 [Thread-35] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:10:34.957 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 34.
+2025-09-12 14:10:39.472 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 26 between Port 34 and Port 48. Length: 193
+2025-09-12 14:10:39.474 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:41.297 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 35.
+2025-09-12 14:10:43.263 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 27 between Port 35 and Port 60. Length: 370
+2025-09-12 14:10:43.264 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:44.438 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Added a relay point to wire 27
+2025-09-12 14:10:44.441 [Thread-38] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:10:49.147 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 33.
+2025-09-12 14:10:52.543 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 28 between Port 33 and Port 52. Length: 170
+2025-09-12 14:10:52.544 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:10:56.726 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 58.
+2025-09-12 14:10:59.397 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 29 between Port 58 and Port 6. Length: 410
+2025-09-12 14:10:59.403 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:11:02.988 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Starting wire drawing from port 46.
+2025-09-12 14:11:04.889 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Created new wire 30 between Port 46 and Port 57. Length: 595
+2025-09-12 14:11:04.891 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Network is now fully connected and valid for prediction.
+2025-09-12 14:11:04.891 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Displaying temporary message: 'Network is fully connected and ready!'
+2025-09-12 14:11:04.896 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Wire drawing cancelled.
+2025-09-12 14:11:06.284 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Attempting to start simulation for level 4.
+2025-09-12 14:11:06.286 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Simulation started successfully.
+2025-09-12 14:11:06.308 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,130.0) Vel:(2.9,-2.9 (Mag:4.10)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:0 P:0.0%)}
+2025-09-12 14:11:06.311 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:1, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:06.312 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:2, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:06.312 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:3, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:06.314 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:4, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(730.0,210.0) Vel:(-0.9,0.5 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:0.0%)}
+2025-09-12 14:11:06.314 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:5, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:06.605 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:0, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(180.0,80.0) Vel:(2.9,-2.9 (Mag:4.10)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:0 P:100.0%)}
+2025-09-12 14:11:06.606 [Thread-42] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-12 14:11:07.347 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:2, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:08.640 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:6, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:09.367 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:7, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:09.651 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:6, SHP:TRIANGLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.8) Vel:(1.6,-1.2 (Mag:2.02)) Accel:true Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.2%)}
+2025-09-12 14:11:09.783 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:8, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:09.984 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:9, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:10.268 [Thread-46] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-12 14:11:10.937 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:10, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:11.557 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:11, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,130.0) Vel:(2.9,-2.9 (Mag:4.10)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:0 P:0.0%)}
+2025-09-12 14:11:11.837 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:11, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(180.0,80.0) Vel:(2.9,-2.9 (Mag:4.10)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:0 P:100.0%)}
+2025-09-12 14:11:11.838 [Thread-47] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-12 14:11:11.953 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:10, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:12.097 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:11:12.324 [AWT-EventQueue-0] DEBUG c.n.game.controller.core.NetworkGame - Showing store panel.
+2025-09-12 14:11:12.348 [AWT-EventQueue-0] DEBUG c.n.game.view.dialogs.StorePanel - Store panel is being made visible.
+2025-09-12 14:11:19.504 [AWT-EventQueue-0] INFO  c.n.game.view.dialogs.StorePanel - User purchased item 'Speed Limiter' for 7 coins. Remaining coins: 29
+2025-09-12 14:11:19.505 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Power-up activated: Speed Limiter.
+2025-09-12 14:11:19.505 [Thread-50] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:11:21.016 [AWT-EventQueue-0] DEBUG c.n.game.view.dialogs.StorePanel - Closing store and resuming game.
+2025-09-12 14:11:21.044 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:11:21.366 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:12, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:21.549 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:13, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:22.103 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:7, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(690.0,200.0) Vel:(0.7,-1.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:11:22.202 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:14, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:22.202 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:15, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:22.607 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:16, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:22.921 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:5, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:11:22.923 [Thread-51] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:23.004 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:8, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:23.005 [Thread-52] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:23.222 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:14, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:24.303 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:3, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,530.0) Vel:(0.8,1.8 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:24.404 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:17, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:24.455 [Thread-54] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-12 14:11:24.503 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:18, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:25.526 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:18, SHP:TRIANGLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.8) Vel:(1.6,-1.2 (Mag:2.00)) Accel:true Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.2%)}
+2025-09-12 14:11:25.560 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:12, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:25.561 [Thread-56] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:25.661 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:19, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:25.745 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:20, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(130.0,130.0) Vel:(2.9,-2.9 (Mag:4.10)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:0 P:0.0%)}
+2025-09-12 14:11:25.947 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:9, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,530.0) Vel:(1.9,-0.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:26.031 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:20, SHP:CIRCLE, TYP: BULK, SZ:8, N:0.0/8, V:8, Ideal:(180.0,80.0) Vel:(2.9,-2.9 (Mag:4.10)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:0 P:100.0%)}
+2025-09-12 14:11:26.032 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Wire 0 destroyed due to excessive BULK packet traversals.
+2025-09-12 14:11:26.032 [Thread-57] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_shutdown.wav
+2025-09-12 14:11:26.033 [Thread-59] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/wire_disconnect.wav
+2025-09-12 14:11:26.265 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:21, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:26.290 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:11:26.290 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:11:26.290 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:11:26.343 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:11:26.344 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:11:26.529 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:15, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:26.531 [Thread-60] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:26.877 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:22, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:27.513 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:23, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:27.884 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:24, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:27.900 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:22, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:29.093 [Thread-62] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:11:29.177 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:25, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:29.177 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:26, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(730.0,210.0) Vel:(-0.9,0.5 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:0.0%)}
+2025-09-12 14:11:29.741 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:4, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,-0.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:29.742 [Thread-63] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/system_reboot.wav
+2025-09-12 14:11:29.973 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:27, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:29.973 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:19, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:29.974 [Thread-64] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:30.189 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:25, SHP:TRIANGLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.8) Vel:(1.6,-1.2 (Mag:2.00)) Accel:true Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.2%)}
+2025-09-12 14:11:30.540 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:28, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:30.843 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Collision detected between Packet ID 23 and Packet ID 26
+2025-09-12 14:11:30.843 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Impact wave generated at (635, 259) due to collision.
+2025-09-12 14:11:30.859 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:23, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:1.0/1, V:1, Ideal:(632.2,255.8) Vel:(0.7,-1.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:26 P:74.6%)}
+2025-09-12 14:11:31.476 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:29, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:31.493 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:1, SHP:SQUARE, TYP: MESSENGER, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:32.094 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:17, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:11:32.095 [Thread-68] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:32.493 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:29, SHP:TRIANGLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.8) Vel:(1.6,-1.2 (Mag:2.00)) Accel:true Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.2%)}
+2025-09-12 14:11:32.628 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:30, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:33.580 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:31, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:33.630 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:32, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:33.779 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:33, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:34.128 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:34, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:34.311 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:28, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(690.0,200.0) Vel:(0.7,-1.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:11:34.798 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:33, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:36.079 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:35, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:36.079 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:36, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:36.297 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:11:36.297 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:11:36.297 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:11:36.313 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:11:36.314 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:11:36.612 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Collision detected between Packet ID 13 and Packet ID 26
+2025-09-12 14:11:36.612 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Impact wave generated at (354, 445) due to collision.
+2025-09-12 14:11:36.630 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:13, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(345.1,448.6) Vel:(1.7,1.0 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:19 P:60.8%)}
+2025-09-12 14:11:36.630 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:26, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(354.1,445.2) Vel:(-0.7,0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:64.4%)}
+2025-09-12 14:11:36.646 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:37, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:37.034 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:30, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:37.035 [Thread-74] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:37.065 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:16, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:11:37.066 [Thread-75] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:37.247 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:35, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:37.431 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:38, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:37.547 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:21, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,200.0) Vel:(0.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:11:37.915 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:31, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:37.915 [Thread-77] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:38.299 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:27, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.1/6, V:4, Ideal:(690.0,530.0) Vel:(2.0,-0.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:38.537 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:39, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:39.554 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:39, SHP:TRIANGLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.8) Vel:(1.6,-1.2 (Mag:2.00)) Accel:true Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.2%)}
+2025-09-12 14:11:39.687 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:40, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:39.803 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:41, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:40.483 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:36, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:40.484 [Thread-79] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:40.534 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:42, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:40.831 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:43, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:40.947 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:37, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:40.948 [Thread-80] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:41.081 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:44, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:41.850 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:43, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:42.833 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:45, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:43.086 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:32, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,200.0) Vel:(1.4,-3.6 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:11:43.137 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:46, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:43.137 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:47, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:43.621 [Thread-82] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:11:43.937 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:40, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:43.938 [Thread-83] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:43.985 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:41, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:43.986 [Thread-84] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:44.153 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:46, SHP:TRIANGLE, TYP: TROJAN, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.8) Vel:(1.6,-1.2 (Mag:2.00)) Accel:true Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.2%)}
+2025-09-12 14:11:44.734 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:48, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:45.438 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:49, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:45.820 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:24, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:45.870 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:50, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:46.293 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:11:46.293 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:11:46.293 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:11:46.305 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:11:46.305 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:11:46.473 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:49, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:46.605 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:51, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:46.804 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:52, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:47.034 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:45, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:47.035 [Thread-87] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:47.269 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:38, SHP:CIRCLE, TYP: MESSENGER, SZ:6, N:1.0/6, V:4, Ideal:(690.0,530.0) Vel:(0.8,1.8 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:47.405 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:47, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:47.406 [Thread-88] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:47.754 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:53, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:48.404 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:54, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:48.771 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:53, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:48.921 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:55, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:50.054 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:56, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:50.054 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:57, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(730.0,210.0) Vel:(-0.9,0.5 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:0.0%)}
+2025-09-12 14:11:50.071 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:50, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:50.072 [Thread-90] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:50.858 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:51, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:50.859 [Thread-91] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:51.075 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:56, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:51.491 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:44, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,200.0) Vel:(0.4,-0.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:11:51.956 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:58, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:11:51.974 [Thread-93] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:11:52.057 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:59, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:52.357 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:60, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:52.924 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:34, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:11:53.056 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:61, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:53.372 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:60, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:53.503 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:62, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:54.664 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:63, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:54.780 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:48, SHP:CIRCLE, TYP: MESSENGER, SZ:6, N:1.0/6, V:4, Ideal:(690.0,200.0) Vel:(0.7,-1.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:11:54.997 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:64, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:55.681 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:63, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:55.714 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:65, SHP:CIRCLE, TYP: SECRET, SZ:4, N:0.0/4, V:3, Ideal:(130.0,680.0) Vel:(2.0,0.4 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:13 P:0.0%)}
+2025-09-12 14:11:56.151 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:58, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:11:56.151 [Thread-96] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:56.292 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:11:56.292 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:11:56.292 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:11:56.300 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:11:56.301 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:11:56.569 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:55, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:11:56.571 [Thread-97] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:56.993 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:66, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:56.993 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:67, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:11:57.795 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:62, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:11:57.796 [Thread-98] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:11:58.018 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:66, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:11:58.067 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:68, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:11:59.307 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:69, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:0.0/1, V:1, Ideal:(130.0,510.0) Vel:(0.8,-1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:23 P:0.0%)}
+2025-09-12 14:11:59.358 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:70, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:11:59.627 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:54, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,200.0) Vel:(0.7,-1.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:12:00.062 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:42, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:00.332 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:69, SHP:TRIANGLE, TYP: MESSENGER, SZ:1, N:1.0/1, V:1, Ideal:(261.6,378.9) Vel:(1.6,-1.1 (Mag:1.96)) Accel:false Decel:true Rev:false FinalPred:N/A St:ON_WIRE(W:8 P:1.1%)}
+2025-09-12 14:12:00.464 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:71, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:01.112 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:72, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:01.263 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:67, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:01.264 [Thread-101] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:01.845 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:68, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(690.0,200.0) Vel:(0.7,-1.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:12:01.995 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:59, SHP:CIRCLE, TYP: SECRET, SZ:6, N:1.0/6, V:4, Ideal:(690.0,350.0) Vel:(0.8,-1.2 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:18)}
+2025-09-12 14:12:02.663 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:64, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:12:02.664 [Thread-103] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:03.912 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:73, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(730.0,210.0) Vel:(-0.9,0.5 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:0.0%)}
+2025-09-12 14:12:04.148 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:74, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:04.714 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:71, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:04.715 [Thread-104] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:05.298 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:72, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:05.299 [Thread-105] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:05.617 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:75, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:06.116 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Collision detected between Packet ID 65 and Packet ID 73
+2025-09-12 14:12:06.117 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Impact wave generated at (617, 282) due to collision.
+2025-09-12 14:12:06.296 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:12:06.297 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:12:06.297 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:12:06.314 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:12:06.315 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:12:07.186 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:52, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:07.219 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:76, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:07.401 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:77, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:07.433 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:65, SHP:CIRCLE, TYP: SECRET, SZ:6, N:2.0/6, V:4, Ideal:(690.0,200.0) Vel:(0.6,-1.6 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:12:08.370 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:74, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:08.371 [Thread-107] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:10.252 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:78, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:10.852 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:79, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:11.406 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:76, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:11.407 [Thread-108] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:11.654 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:77, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:11.655 [Thread-109] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:11.900 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:80, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:13.277 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:81, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:13.573 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:57, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(1110.0,510.0) Vel:(0.4,2.0 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:6)}
+2025-09-12 14:12:13.574 [Thread-110] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:14.256 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:61, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:14.290 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:82, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:14.423 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:78, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:14.425 [Thread-111] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:15.088 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:79, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:15.089 [Thread-112] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:16.292 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:12:16.292 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:12:16.292 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:12:16.304 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:12:16.304 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:12:16.340 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:83, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:17.491 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:81, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:17.492 [Thread-113] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:17.774 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:84, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(730.0,210.0) Vel:(-0.9,0.5 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:0.0%)}
+2025-09-12 14:12:18.174 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:85, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:18.574 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:82, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:18.575 [Thread-114] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:19.377 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:86, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:20.532 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:83, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:20.532 [Thread-115] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:21.244 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:87, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:21.393 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:70, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:22.426 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:88, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:12:23.576 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:86, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:23.577 [Thread-116] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:24.444 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:89, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:24.697 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:90, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:25.462 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:91, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:25.495 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:87, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:25.496 [Thread-117] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:26.292 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:12:26.292 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:12:26.292 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:12:26.300 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:12:26.301 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:12:27.449 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:73, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(1110.0,510.0) Vel:(0.4,2.0 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:6)}
+2025-09-12 14:12:27.450 [Thread-118] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:28.166 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:92, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:28.499 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:75, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:28.515 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:93, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:12:28.966 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:90, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:28.967 [Thread-119] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:29.667 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:91, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:29.668 [Thread-120] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:30.067 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:88, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:12:30.068 [Thread-121] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:30.717 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:94, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:31.550 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:95, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:31.619 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:96, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:32.183 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:84, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,-0.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:32.416 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:92, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:32.417 [Thread-122] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:33.188 [Thread-123] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/ui_confirm.wav
+2025-09-12 14:12:34.587 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:97, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:35.071 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:98, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:35.587 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:80, SHP:SQUARE, TYP: MESSENGER, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:35.736 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:95, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:35.737 [Thread-124] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:35.870 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:96, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:35.871 [Thread-125] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:36.139 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:93, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:12:36.140 [Thread-126] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:36.296 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:12:36.296 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:12:36.296 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:12:36.303 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:12:36.304 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:12:36.989 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:99, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:37.639 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:100, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:38.533 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:101, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:38.783 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:97, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:38.785 [Thread-127] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:39.341 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:98, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:39.342 [Thread-128] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:40.673 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:102, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:41.826 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:100, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:41.826 [Thread-129] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:41.993 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:103, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:42.688 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:85, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:42.789 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:101, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:42.790 [Thread-130] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:43.239 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:104, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:43.705 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:105, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:12:44.860 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:102, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:44.861 [Thread-131] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:45.453 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:106, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(730.0,210.0) Vel:(-0.9,0.5 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:24 P:0.0%)}
+2025-09-12 14:12:46.258 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:103, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:46.259 [Thread-132] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:46.301 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:12:46.301 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:12:46.301 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:12:46.307 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:12:46.308 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:12:46.776 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:107, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:48.948 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:108, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:49.550 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:109, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:49.831 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:110, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:12:49.831 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:89, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:50.981 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:107, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:50.982 [Thread-133] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:51.384 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:105, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:12:51.385 [Thread-134] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:52.398 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:111, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:52.865 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:112, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:12:53.199 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:108, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:53.200 [Thread-135] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:55.799 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:113, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:12:55.849 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:114, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:12:55.900 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:115, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:12:56.301 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:12:56.302 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:12:56.302 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:12:56.307 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:12:56.308 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:12:56.676 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:111, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:12:56.677 [Thread-136] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:56.944 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:94, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
+2025-09-12 14:12:57.077 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:112, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(1110.0,350.0) Vel:(2.0,-0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:5)}
+2025-09-12 14:12:57.078 [Thread-137] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:57.474 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:110, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 14:12:57.475 [Thread-138] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:12:59.827 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:116, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,520.0) Vel:(-1.8,-0.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:18 P:0.0%)}
+2025-09-12 14:13:00.202 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:117, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 14:13:01.001 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:114, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,680.0) Vel:(2.0,0.1 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:7)}
+2025-09-12 14:13:01.002 [Thread-139] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 14:13:01.599 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Collision detected between Packet ID 106 and Packet ID 117
+2025-09-12 14:13:01.599 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Impact wave generated at (737, 670) due to collision.
+2025-09-12 14:13:01.617 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:106, SHP:SQUARE, TYP: NORMAL, SZ:2, N:2.0/2, V:2, Ideal:(735.7,670.8) Vel:(0.6,-1.9 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:30 P:3.4%)}
+2025-09-12 14:13:01.617 [AWT-EventQueue-0] WARN  c.n.game.view.panels.GamePanel - Packet Lost: Packet{ID:117, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:1.0/1, V:1, Ideal:(732.0,670.1) Vel:(2.0,0.1 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:11 P:0.6%)}
+2025-09-12 14:13:12.738 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 14:13:12.739 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 14:13:12.739 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 14:13:12.768 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 14:13:12.769 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 14:13:12.769 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Power-up expired: Speed Limiter.
+2025-09-12 14:13:13.813 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:118, SHP:TRIANGLE, TYP: NORMAL, SZ:3, N:0.0/3, V:3, Ideal:(730.0,540.0) Vel:(-1.0,1.7 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:17 P:0.0%)}
+2025-09-12 14:13:13.898 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:119, SHP:SQUARE, TYP: NORMAL, SZ:2, N:0.0/2, V:2, Ideal:(130.0,350.0) Vel:(0.7,-0.7 (Mag:1.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:5 P:0.0%)}
+2025-09-12 14:13:14.557 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:116, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(690.0,200.0) Vel:(0.7,-1.9 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:20)}
+2025-09-12 14:13:14.607 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Generated new packet: Packet{ID:120, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(730.0,190.0) Vel:(-0.9,1.8 (Mag:2.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:ON_WIRE(W:10 P:0.0%)}
+2025-09-12 21:58:21.473 [AWT-EventQueue-0] DEBUG c.n.game.view.panels.GamePanel - Autosave triggered.
+2025-09-12 21:58:21.473 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game paused.
+2025-09-12 21:58:21.474 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Attempting to save game state...
+2025-09-12 21:58:21.538 [AWT-EventQueue-0] INFO  c.n.game.utils.GameStateManager - Game state saved successfully to 'game_autosave.dat'.
+2025-09-12 21:58:21.541 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Game resumed.
+2025-09-12 21:58:22.277 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:115, SHP:CIRCLE, TYP: NORMAL, SZ:1, N:0.0/1, V:1, Ideal:(1110.0,130.0) Vel:(1.5,-1.3 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:4)}
+2025-09-12 21:58:22.293 [Thread-143] WARN  c.n.game.controller.core.NetworkGame - Sound effect not found: /assets/sounds/delivery_success.wav
+2025-09-12 21:58:22.811 [AWT-EventQueue-0] INFO  c.n.game.view.panels.GamePanel - Packet Delivered Successfully: Packet{ID:99, SHP:SQUARE, TYP: NORMAL, SZ:2, N:1.0/2, V:2, Ideal:(690.0,530.0) Vel:(2.0,0.4 (Mag:0.00)) Accel:false Decel:false Rev:false FinalPred:N/A St:QUEUED(Sys:21)}
