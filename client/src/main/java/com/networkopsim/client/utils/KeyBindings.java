@@ -1,7 +1,7 @@
 // ===== File: KeyBindings.java (REVISED for Client) =====
 // ===== MODULE: client =====
 
-package com.networkopsim.game.utils;
+package com.networkopsim.client.utils;
 
 import java.awt.event.KeyEvent;
 import java.io.*;

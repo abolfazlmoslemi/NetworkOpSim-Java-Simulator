@@ -10,12 +10,11 @@ import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.core.Wire;
 import com.networkopsim.game.model.enums.NetworkEnums;
 import com.networkopsim.game.model.state.GameState;
-import com.networkopsim.game.utils.KeyBindings;
+import com.networkopsim.client.utils.KeyBindings;
 import com.networkopsim.game.view.panels.GamePanel;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +91,7 @@ public class GameRenderer {
         }
       }
 
-      // Corrected call to drawSystems with the simulation time
+      // [CORRECTED] Call drawSystems with the simulation time
       SystemDrawer.drawSystems(g2d, this.systems, gamePanel.getSimulationTimeElapsedMs());
 
       if (gamePanel.isWireDrawingMode() && gamePanel.getSelectedOutputPort() != null && gamePanel.getMouseDragPos() != null) {

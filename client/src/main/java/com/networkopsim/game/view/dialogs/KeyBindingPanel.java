@@ -2,7 +2,7 @@ package com.networkopsim.game.view.dialogs;
 
 
 import com.networkopsim.game.controller.core.NetworkGame;
-import com.networkopsim.game.utils.KeyBindings;
+import com.networkopsim.client.utils.KeyBindings;
 
 // ===== File: KeyBindingPanel.java =====
 import javax.swing.*;

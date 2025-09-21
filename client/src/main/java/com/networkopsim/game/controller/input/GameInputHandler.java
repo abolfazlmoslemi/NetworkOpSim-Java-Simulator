@@ -8,7 +8,7 @@ import com.networkopsim.game.model.core.Port;
 import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.core.Wire;
 import com.networkopsim.game.model.enums.NetworkEnums;
-import com.networkopsim.game.utils.KeyBindings;
+import com.networkopsim.client.utils.KeyBindings;
 import com.networkopsim.game.view.panels.GamePanel;
 
 import javax.swing.*;

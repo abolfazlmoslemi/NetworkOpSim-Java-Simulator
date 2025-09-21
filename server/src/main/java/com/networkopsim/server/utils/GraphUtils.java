@@ -1,4 +1,4 @@
-package com.networkopsim.game.utils;
+package com.networkopsim.server.utils;
 
 
 import com.networkopsim.game.model.core.Port;

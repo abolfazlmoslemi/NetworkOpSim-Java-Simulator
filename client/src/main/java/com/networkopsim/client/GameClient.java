@@ -1,4 +1,4 @@
-// ===== File: GameClient.java (FINAL CORRECTED VERSION) =====
+// ===== File: GameClient.java (FINAL CORRECTED with Definitive Stream Initialization) =====
 // ===== MODULE: client =====
 
 package com.networkopsim.client;
@@ -26,7 +26,7 @@ public class GameClient implements Runnable {
   private ObjectInputStream in;
   private volatile boolean running = true;
   private final GamePanel gamePanel;
-  private final int levelToLoad; // Field to store the level to initialize
+  private final int levelToLoad;
 
   public GameClient(String host, int port, GamePanel gamePanel, int levelToLoad) {
     this.host = host;
@@ -39,13 +39,17 @@ public class GameClient implements Runnable {
   public void run() {
     try {
       socket = new Socket(host, port);
-      out = new ObjectOutputStream(socket.getOutputStream());
+
+      // [DEFINITIVE FIX] Client creates its input stream first. This will wait for the server's
+      // output stream header before proceeding.
       in = new ObjectInputStream(socket.getInputStream());
+      // Client creates its output stream second, completing the handshake.
+      out = new ObjectOutputStream(socket.getOutputStream());
+
       logger.info("Successfully connected to game server at {}:{}", host, port);
 
       SwingUtilities.invokeLater(() -> gamePanel.setConnectionStatus(true));
 
-      // CRITICAL CHANGE: Send the initialization action AFTER connection is established.
       sendAction(new ClientAction(ClientAction.ActionType.INITIALIZE_LEVEL, levelToLoad));
 
       while (running) {
@@ -56,7 +60,7 @@ public class GameClient implements Runnable {
           logger.warn("Received an unknown object type from the server.");
         } catch (SocketException | java.io.EOFException e) {
           logger.warn("Connection to server lost (Socket closed).");
-          running = false; // Exit the loop
+          running = false;
         }
       }
     } catch (UnknownHostException e) {
@@ -65,14 +69,14 @@ public class GameClient implements Runnable {
         JOptionPane.showMessageDialog(gamePanel.getGame(),
                 "Could not find the server at " + host + ":" + port + ".\nPlease ensure the server is running and accessible.",
                 "Connection Error", JOptionPane.ERROR_MESSAGE);
-        gamePanel.getGame().returnToMenu(); // Go back to menu on connection failure
+        gamePanel.getGame().returnToMenu();
       });
     } catch (IOException e) {
       logger.error("Lost connection to the server or could not connect.", e);
       SwingUtilities.invokeLater(() -> {
         JOptionPane.showMessageDialog(gamePanel.getGame(),
                 "Lost connection to the server.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-        gamePanel.getGame().returnToMenu(); // Go back to menu on connection failure
+        gamePanel.getGame().returnToMenu();
       });
     } finally {
       close();
@@ -88,6 +92,7 @@ public class GameClient implements Runnable {
     try {
       out.writeObject(action);
       out.flush();
+      out.reset(); // Very important to prevent caching issues with mutable objects
       logger.debug("Sent action to server: {}", action.type);
     } catch (IOException e) {
       logger.error("Failed to send action to server", e);

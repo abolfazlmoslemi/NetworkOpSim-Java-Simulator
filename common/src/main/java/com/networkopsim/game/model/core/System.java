@@ -17,7 +17,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class System implements Serializable {
-    private static final long serialVersionUID = 3L; // Version updated due to behavior removal
+    private static final long serialVersionUID = 107L; // Version updated due to behavior removal
     public static final int SYSTEM_WIDTH = 80;
     public static final int SYSTEM_HEIGHT = 60;
     public static final int QUEUE_CAPACITY = 5;

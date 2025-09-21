@@ -4,167 +4,63 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c14aa41a-4a91-4068-aaf9-18c3c73ce251" name="Changes" comment="46th = faz3 start">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_4_14.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_core_1_4_14.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_2_0_12.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P1.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/keybindings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/keybindings.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-10.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-11.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-12.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-13.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-15.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-16.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-17.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.2025-09-18.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/game.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgit_submit.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembly/zip-image.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/core/NetworkGame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/input/GameInputHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/GameEngine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/SystemBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/AbstractSystemBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/CorruptorBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/DistributorBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/MergerBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/NodeBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/SinkBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/SourceBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/SpyBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/controller/logic/behaviors/VpnBehavior.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/core/Packet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/core/Port.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/core/System.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/core/Wire.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/enums/NetworkEnums.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/state/GameState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/state/PacketSnapshot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/state/PredictedPacketStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/model/state/TemporalState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/utils/GameStateManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/utils/GraphUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/utils/KeyBindings.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/utils/LevelLoader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/dialogs/KeyBindingPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/dialogs/StorePanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/panels/GamePanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/panels/LevelSelectionPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/panels/MenuPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/panels/SettingsPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/rendering/GameRenderer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/rendering/PacketDrawer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkopsim/game/view/rendering/SystemDrawer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/images/menu_background.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/background_music.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/collision.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/error.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/game_over.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/level_complete.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/packet_loss.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/sounds/wire_connect.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/keybindings.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/replink.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/images/menu_background.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/background_music.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/collision.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/error.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/game_over.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/level_complete.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/packet_loss.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/sounds/wire_connect.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/core/NetworkGame$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/core/NetworkGame$TemporaryMessage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/core/NetworkGame.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/input/GameInputHandler$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/input/GameInputHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/GameEngine$Pair.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/GameEngine.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/SystemBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/AbstractSystemBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/CorruptorBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/DistributorBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/MergerBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/NodeBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/SinkBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/SourceBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/SpyBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/controller/logic/behaviors/VpnBehavior.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Packet$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Packet$ProtectedMovementMode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Packet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Port$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Port.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/System$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/System.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Wire$PathInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Wire$RelayPoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/core/Wire.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PacketShape.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PacketType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PortShape.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PortType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/enums/NetworkEnums$SystemType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/enums/NetworkEnums.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/state/GameState$BulkPacketInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/state/GameState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/state/PacketSnapshot$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/state/PacketSnapshot.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/state/PredictedPacketStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/model/state/TemporalState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/GameStateManager$SaveData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/GameStateManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/GraphUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/KeyBindings$GameAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/KeyBindings.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/LevelLoader$LevelLayout.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/utils/LevelLoader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/StorePanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/StorePanel$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/StorePanel$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/dialogs/StorePanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/GamePanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/GamePanel$ActiveWireEffect.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/GamePanel$InteractiveMode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/GamePanel$PredictionContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/GamePanel$PredictionRunStats.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/GamePanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/LevelSelectionPanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/LevelSelectionPanel$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/LevelSelectionPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/MenuPanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/MenuPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/SettingsPanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/SettingsPanel$MuteCheckboxListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/SettingsPanel$VolumeSliderListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/panels/SettingsPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/rendering/GameRenderer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/rendering/GameRenderer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/rendering/PacketDrawer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/rendering/PacketDrawer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/rendering/SystemDrawer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/networkopsim/game/view/rendering/SystemDrawer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/keybindings.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/logback.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/replink.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    <list default="true" id="c14aa41a-4a91-4068-aaf9-18c3c73ce251" name="Changes" comment="47th = faz mvc">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/GameClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/core/NetworkGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/core/NetworkGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/input/GameInputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/input/GameInputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/utils/KeyBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/utils/KeyBindings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/dialogs/KeyBindingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/dialogs/KeyBindingPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/GameRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/GameClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/GameClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$TemporaryMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$TemporaryMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/utils/KeyBindings$GameAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/utils/KeyBindings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/GameRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/GameRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Packet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Port.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Port.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/System.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/System.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Wire.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Wire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/ClientAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/ClientAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/GameStateUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/GameStateUpdate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Port.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Port.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/System.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/System.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$PathInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$PathInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$RelayPoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$RelayPoint.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$BulkPacketInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$BulkPacketInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction$ActionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction$ActionType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/GameStateUpdate.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/GameStateUpdate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/GameEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/utils/GraphUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/utils/LevelLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/GameServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/GameServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$Pair.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$Pair.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/utils/GraphUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/utils/LevelLoader$LevelLayout.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/utils/LevelLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/GameServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/GameServer.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -635,7 +531,21 @@
       <option name="project" value="LOCAL" />
       <updated>1758342029438</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="47th = faz mvc">
+      <created>1758425179835</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1758425179835</updated>
+    </task>
+    <task id="LOCAL-00035" summary="47th = faz mvc">
+      <created>1758425198295</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1758425198295</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -690,7 +600,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="faz1nahaei" />
     <MESSAGE value="23rd = Add initial implementations for various systems and different types of packets." />
     <MESSAGE value="24th = Add more components of the new packet and system models." />
     <MESSAGE value="26th = Major modifications made specifically for packet movement in this phase." />
@@ -715,7 +624,8 @@
     <MESSAGE value="45th = CorruptorBehavior.class edit" />
     <MESSAGE value="46th = final edit" />
     <MESSAGE value="46th = faz3 start" />
-    <option name="LAST_COMMIT_MESSAGE" value="46th = faz3 start" />
+    <MESSAGE value="47th = faz mvc" />
+    <option name="LAST_COMMIT_MESSAGE" value="47th = faz mvc" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pgit___Copy$NetworkGame__2_.ic" NAME="NetworkGame (2) Coverage Results" MODIFIED="1757668524087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -736,6 +646,9 @@
     </SUITE>
     <SUITE FILE_PATH="coverage/pgit$NetworkGame__2_.ic" NAME="NetworkGame (2) Coverage Results" MODIFIED="1748034653738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.networkopsim.game.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/faz3$ClientMain.ic" NAME="ClientMain Coverage Results" MODIFIED="1758406233137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.client.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/P1$NetworkGame.ic" NAME="NetworkGame Coverage Results" MODIFIED="1747951549632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>

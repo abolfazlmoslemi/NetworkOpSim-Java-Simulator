@@ -5,7 +5,7 @@ package com.networkopsim.game.controller.core;
 
 import com.networkopsim.client.GameClient;
 import com.networkopsim.game.model.state.GameState;
-import com.networkopsim.game.utils.KeyBindings;
+import com.networkopsim.client.utils.KeyBindings;
 import com.networkopsim.game.view.dialogs.KeyBindingPanel;
 import com.networkopsim.game.view.dialogs.StorePanel;
 import com.networkopsim.game.view.panels.GamePanel;
@@ -21,9 +21,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Objects;
 
 public class NetworkGame extends JFrame {
   private static final Logger logger = LoggerFactory.getLogger(NetworkGame.class);

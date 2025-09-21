@@ -1,7 +1,7 @@
 // ===== File: LevelLoader.java (FINAL COMPLETE VERSION for Server) =====
 // ===== MODULE: server =====
 
-package com.networkopsim.game.utils;
+package com.networkopsim.server.utils;
 
 import com.networkopsim.game.model.core.Port;
 import com.networkopsim.game.model.core.System;

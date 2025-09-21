@@ -11,8 +11,11 @@ import com.networkopsim.game.model.core.Wire;
 import com.networkopsim.game.model.enums.NetworkEnums;
 import com.networkopsim.game.model.state.GameState;
 import com.networkopsim.game.model.state.PredictedPacketStatus;
+// [FIXED] Corrected import path for LevelLoader
+import com.networkopsim.server.utils.LevelLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.awt.geom.Point2D;
 import java.awt.*;
@@ -31,6 +34,11 @@ public class GameEngine {
   private static final double IMPACT_WAVE_TORQUE_FACTOR = 5.0;
   private static final int SPATIAL_GRID_CELL_SIZE = 60;
 
+  // --- Power-up Durations ---
+  private static final int ATAR_DURATION_MS = 10000;
+  private static final int AIRYAMAN_DURATION_MS = 5000;
+  private static final int SPEED_LIMITER_DURATION_MS = 15000;
+
   private GameState gameState;
   private int currentLevel;
   private List<System> systems = new ArrayList<>();
@@ -39,6 +47,12 @@ public class GameEngine {
   private volatile long simulationTimeElapsedMs = 0;
   private volatile boolean simulationRunning = false;
   private volatile boolean simulationPaused = false;
+
+  // --- Power-up State ---
+  private long atarEndTime = 0;
+  private long airyamanEndTime = 0;
+  private long speedLimiterEndTime = 0;
+
   private int totalPacketsSuccessfullyDelivered = 0;
   private final List<Packet> packetsToAdd = new ArrayList<>();
   private final List<Packet> packetsToRemove = new ArrayList<>();
@@ -81,11 +95,13 @@ public class GameEngine {
   public void gameTick(long tickDurationMs) {
     if (!simulationRunning || simulationPaused) return;
     simulationTimeElapsedMs += tickDurationMs;
-    // The active power-ups (atar, etc.) state should be managed here. Passing false for now.
-    runSimulationTickLogic(false, simulationTimeElapsedMs, false, false, false);
+    runSimulationTickLogic(false, simulationTimeElapsedMs, isAtarActive(), isAiryamanActive(), isSpeedLimiterActive());
   }
 
   public void runSimulationTickLogic(boolean isPredictionRun, long currentTotalSimTimeMs, boolean isAtarActive, boolean isAiryamanActive, boolean isSpeedLimiterActive) {
+    updatePowerUpStates();
+    updateActiveWireEffects();
+
     for (System s : systems) {
       updateSystemState(s, currentTotalSimTimeMs);
       if (s.getSystemType() == NetworkEnums.SystemType.SOURCE) {
@@ -94,6 +110,7 @@ public class GameEngine {
     }
     processBuffersInternal();
     for (Packet p : new ArrayList<>(packets)) {
+      applyWireEffectsToPacket(p);
       updatePacket(p, isAiryamanActive, isSpeedLimiterActive, isPredictionRun);
     }
     processBuffersInternal();
@@ -108,11 +125,47 @@ public class GameEngine {
         updateAntiTrojan(s, isPredictionRun);
       }
     }
-    if (!isAiryamanActive) {
-      detectAndHandleCollisions(isPredictionRun, isAtarActive);
+    if (!isAiryamanActive()) {
+      detectAndHandleCollisions(isPredictionRun, isAtarActive());
     }
     processWireDestruction(isPredictionRun);
     processBuffersInternal();
+  }
+
+  // --- Power-up Activation & State Methods ---
+  public void activateAtar() { atarEndTime = simulationTimeElapsedMs + ATAR_DURATION_MS; }
+  public void activateAiryaman() { airyamanEndTime = simulationTimeElapsedMs + AIRYAMAN_DURATION_MS; }
+  public void activateAnahita() { for (Packet p : getAllActivePackets()) { if (p != null && p.getNoise() > 0) p.revertToOriginalType(); } }
+  public void activateSpeedLimiter() { speedLimiterEndTime = simulationTimeElapsedMs + SPEED_LIMITER_DURATION_MS; }
+  public void activateEmergencyBrake() { for (Packet p : getAllActivePackets()) { if (p != null && p.getCurrentWire() != null) p.setCurrentSpeedMagnitude(Packet.BASE_SPEED_MAGNITUDE); } }
+
+  public boolean isAtarActive() { return simulationTimeElapsedMs < atarEndTime; }
+  public boolean isAiryamanActive() { return simulationTimeElapsedMs < airyamanEndTime; }
+  public boolean isSpeedLimiterActive() { return simulationTimeElapsedMs < speedLimiterEndTime; }
+
+  private void updatePowerUpStates() {
+    if (atarEndTime > 0 && simulationTimeElapsedMs >= atarEndTime) atarEndTime = 0;
+    if (airyamanEndTime > 0 && simulationTimeElapsedMs >= airyamanEndTime) airyamanEndTime = 0;
+    if (speedLimiterEndTime > 0 && simulationTimeElapsedMs >= speedLimiterEndTime) speedLimiterEndTime = 0;
+  }
+
+  private void updateActiveWireEffects() {
+    gameState.getActiveWireEffects().removeIf(effect -> simulationTimeElapsedMs >= effect.expiryTime);
+  }
+
+  private void applyWireEffectsToPacket(Packet packet) {
+    for (GameState.ActiveWireEffect effect : gameState.getActiveWireEffects()) {
+      if (packet.getCurrentWire() != null && effect.parentWireId == packet.getCurrentWire().getId()) {
+        Point2D.Double idealPos = packet.getIdealPosition();
+        if (idealPos != null && effect.position.distanceSq(idealPos) < 30 * 30) {
+          if (effect.type == GameState.InteractiveMode.AERGIA_PLACEMENT) {
+            packet.setAccelerating(false);
+          } else if (effect.type == GameState.InteractiveMode.ELIPHAS_PLACEMENT) {
+            packet.addNoise(-0.1); // Slowly reduces noise
+          }
+        }
+      }
+    }
   }
 
   private void updateSystemState(System system, long currentTimeMs) {
@@ -146,17 +199,7 @@ public class GameEngine {
       packet.setAngularVelocity(0);
     }
 
-    if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) {
-      if (packet.isUpgradedSecret()) {
-        // handleUpgradedSecretMovement(packet); // This logic can be re-added if necessary
-      } else {
-        System destSystem = currentWire.getEndPort().getParentSystem();
-        double targetSpeed = (destSystem != null && destSystem.getQueueSize() > 0) ? Packet.BASE_SPEED_MAGNITUDE * Packet.SECRET_PACKET_SLOW_SPEED_FACTOR : Packet.BASE_SPEED_MAGNITUDE;
-        packet.setTargetSpeedMagnitude(targetSpeed);
-        packet.setCurrentSpeedMagnitude(targetSpeed);
-        packet.setAccelerating(false);
-      }
-    } else if (packet.isAccelerating() && !isSpeedLimiterActive) {
+    if (packet.isAccelerating() && !isSpeedLimiterActive) {
       double newSpeed = Math.min(packet.getTargetSpeedMagnitude(), packet.getCurrentSpeedMagnitude() + Packet.TRIANGLE_ACCELERATION_RATE);
       packet.setCurrentSpeedMagnitude(newSpeed);
       if (newSpeed >= packet.getTargetSpeedMagnitude()) packet.setAccelerating(false);
@@ -302,7 +345,7 @@ public class GameEngine {
   }
 
   public void teleportPacketToWire(Packet packet, Wire wire) {
-    packet.setWire(wire, false); // Assume incompatible exit for safety
+    packet.setWire(wire, false);
     packet.setProgressOnWire(0.0);
     packet.setReversing(false);
     packet.setAccelerating(false);
@@ -434,7 +477,7 @@ public class GameEngine {
   public boolean initializeLevel(int level) {
     logger.info("GameEngine: Initializing level {}.", level);
     stopAndCleanupLevel();
-    com.networkopsim.game.utils.LevelLoader.LevelLayout layout = com.networkopsim.game.utils.LevelLoader.loadLevel(level, gameState);
+    LevelLoader.LevelLayout layout = LevelLoader.loadLevel(level, gameState);
     if (layout == null) {
       logger.error("GameEngine: Failed to load level layout for level {}.", level);
       return false;
@@ -446,8 +489,6 @@ public class GameEngine {
     Port.resetGlobalId();
     System.resetGlobalRandomSeed(12345L);
     systems.addAll(layout.systems);
-    // Wires are part of the layout but are empty by default.
-    // They will be created by client actions.
     wires.clear();
     bulkPartTracker.clear();
     rebuildTransientReferences();
@@ -502,6 +543,14 @@ public class GameEngine {
       logger.info("GameEngine: Simulation resumed.");
       simulationPaused = false;
     }
+  }
+
+  public void setSimulationTimeElapsedMs(long time) {
+    this.simulationTimeElapsedMs = time;
+  }
+
+  public void setSimulationRunning(boolean running) {
+    this.simulationRunning = running;
   }
 
   private void processBuffersInternal() {
@@ -590,8 +639,6 @@ public class GameEngine {
         Point2D.Double forceDirection = new Point2D.Double(pVisPos.x - center.x, pVisPos.y - center.y);
         p.setVisualOffsetDirectionFromForce(forceDirection);
         p.addNoise(noiseAmount);
-        // double torqueMagnitude = IMPACT_WAVE_TORQUE_FACTOR * (1.0 - normalizedDistance);
-        // p.applyTorque(forceDirection, torqueMagnitude);
       }
     }
   }

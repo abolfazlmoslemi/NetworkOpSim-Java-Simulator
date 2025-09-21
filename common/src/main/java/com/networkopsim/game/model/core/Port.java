@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Port implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 108L;
     public static final int PORT_SIZE = 10;
     private NetworkEnums.PortType type;
     private NetworkEnums.PortShape shape;
