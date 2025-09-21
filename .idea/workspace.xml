@@ -4,60 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c14aa41a-4a91-4068-aaf9-18c3c73ce251" name="Changes" comment="47th = faz mvc">
+    <list default="true" id="c14aa41a-4a91-4068-aaf9-18c3c73ce251" name="Changes" comment="48th = faz3 mvc and server client">
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/GameClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/core/NetworkGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/core/NetworkGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/input/GameInputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/input/GameInputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/utils/KeyBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/utils/KeyBindings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/dialogs/KeyBindingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/dialogs/KeyBindingPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/GameRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/panels/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/panels/GamePanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/GameClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/GameClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$TemporaryMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$TemporaryMessage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/utils/KeyBindings$GameAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/utils/KeyBindings.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/GameRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/GameRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Packet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Port.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Port.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/System.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/System.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Wire.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Wire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/GameState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/ClientAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/ClientAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/GameStateUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/GameStateUpdate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Port.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Port.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/System.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/System.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$PathInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$PathInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$RelayPoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$RelayPoint.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$BulkPacketInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$BulkPacketInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction$ActionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction$ActionType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/GameStateUpdate.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/GameStateUpdate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/GameEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/utils/GraphUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/utils/LevelLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/GamePanel$InteractiveMode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/GamePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/GamePanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keybindings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/keybindings.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/GameServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/GameServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$Pair.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$Pair.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/utils/GraphUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/utils/LevelLoader$LevelLayout.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/utils/LevelLoader.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/GameServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/GameServer.class" afterDir="false" />
@@ -545,7 +504,14 @@
       <option name="project" value="LOCAL" />
       <updated>1758425198295</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="47th = faz3 mvc">
+      <created>1758429358667</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1758429358667</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -600,8 +566,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="23rd = Add initial implementations for various systems and different types of packets." />
-    <MESSAGE value="24th = Add more components of the new packet and system models." />
     <MESSAGE value="26th = Major modifications made specifically for packet movement in this phase." />
     <MESSAGE value="27th = Bug fixes and visual improvements" />
     <MESSAGE value="28th = Bug fixes" />
@@ -625,7 +589,9 @@
     <MESSAGE value="46th = final edit" />
     <MESSAGE value="46th = faz3 start" />
     <MESSAGE value="47th = faz mvc" />
-    <option name="LAST_COMMIT_MESSAGE" value="47th = faz mvc" />
+    <MESSAGE value="47th = faz3 mvc" />
+    <MESSAGE value="48th = faz3 mvc and server client" />
+    <option name="LAST_COMMIT_MESSAGE" value="48th = faz3 mvc and server client" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pgit___Copy$NetworkGame__2_.ic" NAME="NetworkGame (2) Coverage Results" MODIFIED="1757668524087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -647,7 +613,7 @@
     <SUITE FILE_PATH="coverage/pgit$NetworkGame__2_.ic" NAME="NetworkGame (2) Coverage Results" MODIFIED="1748034653738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.networkopsim.game.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/faz3$ClientMain.ic" NAME="ClientMain Coverage Results" MODIFIED="1758406233137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/faz3$ClientMain.ic" NAME="ClientMain Coverage Results" MODIFIED="1758429253967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.networkopsim.client.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/P1$NetworkGame.ic" NAME="NetworkGame Coverage Results" MODIFIED="1747951549632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

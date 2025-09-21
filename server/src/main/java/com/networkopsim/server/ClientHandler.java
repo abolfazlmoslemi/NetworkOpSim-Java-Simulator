@@ -1,4 +1,4 @@
-// ===== File: ClientHandler.java (FINAL CORRECTED with Definitive Stream Initialization) =====
+// ===== File: ClientHandler.java (FINAL REVISED with isReady flag) =====
 // ===== MODULE: server =====
 
 package com.networkopsim.server;
@@ -34,20 +34,25 @@ public class ClientHandler implements Runnable {
   private ObjectOutputStream out;
   private ObjectInputStream in;
   private volatile boolean running = true;
+  private volatile boolean isReady = false; // [NEW] Flag to indicate readiness
 
   public ClientHandler(Socket socket, GameServer server) {
     this.socket = socket;
     this.server = server;
   }
 
+  // [NEW] Getter for the readiness flag
+  public boolean isReady() {
+    return isReady;
+  }
+
   @Override
   public void run() {
     try {
-      // [DEFINITIVE FIX] Server creates its output stream first.
       out = new ObjectOutputStream(socket.getOutputStream());
-      // Server creates its input stream second. This will block until the client
-      // has created its output stream, completing the handshake.
       in = new ObjectInputStream(socket.getInputStream());
+
+      isReady = true; // [NEW] Set readiness flag after streams are successfully created.
 
       while (running) {
         try {
@@ -71,10 +76,10 @@ public class ClientHandler implements Runnable {
   }
 
   private void handleClientAction(ClientAction action) {
-    GameEngine engine = server.getGameEngine();
     logger.debug("Received action from client: {}", action.type);
 
-    synchronized (engine) {
+    synchronized (server.getGameEngineLock()) {
+      GameEngine engine = server.getGameEngineUnsafe();
       switch (action.type) {
         case INITIALIZE_LEVEL:
           server.reinitializeGameForLevel(action.getInt(0));
@@ -302,6 +307,7 @@ public class ClientHandler implements Runnable {
   public void close() {
     if (!running) return;
     running = false;
+    isReady = false; // Set not ready on close
     try {
       if (socket != null && !socket.isClosed()) socket.close();
     } catch (IOException e) { /* Suppress */ }

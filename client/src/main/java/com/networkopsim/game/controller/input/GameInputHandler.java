@@ -1,4 +1,4 @@
-// ===== File: GameInputHandler.java (FINAL COMPLETE VERSION for Client) =====
+// ===== File: GameInputHandler.java (FINAL CORRECTED with all proper imports and enum paths) =====
 // ===== MODULE: client =====
 
 package com.networkopsim.game.controller.input;
@@ -8,7 +8,9 @@ import com.networkopsim.game.model.core.Port;
 import com.networkopsim.game.model.core.System;
 import com.networkopsim.game.model.core.Wire;
 import com.networkopsim.game.model.enums.NetworkEnums;
-import com.networkopsim.client.utils.KeyBindings;
+import com.networkopsim.game.model.state.GameState; // [FIXED] Import GameState for InteractiveMode
+import com.networkopsim.game.net.ClientAction;
+import com.networkopsim.client.utils.KeyBindings; // [FIXED] Corrected import path
 import com.networkopsim.game.view.panels.GamePanel;
 
 import javax.swing.*;
@@ -59,7 +61,8 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         e.consume();
       }
     } else {
-      if (gamePanel.getCurrentInteractiveMode() != GamePanel.InteractiveMode.NONE) {
+      // [FIXED] Use GameState.InteractiveMode
+      if (gamePanel.getGameState() != null && gamePanel.getGameState().getCurrentInteractiveMode() != GameState.InteractiveMode.NONE) {
         e.consume();
         return;
       }
@@ -78,7 +81,8 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
   }
 
   private void handleEscapeKey() {
-    if (gamePanel.getCurrentInteractiveMode() != GamePanel.InteractiveMode.NONE) {
+    // [FIXED] Use GameState.InteractiveMode
+    if (gamePanel.getGameState() != null && gamePanel.getGameState().getCurrentInteractiveMode() != GameState.InteractiveMode.NONE) {
       gamePanel.cancelAllInteractiveModes();
       game.showTemporaryMessage("Action Canceled", Color.ORANGE, 1500);
       if(gamePanel.isSimulationStarted()) {
@@ -127,10 +131,48 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
 
   @Override
   public void mousePressed(MouseEvent e) {
-    if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) return;
+    if (gamePanel.isGameOver() || gamePanel.isLevelComplete() || gamePanel.getGameState() == null) return;
 
     Point pressPoint = e.getPoint();
     gamePanel.requestFocusInWindow();
+
+    GameState.InteractiveMode mode = gamePanel.getGameState().getCurrentInteractiveMode();
+
+    if (mode != GameState.InteractiveMode.NONE) {
+      if (SwingUtilities.isRightMouseButton(e)) {
+        gamePanel.cancelAllInteractiveModes();
+        game.showTemporaryMessage("Action Canceled", Color.ORANGE, 1500);
+        if(gamePanel.isSimulationStarted()){
+          gamePanel.pauseGame(true);
+        }
+        return;
+      }
+
+      if (SwingUtilities.isLeftMouseButton(e)) {
+        Wire clickedWire = gamePanel.findWireAt(pressPoint, 5.0);
+        System clickedSystem = findSystemAt(pressPoint);
+
+        switch (mode) {
+          case AERGIA_PLACEMENT:
+          case ELIPHAS_PLACEMENT:
+            if (clickedWire != null) {
+              if (mode == GameState.InteractiveMode.AERGIA_PLACEMENT) {
+                game.getGameClient().sendAction(new ClientAction(ClientAction.ActionType.PLACE_AERGIA_EFFECT, clickedWire.getId(), pressPoint));
+              } else {
+                game.getGameClient().sendAction(new ClientAction(ClientAction.ActionType.PLACE_ELIPHAS_EFFECT, clickedWire.getId(), pressPoint));
+              }
+            } else {
+              if (!game.isMuted()) game.playSoundEffect("error");
+              game.showTemporaryMessage("You must click on a wire.", Color.RED, 2000);
+            }
+            break;
+          case SISYPHUS_DRAG:
+            // Sisyphus drag logic would go here
+            break;
+        }
+      }
+      return;
+    }
 
     if (SwingUtilities.isLeftMouseButton(e)) {
       if (gamePanel.isSimulationStarted()) return;
@@ -214,7 +256,7 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
 
   @Override
   public void mouseMoved(MouseEvent e) {
-    if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) {
+    if (gamePanel.isGameOver() || gamePanel.isLevelComplete() || gamePanel.getGameState() == null) {
       gamePanel.clearAllHoverStates();
       gamePanel.setCursor(Cursor.getDefaultCursor());
       gamePanel.setToolTipText(null);
@@ -226,31 +268,51 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
     Cursor currentCursor = Cursor.getDefaultCursor();
     String tooltipText = null;
 
-    if (gamePanel.isSimulationStarted() && gamePanel.isGamePaused()) {
-      gamePanel.setCursor(Cursor.getDefaultCursor());
-      gamePanel.setToolTipText(null);
-      return;
-    }
-
-    Port portUnderMouse = gamePanel.findPortAt(currentPoint);
-    Wire.RelayPoint relayUnderMouse = findRelayPointAt(currentPoint);
-    Wire wireUnderMouse = (relayUnderMouse == null) ? gamePanel.findWireAt(currentPoint, 5.0) : null;
-
-    if (relayUnderMouse != null) {
-      relayUnderMouse.setHovered(true);
-      currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
-      tooltipText = "Relay Point (Right-Click to Delete)";
-    } else if (portUnderMouse != null) {
-      tooltipText = generatePortTooltip(portUnderMouse);
-      if (!gamePanel.isSimulationStarted() && !portUnderMouse.isConnected()) {
-        currentCursor = (portUnderMouse.getType() == NetworkEnums.PortType.OUTPUT) ?
-                Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR) :
-                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+    GameState.InteractiveMode mode = gamePanel.getGameState().getCurrentInteractiveMode();
+    if (mode != GameState.InteractiveMode.NONE) {
+      currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+      switch (mode) {
+        case AERGIA_PLACEMENT:
+          tooltipText = "Aergia: Click a wire to place. Right-click to cancel.";
+          if (gamePanel.findWireAt(currentPoint, 5.0) != null) currentCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+          break;
+        case ELIPHAS_PLACEMENT:
+          tooltipText = "Eliphas: Click a wire to place. Right-click to cancel.";
+          if (gamePanel.findWireAt(currentPoint, 5.0) != null) currentCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+          break;
+        case SISYPHUS_DRAG:
+          tooltipText = "Sisyphus: Click a non-reference system to move. Right-click to cancel.";
+          System sys = findSystemAt(currentPoint);
+          if (sys != null && !sys.isReferenceSystem()) currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+          break;
       }
-    } else if (wireUnderMouse != null) {
-      if (!gamePanel.isSimulationStarted()) {
-        currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-        tooltipText = "Wire " + wireUnderMouse.getId() + " (Left-Click to Add Relay, Right-Click to Delete)";
+    } else {
+      if (gamePanel.isSimulationStarted() && gamePanel.isGamePaused()) {
+        gamePanel.setCursor(Cursor.getDefaultCursor());
+        gamePanel.setToolTipText(null);
+        return;
+      }
+
+      Port portUnderMouse = gamePanel.findPortAt(currentPoint);
+      Wire.RelayPoint relayUnderMouse = findRelayPointAt(currentPoint);
+      Wire wireUnderMouse = (relayUnderMouse == null) ? gamePanel.findWireAt(currentPoint, 5.0) : null;
+
+      if (relayUnderMouse != null) {
+        relayUnderMouse.setHovered(true);
+        currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+        tooltipText = "Relay Point (Right-Click to Delete)";
+      } else if (portUnderMouse != null) {
+        tooltipText = generatePortTooltip(portUnderMouse);
+        if (!gamePanel.isSimulationStarted() && !portUnderMouse.isConnected()) {
+          currentCursor = (portUnderMouse.getType() == NetworkEnums.PortType.OUTPUT) ?
+                  Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR) :
+                  Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        }
+      } else if (wireUnderMouse != null) {
+        if (!gamePanel.isSimulationStarted()) {
+          currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+          tooltipText = "Wire " + wireUnderMouse.getId() + " (Left-Click to Add Relay, Right-Click to Delete)";
+        }
       }
     }
 
@@ -260,11 +322,20 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
   }
 
   private Wire.RelayPoint findRelayPointAt(Point p) {
-    if (p == null) return null;
+    if (p == null || gamePanel.getWires() == null) return null;
     for (Wire w : gamePanel.getWires()) {
+      if (w == null) continue;
       for (Wire.RelayPoint rp : w.getRelayPoints()) {
         if (rp.contains(p)) return rp;
       }
+    }
+    return null;
+  }
+
+  private System findSystemAt(Point p) {
+    if (p == null || gamePanel.getSystems() == null) return null;
+    for(System s : gamePanel.getSystems()) {
+      if (new Rectangle(s.getX(), s.getY(), System.SYSTEM_WIDTH, System.SYSTEM_HEIGHT).contains(p)) return s;
     }
     return null;
   }

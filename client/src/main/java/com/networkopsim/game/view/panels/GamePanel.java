@@ -1,4 +1,4 @@
-// ===== File: GamePanel.java (FINAL COMPLETE VERSION for Client) =====
+// ===== File: GamePanel.java (FINAL COMPLETE VERSION with Syntax Fix) =====
 // ===== MODULE: client =====
 
 package com.networkopsim.game.view.panels;
@@ -21,7 +21,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,8 +59,7 @@ public class GamePanel extends JPanel {
   private boolean wireDrawingMode = false;
   private Color currentWiringColor = DEFAULT_WIRING_COLOR;
 
-  public enum InteractiveMode { NONE } // Simplified for now
-  private volatile InteractiveMode currentInteractiveMode = InteractiveMode.NONE;
+  private boolean endDialogShown = false;
 
   public GamePanel(NetworkGame game) {
     this.game = game;
@@ -90,6 +88,7 @@ public class GamePanel extends JPanel {
     this.levelComplete = false;
     this.gameOver = false;
     this.isConnected = false;
+    this.endDialogShown = false;
     cancelAllInteractiveModes();
     if (!renderTimer.isRunning()) {
       renderTimer.start();
@@ -99,9 +98,9 @@ public class GamePanel extends JPanel {
 
   public void updateStateFromServer(GameStateUpdate update) {
     this.gameState = update.gameState;
-    this.systems = Collections.synchronizedList(update.systems);
-    this.wires = Collections.synchronizedList(update.wires);
-    this.packets = Collections.synchronizedList(update.packets);
+    this.systems = Collections.synchronizedList(new ArrayList<>(update.systems));
+    this.wires = Collections.synchronizedList(new ArrayList<>(update.wires));
+    this.packets = Collections.synchronizedList(new ArrayList<>(update.packets));
     this.simulationTimeElapsedMs = update.simulationTimeMs;
     this.isSimulationRunning = update.isSimulationRunning;
     this.isSimulationPaused = update.isSimulationPaused;
@@ -111,15 +110,66 @@ public class GamePanel extends JPanel {
     rebuildTransientReferences();
     this.gameRenderer.setGameState(this.gameState);
     this.gameRenderer.setServerState(this.systems, this.wires, this.packets);
+
+    if ((this.levelComplete || this.gameOver) && !this.endDialogShown) {
+      this.endDialogShown = true;
+      SwingUtilities.invokeLater(() -> showEndLevelDialog(this.levelComplete));
+    }
+  }
+
+  private void showEndLevelDialog(boolean success) {
+    if (gameState == null) {
+      logger.error("Cannot show end level dialog because GameState is null.");
+      game.returnToMenu();
+      return;
+    }
+
+    String title = success ? "Level " + gameState.getCurrentSelectedLevel() + " Complete!" : "Game Over!";
+    StringBuilder message = new StringBuilder();
+    message.append(success ? "Congratulations!" : "Simulation Failed!").append("\n");
+    message.append("\n--- Results ---")
+            .append("\nPackets Generated: ").append(gameState.getTotalPacketsGeneratedCount())
+            .append("\nPackets Lost: ").append(gameState.getTotalPacketsLostCount())
+            .append("\nPacket Units Lost: ").append(gameState.getTotalPacketLossUnits()).append(" units (").append(String.format("%.1f%%", gameState.getPacketLossPercentage())).append(")")
+            .append("\nTotal Coins (Overall): ").append(gameState.getCoins())
+            .append("\nRemaining Wire Length: ").append(gameState.getRemainingWireLength())
+            .append("\nSimulation Time: ").append(String.format("%.2f s", simulationTimeElapsedMs / 1000.0));
+
+    int nextLevel = gameState.getCurrentSelectedLevel() + 1;
+    List<String> optionsList = new ArrayList<>();
+    if (success && nextLevel <= gameState.getMaxLevels() && gameState.isLevelUnlocked(nextLevel - 1)) {
+      optionsList.add("Next Level (" + nextLevel + ")");
+    }
+    optionsList.add("Retry Level");
+    optionsList.add("Main Menu");
+
+    Object[] options = optionsList.toArray();
+    int choice = JOptionPane.showOptionDialog(this.game, message.toString(), title,
+            JOptionPane.DEFAULT_OPTION, success ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE,
+            null, options, options[0]);
+
+    String selectedOption = (choice >= 0 && choice < options.length) ? options[choice].toString() : "Main Menu";
+
+    if (selectedOption.startsWith("Next Level")) {
+      game.setLevel(nextLevel);
+      game.startGame();
+    } else if (selectedOption.equals("Retry Level")) {
+      game.setLevel(gameState.getCurrentSelectedLevel());
+      game.startGame();
+    } else {
+      game.returnToMenu();
+    }
   }
 
   private void rebuildTransientReferences() {
     if (systems == null || wires == null) return;
     Map<Integer, System> systemMap = systems.stream().collect(Collectors.toMap(System::getId, s -> s));
     for (Wire w : wires) {
-      w.rebuildTransientReferences(systemMap);
-      for(Wire.RelayPoint rp : w.getRelayPoints()) {
-        rp.setParentWire(w);
+      if (w != null) {
+        w.rebuildTransientReferences(systemMap);
+        for(Wire.RelayPoint rp : w.getRelayPoints()) {
+          rp.setParentWire(w);
+        }
       }
     }
   }
@@ -193,13 +243,12 @@ public class GamePanel extends JPanel {
   public void updateDragPos(Point currentMousePos) { if (wireDrawingMode) this.mouseDragPos.setLocation(currentMousePos); }
   public void updateWiringPreview(Point currentMousePos) { if (!wireDrawingMode || selectedOutputPort == null || selectedOutputPort.getPosition() == null) { this.currentWiringColor = DEFAULT_WIRING_COLOR; repaint(); return; } Point startPos = selectedOutputPort.getPosition(); double wireLength = startPos.distance(currentMousePos); if (gameState != null && gameState.getRemainingWireLength() < wireLength) { this.currentWiringColor = INVALID_WIRING_COLOR; repaint(); return; } Port targetPort = findPortAt(currentMousePos); if (targetPort != null) { if (Objects.equals(targetPort.getParentSystem(), selectedOutputPort.getParentSystem()) || targetPort.getType() != NetworkEnums.PortType.INPUT || targetPort.isConnected()) { this.currentWiringColor = INVALID_WIRING_COLOR; } else { this.currentWiringColor = VALID_WIRING_COLOR_TARGET; } } else { this.currentWiringColor = DEFAULT_WIRING_COLOR; } repaint(); }
   public void cancelWiring() { if(wireDrawingMode) { selectedOutputPort = null; wireDrawingMode = false; currentWiringColor = DEFAULT_WIRING_COLOR; setCursor(Cursor.getDefaultCursor()); repaint(); } }
-  public Port findPortAt(Point p) { for(System s : systems) { Port port = s.getPortAt(p); if (port != null) return port; } return null; }
-  public Wire findWireAt(Point p, double clickThreshold) { if (p == null) return null; double clickThresholdSq = clickThreshold * clickThreshold; Wire closestWire = null; double minDistanceSq = Double.MAX_VALUE; for (Wire w : wires) { if (w == null) continue; List<Point2D.Double> path = w.getFullPathPoints(); for (int i = 0; i < path.size() - 1; i++) { double distSq = Line2D.ptSegDistSq(path.get(i).x, path.get(i).y, path.get(i+1).x, path.get(i+1).y, p.x, p.y); if (distSq < minDistanceSq) { minDistanceSq = distSq; closestWire = w; } } } return (closestWire != null && minDistanceSq < clickThresholdSq) ? closestWire : null; }
-  public void clearAllHoverStates() { for(Wire w : wires) w.clearHoverStates(); }
-  public void cancelAllInteractiveModes() { this.currentInteractiveMode = InteractiveMode.NONE; /* any other UI cleanup */ }
+  public Port findPortAt(Point p) { if (systems == null) return null; for(System s : systems) { Port port = s.getPortAt(p); if (port != null) return port; } return null; }
+  public Wire findWireAt(Point p, double clickThreshold) { if (p == null || wires == null) return null; double clickThresholdSq = clickThreshold * clickThreshold; Wire closestWire = null; double minDistanceSq = Double.MAX_VALUE; for (Wire w : wires) { if (w == null) continue; List<Point2D.Double> path = w.getFullPathPoints(); for (int i = 0; i < path.size() - 1; i++) { double distSq = Line2D.ptSegDistSq(path.get(i).x, path.get(i).y, path.get(i+1).x, path.get(i+1).y, p.x, p.y); if (distSq < minDistanceSq) { minDistanceSq = distSq; closestWire = w; } } } return (closestWire != null && minDistanceSq < clickThresholdSq) ? closestWire : null; }
+  public void clearAllHoverStates() { if (wires == null) return; for(Wire w : wires) { if(w != null) w.clearHoverStates(); } }
+  public void cancelAllInteractiveModes() { if (game.getGameClient() != null && gameState != null && gameState.getCurrentInteractiveMode() != GameState.InteractiveMode.NONE) { /* This would be a good place to send a CANCEL_INTERACTIVE_MODE action to the server */ } }
   public void toggleHUD() { showHUD = !showHUD; repaint(); }
 
-  // GETTERS FOR UI STATE
   public List<System> getSystems() { return systems; }
   public List<Wire> getWires() { return wires; }
   public List<Packet> getPackets() { return packets; }
@@ -216,5 +265,8 @@ public class GamePanel extends JPanel {
   public Point getMouseDragPos() { return mouseDragPos; }
   public Color getCurrentWiringColor() { return currentWiringColor; }
   public boolean isShowHUD() { return showHUD; }
-  public InteractiveMode getCurrentInteractiveMode() { return currentInteractiveMode; }
+
+  // [DEPRECATED] This local getter is no longer the source of truth.
+  // We now get the mode from getGameState().getCurrentInteractiveMode()
+  // public InteractiveMode getCurrentInteractiveMode() { return currentInteractiveMode; }
 }

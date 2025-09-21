@@ -1,4 +1,4 @@
-// ===== File: GameServer.java (FINAL CORRECTED with fixed connection logic) =====
+// ===== File: GameServer.java (FINAL REVISED with isReady check) =====
 // ===== MODULE: server =====
 
 package com.networkopsim.server;
@@ -6,6 +6,7 @@ package com.networkopsim.server;
 import com.networkopsim.game.controller.logic.GameEngine;
 import com.networkopsim.game.model.core.Packet;
 import com.networkopsim.game.model.core.System;
+import com.networkopsim.game.model.core.Wire;
 import com.networkopsim.game.model.enums.NetworkEnums;
 import com.networkopsim.game.model.state.GameState;
 import com.networkopsim.game.net.GameStateUpdate;
@@ -19,6 +20,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public class GameServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(GameServer.class);
@@ -35,6 +37,7 @@ public class GameServer implements Runnable {
     private boolean levelComplete = false;
     private boolean gameOver = false;
     private long lastAutosaveTime = 0;
+    private final Object gameEngineLock = new Object();
 
     public GameServer(int port) {
         this.port = port;
@@ -72,8 +75,6 @@ public class GameServer implements Runnable {
                 ClientHandler clientHandler = new ClientHandler(clientSocket, this);
                 clients.add(clientHandler);
                 new Thread(clientHandler, "ClientHandler-" + clientSocket.getInetAddress()).start();
-                // [REMOVED] Do NOT send an update immediately. Wait for the client's first action.
-                // clientHandler.sendUpdate(createStateUpdate());
             }
         } catch (IOException e) {
             if (running) {
@@ -93,19 +94,23 @@ public class GameServer implements Runnable {
             long elapsedTime = currentTime - lastTickTime;
 
             if (elapsedTime >= GAME_TICK_MS) {
-                if (gameEngine.isSimulationRunning() && !gameEngine.isSimulationPaused()) {
-                    gameEngine.gameTick(GAME_TICK_MS);
-                    checkEndConditions();
+                synchronized (gameEngineLock) {
+                    if (gameEngine.isSimulationRunning() && !gameEngine.isSimulationPaused()) {
+                        gameEngine.gameTick(GAME_TICK_MS);
+                        checkEndConditions();
+                    }
                 }
 
                 broadcastState();
 
                 if (currentTime - lastAutosaveTime > AUTOSAVE_INTERVAL_MS) {
-                    if (gameEngine.isSimulationRunning() && !gameEngine.isSimulationPaused() && !levelComplete && !gameOver) {
-                        GameStateManager.saveGameState(
-                                gameEngine.getGameState(), gameEngine.getSystems(), gameEngine.getWires(),
-                                gameEngine.getPackets(), gameEngine.getSimulationTimeElapsedMs()
-                        );
+                    synchronized (gameEngineLock) {
+                        if (gameEngine.isSimulationRunning() && !gameEngine.isSimulationPaused() && !levelComplete && !gameOver) {
+                            GameStateManager.saveGameState(
+                                    gameEngine.getGameState(), gameEngine.getSystems(), gameEngine.getWires(),
+                                    gameEngine.getPackets(), gameEngine.getSimulationTimeElapsedMs()
+                            );
+                        }
                     }
                     lastAutosaveTime = currentTime;
                 }
@@ -173,14 +178,19 @@ public class GameServer implements Runnable {
             }
         }
         GameStateManager.deleteSaveFile();
-        broadcastState();
     }
 
     public void broadcastState() {
         if (clients.isEmpty()) return;
-        GameStateUpdate update = createStateUpdate();
+        GameStateUpdate update;
+        synchronized (gameEngineLock) {
+            update = createStateUpdate();
+        }
         for (ClientHandler client : clients) {
-            client.sendUpdate(update);
+            // [FIXED] Only send updates to clients that have successfully initialized their streams.
+            if (client.isReady()) {
+                client.sendUpdate(update);
+            }
         }
     }
 
@@ -203,18 +213,14 @@ public class GameServer implements Runnable {
         );
     }
 
-    public synchronized GameEngine getGameEngine() {
-        return gameEngine;
-    }
-
-    public synchronized void reinitializeGameForLevel(int level) {
-        logger.info("Server is re-initializing game state for level {}.", level);
-        this.levelComplete = false;
-        this.gameOver = false;
-        GameState newGameState = new GameState();
-        this.gameEngine = new GameEngine(null, newGameState, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        this.gameEngine.initializeLevel(level);
-        GameStateManager.deleteSaveFile();
+    public void reinitializeGameForLevel(int level) {
+        synchronized (gameEngineLock) {
+            logger.info("Server is re-initializing game state for level {}.", level);
+            this.levelComplete = false;
+            this.gameOver = false;
+            this.gameEngine.initializeLevel(level);
+            GameStateManager.deleteSaveFile();
+        }
     }
 
     public void removeClient(ClientHandler client) {
@@ -235,5 +241,13 @@ public class GameServer implements Runnable {
             logger.error("Error while stopping the server", e);
         }
         logger.info("Server has been stopped.");
+    }
+
+    public Object getGameEngineLock() {
+        return gameEngineLock;
+    }
+
+    public GameEngine getGameEngineUnsafe() {
+        return gameEngine;
     }
 }
