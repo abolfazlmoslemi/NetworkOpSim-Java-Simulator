@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="NetworkOpSim-Shared-2.0.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/NetworkOpSim-Shared/target/NetworkOpSim-Shared-2.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
