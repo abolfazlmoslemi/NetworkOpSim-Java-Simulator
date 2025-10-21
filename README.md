@@ -1,102 +1,127 @@
 # Network Operator Simulator (NetworkOpSim)
 
-![Java](https://img.shields.io/badge/Java-17-blue.svg) ![Maven](https://img.shields.io/badge/Maven-3.8-red.svg) ![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Java](https://img.shields.io/badge/Java-17-blue.svg?style=for-the-badge&logo=java) ![Maven](https://img.shields.io/badge/Build-Maven-red.svg?style=for-the-badge&logo=apache-maven) ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-A real-time multiplayer network simulation game developed as an advanced programming course project. This repository showcases the architectural evolution of a complex software system, from a simple monolith to a scalable, multi-module client-server model in Java.
+A comprehensive case study in software architecture, demonstrating the evolution of a real-time multiplayer network simulation game from a simple monolith to a scalable, multi-module client-server application using Java and industry-standard design patterns.
 
 ---
 
-### **Gameplay Demo (Multiplayer Mode)**
+### ► Gameplay Demo (Multiplayer Mode)
 
-*(در این قسمت یک GIF جذاب از گیم‌پلی فاز نهایی (چندنفره) قرار دهید. این اولین چیزی است که توجه را جلب می‌کند! برای این کار، یک فایل GIF با نام `demo.gif` در ریشه مخزن خود آپلود کنید.)*
+*A brief demonstration of the final multiplayer gameplay, showcasing real-time packet movement, player-owned networks, and strategic packet deployment.*
+
+*(To add this, create a `demo.gif` of your gameplay, upload it to the root of the `faz3nahaee` branch, and this link will work automatically.)*
 
 ![Gameplay Demo](./demo.gif)
 
 ---
 
-### **Architectural Evolution**
+### 🏛️ Architectural Evolution: A Three-Phase Journey
 
-This project was developed in three distinct phases, each representing a significant step in architectural maturity. This repository is structured to reflect this evolution through its Git history and releases.
+This project was developed in three distinct phases, with the final code for each phase meticulously preserved in its own branch. This structure provides a clear and tangible timeline of the software's architectural maturation, from a simple prototype to a distributed system.
 
-*   **Phase 1: Monolithic Foundation (`v1.0`)**
-    *   **Architecture:** A standard desktop Swing application with a monolithic structure. The `GamePanel` class handles Model, View, and Controller responsibilities.
-    *   **Goal:** Rapid prototyping of core game mechanics and UI.
-    *   **Code:** View the complete code for this phase in **[Release v1.0-monolith](https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator/releases/tag/v1.0-monolith)**.
+*   #### **Phase 1: The Monolithic Foundation**
+    > **Branch: [`faz1nahaee`](https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator/tree/faz1nahaee)**
+    *   **Architecture:** A standard desktop Swing application with a tightly-coupled, monolithic structure. The `GamePanel` class encapsulates the responsibilities of Model, View, and Controller.
+    *   **Objective:** Rapid prototyping of core game mechanics, rendering, and input handling to establish a functional baseline.
 
-*   **Phase 2: Decoupled Core & Design Patterns (`v2.0`)**
-    *   **Architecture:** The core simulation logic was refactored into a platform-agnostic `GameEngine`. The **Strategy Pattern** was implemented to manage diverse network system behaviors (`SystemBehavior`).
-    *   **Goal:** Enhance extensibility, testability, and prepare the core logic for distributed environments.
-    *   **Code:** View the complete code for this phase in **[Release v2.0-decoupled](https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator/releases/tag/v2.0-decoupled)**.
+*   #### **Phase 2: Decoupling & Design Patterns**
+    > **Branch: [`faz2nahaee`](https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator/tree/faz2nahaee)**
+    *   **Architecture:** The simulation logic was refactored into a platform-agnostic `GameEngine`, decoupling it from the Swing framework. The **Strategy Pattern** was implemented to manage diverse network system behaviors (`SystemBehavior`), dramatically improving extensibility.
+    *   **Objective:** Enhance testability and maintainability, and prepare the core logic for use in a distributed environment.
 
-*   **Phase 3: Client-Server & Multiplayer (`v3.0`)**
-    *   **Architecture:** The project was modularized into four Maven modules (`core`, `shared`, `client`, `server`). An authoritative server now manages game state, with communication handled via a DTO-based protocol. A dynamic **Proxy Pattern** was implemented for centralized, AOP-like exception handling on the server.
-    *   **Goal:** Implement real-time multiplayer functionality, centralized state management, and a scalable backend.
-    *   **Code:** The final code is available on the `main` branch. See **[Release v3.0-multiplayer](https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator/releases/tag/v3.0-multiplayer)**.
-
----
-
-### **Key Features & Architectural Highlights**
-
-*   **Multi-module Maven Architecture:** Enforces a strong separation of concerns between the data model, core logic, client, and server.
-*   **Strategy Design Pattern:** Allows for flexible and extensible network system behaviors without modifying core classes.
-*   **Proxy Design Pattern (AOP-style):** Provides clean, centralized exception handling on the server, decoupling error management from business logic.
-*   **DTO-Based Network Protocol:** Ensures a stable and decoupled API between the client and server.
-*   **Real-time Multiplayer Engine:** Features a state machine-driven `GameSession` manager for handling complex game phases like the "Overtime Build Phase".
-*   **Offline Mode with DIV:** Supports offline play and includes a replay system (`ReplayRecorder`) for Data Integrity Validation on the server to prevent cheating.
+*   #### **Phase 3: Client-Server & Multiplayer Architecture (Final Version)**
+    > **Branch: [`faz3nahaee`](https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator/tree/faz3nahaee)**
+    *   **Architecture:** The project was modularized into four Maven modules (`core`, `shared`, `client`, `server`). An authoritative server now manages all game state and logic, with communication handled via a DTO-based protocol. A dynamic **Proxy Pattern** was implemented for centralized, AOP-like exception handling on the server.
+    *   **Objective:** Implement real-time multiplayer functionality, centralized state management, a scalable backend, and robust error handling.
 
 ---
 
-### **Architecture Diagrams**
+### ✨ Key Features & Architectural Highlights
 
-*These diagrams were created using LaTeX and TikZ for the project's technical paper.*
-
-**Modular Architecture Overview:**
-*(تصویر دیاگرام ماژول‌ها را اینجا قرار دهید. ابتدا تصویر را در مخزن آپلود کنید و سپس لینکش را جایگزین کنید)*
-`![Module Diagram](path/to/your/module-diagram.png)`
-
-**Strategy Pattern for `SystemBehavior`:**
-*(تصویر دیاگرام استراتژی را اینجا قرار دهید)*
-`![Strategy Pattern Diagram](path/to/your/strategy-diagram.png)`
-
-**Proxy-based Exception Handling Flow:**
-*(تصویر دیاگرام پراکسی را اینجا قرار دهید)*
-`![Proxy Pattern Diagram](path/to/your/proxy-diagram.png)`
-
+*   **Multi-Module Maven Architecture:** Enforces a strong Separation of Concerns (SoC) between the data model, core logic, client presentation, and server orchestration.
+*   **Strategy Design Pattern:** Allows for flexible and extensible network system behaviors, adhering to the Open/Closed Principle.
+*   **Proxy Design Pattern (AOP-style):** Provides clean, centralized exception handling on the server, decoupling this cross-cutting concern from the primary business logic.
+*   **DTO-Based Network Protocol:** Ensures a stable, versionable, and decoupled API between the client and server.
+*   **Real-time Multiplayer Engine:** Features a state machine-driven `GameSession` manager for handling complex game phases, including a strategic "Overtime Build Phase" with penalty mechanics.
+*   **Offline Mode with Data Integrity Validation (DIV):** Supports full offline play by running a local `GameEngine` instance and includes a replay system (`ReplayRecorder`) for server-side validation to prevent cheating.
+*   **Deterministic Simulation Core:** Utilizes a fixed time-step and a seeded random generator, crucial for replays and fair DIV.
 
 ---
 
-### **Tech Stack**
+### 🎨 Architecture Diagrams
+
+*These diagrams were created using LaTeX and TikZ for the project's technical paper and illustrate the final architecture.*
+
+**1. Modular Architecture Overview**
+*(Upload your module diagram to a `docs/diagrams` folder in the `faz3nahaee` branch and update the path below.)*
+`![Module Diagram](./docs/diagrams/module-diagram.png)`
+
+**2. Strategy Pattern for `SystemBehavior`**
+*(Upload your Strategy pattern diagram.)*
+`![Strategy Pattern Diagram](./docs/diagrams/strategy-diagram.png)`
+
+**3. Proxy-based Exception Handling Flow**
+*(Upload your Proxy pattern diagram.)*
+`![Proxy Pattern Diagram](./docs/diagrams/proxy-diagram.png)`
+
+---
+
+### 🛠️ Tech Stack
 
 *   **Language:** Java 17
 *   **UI Framework:** Java Swing
 *   **Build Tool:** Apache Maven
-*   **Networking:** Java Sockets (TCP/IP)
+*   **Networking:** Java Sockets (TCP/IP) & Object Serialization
 *   **Logging:** SLF4J
 *   **Database (Server):** SQLite
 *   **Documentation:** LaTeX with TikZ
 
 ---
 
-### **How to Run**
+### 🚀 Getting Started (Running the Final Multiplayer Version)
+
+Follow these steps to build and run the final version of the project.
 
 1.  **Prerequisites:**
     *   JDK 17 or later
     *   Apache Maven 3.8 or later
+    *   Git
 
-2.  **Clone and Build:**
+2.  **Clone and Checkout Final Branch:**
     ```bash
     git clone https://github.com/abolfazlmoslemi/NetworkOpSim-Java-Simulator.git
     cd NetworkOpSim-Java-Simulator
+    git checkout faz3nahaee
+    ```
+
+3.  **Build the Project:**
+    This command will compile all modules and create the executable JAR files.
+    ```bash
     mvn clean install
     ```
 
-3.  **Run the Server:**
+4.  **Run the Server:**
     ```bash
     java -jar NetworkOpSim-Server/target/NetworkOpSim-Server-*.jar
     ```
+    The server is now running and waiting for clients on port `26263`.
 
-4.  **Run the Client:**
-    (Open a new terminal for each client instance)
+5.  **Run the Client:**
+    Open a new terminal for each client instance you want to run.
     ```bash
     java -jar NetworkOpSim-Client/target/NetworkOpSim-Client-*.jar
     ```
+
+---
+
+### 📚 Exploring Previous Phases
+
+To explore the code for a specific architectural phase, simply check out the corresponding branch after cloning the repository:
+
+```bash
+# Example: Switch to the Phase 2 branch to see the decoupled architecture
+git checkout faz2nahaee
+
+# To return to the final version
+git checkout faz3nahaee
