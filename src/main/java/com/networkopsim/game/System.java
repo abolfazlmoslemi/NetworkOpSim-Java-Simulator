@@ -1,393 +1,321 @@
-// ===== System.java =====
+// ===== FILE: System.java (کد کامل و اصلاح شده نهایی) =====
 
 package com.networkopsim.game;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.Objects;
-import java.util.Random; // Keep this import
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class System {
+    // --- Fields ---
     public static final int SYSTEM_WIDTH = 80;
     public static final int SYSTEM_HEIGHT = 60;
     private static final int QUEUE_CAPACITY = 5;
     private static int nextId = 0;
-    private static Random globalRandom = new Random(); // Static instance for deterministic choices
+    private static Random globalRandom = new Random();
 
     private final int id;
     private int x, y;
+
+    private final NetworkEnums.SystemType systemType;
     private final boolean isReferenceSystem;
     private boolean indicatorOn = false;
     private final List<Port> inputPorts = Collections.synchronizedList(new ArrayList<>());
     private final List<Port> outputPorts = Collections.synchronizedList(new ArrayList<>());
-    public final Queue<Packet> packetQueue = new LinkedList<>(); // Not synchronized, access should be controlled
+    public final Queue<Packet> packetQueue = new LinkedList<>();
 
     private int packetsToGenerateConfig = 0;
     private int packetsGeneratedThisRun = 0;
     private int generationFrequencyMillisConfig = 2000;
     private long lastGenerationTimeThisRun = -1;
+    private NetworkEnums.PacketType packetTypeToGenerate = NetworkEnums.PacketType.NORMAL;
+
+    private NetworkEnums.PacketShape packetShapeToGenerate = null;
+
+    private static final double TROJAN_CONVERSION_CHANCE = 0.15;
+    private static final double CORRUPTOR_NOISE_ADDITION = 1.0;
+    public static final double ANTITROJAN_SCAN_RADIUS = 150.0;
+    private static final long ANTITROJAN_COOLDOWN_MS = 8000;
+    private long antiTrojanCooldownUntil = 0;
+    private boolean vpnIsActive = true;
+
+    private volatile boolean isDisabled = false;
+    private volatile long disabledUntil = 0;
+    public static final long SYSTEM_DISABLE_DURATION_MS = 3500;
+    public static final double MAX_SAFE_ENTRY_SPEED = 4.0;
+
+    private final Map<Integer, List<Packet>> mergingPackets = new HashMap<>();
 
 
-    public static void resetGlobalRandomSeed(long seed) {
-        globalRandom = new Random(seed);
-        // java.lang.System.out.println("System.globalRandom re-seeded with: " + seed);
+    public static void resetGlobalRandomSeed(long seed) { globalRandom = new Random(seed); }
+    public static Random getGlobalRandom() { return globalRandom; }
+    public static void resetGlobalId() { nextId = 0; }
+    public static NetworkEnums.PacketShape getPacketShapeFromPortShapeStatic(NetworkEnums.PortShape portShape) {
+        if (portShape == null) return null;
+        switch (portShape) {
+            case SQUARE:   return NetworkEnums.PacketShape.SQUARE;
+            case TRIANGLE: return NetworkEnums.PacketShape.TRIANGLE;
+            case CIRCLE:   return NetworkEnums.PacketShape.CIRCLE;
+            case ANY: default: return null;
+        }
     }
 
-    // This getter might be useful if other parts of the simulation need deterministic random choices
-    // based on the same seed (e.g., initial packet offset side preference in Packet.java, though that's now ID-based).
-    public static Random getGlobalRandom() {
-        return globalRandom;
+    public System(int x, int y, NetworkEnums.SystemType type) {
+        this.id = nextId++; this.x = x; this.y = y; this.systemType = type;
+        this.isReferenceSystem = (type == NetworkEnums.SystemType.SOURCE || type == NetworkEnums.SystemType.SINK);
+        resetForNewRun();
     }
-
-    public static void resetGlobalId() {
-        nextId = 0;
-    }
-
-
     public System(int x, int y, boolean isReference) {
-        this.id = nextId++;
-        this.x = x;
-        this.y = y;
-        this.isReferenceSystem = isReference;
-        resetForNewRun(); // Initialize run-specific state
+        this(x, y, isReference ? NetworkEnums.SystemType.SOURCE : NetworkEnums.SystemType.NODE);
     }
 
+    // --- Getters & simple methods ---
+    public NetworkEnums.SystemType getSystemType() { return systemType; }
+    public int getId() { return id; }
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public List<Port> getInputPorts() { synchronized(inputPorts) { return Collections.unmodifiableList(new ArrayList<>(inputPorts)); } }
+    public List<Port> getOutputPorts() { synchronized(outputPorts) { return Collections.unmodifiableList(new ArrayList<>(outputPorts)); } }
+    public boolean isReferenceSystem() { return isReferenceSystem; }
+    public boolean hasOutputPorts() { synchronized(outputPorts) { return !outputPorts.isEmpty(); } }
+    public boolean hasInputPorts() { synchronized(inputPorts) { return !inputPorts.isEmpty(); } }
+    public Point getPosition() { return new Point(x + SYSTEM_WIDTH / 2, y + SYSTEM_HEIGHT / 2); }
+    public int getPacketsGeneratedCount() { return packetsGeneratedThisRun; }
+    public int getTotalPacketsToGenerate() { return packetsToGenerateConfig; }
+    public int getQueueSize() { synchronized(packetQueue) { return packetQueue.size(); } }
+    public long getAntiTrojanCooldownUntil() { return antiTrojanCooldownUntil; }
+    public boolean isDisabled() { return isDisabled; }
+    private boolean areAllMyPortsConnected() {
+        synchronized(inputPorts) { for (Port p : inputPorts) if (p != null && !p.isConnected()) return false; }
+        synchronized(outputPorts) { for (Port p : outputPorts) if (p != null && !p.isConnected()) return false; }
+        return true;
+    }
+    public void setPacketShapeToGenerate(NetworkEnums.PacketShape shape) { this.packetShapeToGenerate = shape; }
+    public void setPosition(int x, int y) { this.x = x; this.y = y; updateAllPortPositions(); }
+    public void setVpnActive(boolean active, GamePanel gamePanel) {
+        if (this.systemType != NetworkEnums.SystemType.VPN || this.vpnIsActive == active) return;
+        this.vpnIsActive = active;
+        if (!active) {
+            List<Packet> allPackets = new ArrayList<>(gamePanel.getPacketsForRendering());
+            allPackets.addAll(getAllPacketsInQueues(gamePanel.getSystems()));
+            for (Packet p : allPackets) { if (p != null && p.getPacketType() == NetworkEnums.PacketType.PROTECTED) p.revertToOriginalType(); }
+        }
+    }
+    public void configureGenerator(int totalPackets, int frequencyMs) {
+        if (systemType == NetworkEnums.SystemType.SOURCE && hasOutputPorts()) {
+            this.packetsToGenerateConfig = Math.max(0, totalPackets);
+            this.generationFrequencyMillisConfig = Math.max(100, frequencyMs);
+            this.packetTypeToGenerate = NetworkEnums.PacketType.NORMAL;
+        } else { this.packetsToGenerateConfig = 0; }
+    }
+    public void configureGenerator(int totalPackets, int frequencyMs, NetworkEnums.PacketType type) {
+        configureGenerator(totalPackets, frequencyMs);
+        if (systemType == NetworkEnums.SystemType.SOURCE) {
+            this.packetTypeToGenerate = type;
+        }
+    }
     public void resetForNewRun() {
-        synchronized (packetQueue) { // Ensure thread-safe access if queue could be modified elsewhere
-            packetQueue.clear();
-        }
-        this.packetsGeneratedThisRun = 0;
-        this.lastGenerationTimeThisRun = -1; // Reset to allow first packet generation based on frequency
+        synchronized (packetQueue) { packetQueue.clear(); }
+        this.packetsGeneratedThisRun = 0; this.lastGenerationTimeThisRun = -1;
+        this.antiTrojanCooldownUntil = 0; this.vpnIsActive = true;
+        this.mergingPackets.clear();
+        this.isDisabled = false;
+        this.disabledUntil = 0;
     }
-
-    public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) {
-        if (shape == NetworkEnums.PortShape.ANY) {
-            throw new IllegalArgumentException("PortShape.ANY is not allowed for system ports in this configuration.");
-        }
-        Port newPort;
-        int index; // Index within its type (input/output)
-        if (type == NetworkEnums.PortType.INPUT) {
-            synchronized(inputPorts) {
-                index = inputPorts.size();
-                newPort = new Port(this, type, shape, index);
-                inputPorts.add(newPort);
-            }
-        } else { // OUTPUT
-            synchronized(outputPorts) {
-                index = outputPorts.size();
-                newPort = new Port(this, type, shape, index);
-                outputPorts.add(newPort);
-            }
-        }
-        updateAllPortPositions(); // Recalculate positions for all ports
-    }
-
-    public void updateAllPortPositions() {
-        int totalInput;
-        int totalOutput;
-        // Get counts outside synchronized blocks to avoid nested synchronization if Port.updatePosition synchronizes
-        synchronized (inputPorts) { totalInput = inputPorts.size(); }
-        synchronized (outputPorts) { totalOutput = outputPorts.size(); }
-
-        synchronized (inputPorts) {
-            for (int i = 0; i < inputPorts.size(); i++) {
-                Port p = inputPorts.get(i);
-                if (p != null) {
-                    // Pass current total counts for accurate calculation
-                    p.updatePosition(this.x, this.y, totalInput, totalOutput);
-                }
-            }
-        }
-        synchronized (outputPorts) {
-            for (int i = 0; i < outputPorts.size(); i++) {
-                Port p = outputPorts.get(i);
-                if (p != null) {
-                    p.updatePosition(this.x, this.y, totalInput, totalOutput);
-                }
+    public void updateSystemState(long currentTimeMs, GamePanel gamePanel) {
+        if (isDisabled && currentTimeMs >= disabledUntil) {
+            isDisabled = false;
+            disabledUntil = 0;
+            if (!isReferenceSystem && !gamePanel.getGame().isMuted()) {
+                gamePanel.getGame().playSoundEffect("system_reboot");
             }
         }
     }
-
-    public Port getPortAt(Point p) {
-        // Iterate over copies to avoid CME if ports could be modified, though less likely here
-        List<Port> currentOutputPorts;
-        List<Port> currentInputPorts;
-        synchronized (outputPorts) { currentOutputPorts = new ArrayList<>(outputPorts); }
-        synchronized (inputPorts) { currentInputPorts = new ArrayList<>(inputPorts); }
-
-        for (Port port : currentOutputPorts) {
-            if (port != null && port.contains(p)) return port;
-        }
-        for (Port port : currentInputPorts) {
-            if (port != null && port.contains(p)) return port;
-        }
-        return null;
-    }
-
     public void receivePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
+        receivePacket(packet, gamePanel, isPredictionRun, true);
+    }
+    public void receivePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun, boolean enteredCompatibly) {
         if (packet == null || gamePanel == null) return;
-        packet.setCurrentSystem(this); // Packet is now "in" this system
-        gamePanel.addRoutingCoinsInternal(packet, isPredictionRun); // Add coins if it's a live run
-
-        if (isReferenceSystem && !hasOutputPorts()) { // This is a Sink system (reference and no outputs)
-            packet.setFinalStatusForPrediction(PredictedPacketStatus.DELIVERED);
-            gamePanel.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
-        } else if (!isReferenceSystem) { // This is a regular Node system
-            processOrQueuePacket(packet, gamePanel, isPredictionRun);
-        } else { // This is a Source system (reference and has outputs), it should not receive packets
-            // java.lang.System.err.println("ERROR: Source System " + id + " received a packet unexpectedly! Packet " + packet.getId() + " LOST.");
-            packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST);
-            gamePanel.packetLostInternal(packet, isPredictionRun);
-        }
-    }
-
-    private void processOrQueuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
-        // Attempt to find an immediate output port for the packet
-        Port outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun);
-        if (outputPort != null) { // An available port was found
-            Wire outputWire = gamePanel.findWireFromPort(outputPort);
-            if (outputWire != null) { // And it's connected to a wire
-                NetworkEnums.PortShape packetRequiredPortShape = Port.getShapeEnum(packet.getShape());
-                boolean compatibleExit = (packetRequiredPortShape != null &&
-                        outputPort.getShape() == packetRequiredPortShape);
-                packet.setWire(outputWire, compatibleExit); // Send packet on its way
-                // If packet was predicted as QUEUED and now sent, its status is no longer QUEUED.
-                if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) {
-                    packet.setFinalStatusForPrediction(null); // Will become ON_WIRE or other status based on its travel
-                }
+        boolean isReversibleMessenger = packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getShape() == NetworkEnums.PacketShape.CIRCLE;
+        if (this.isDisabled) {
+            if (isReversibleMessenger) {
+                packet.reverseDirection(gamePanel);
             } else {
-                // This should be rare if findAvailableOutputPort checks for connected wires.
-                // If port selected but no wire, implies an issue or a very transient state.
-                // java.lang.System.err.println("WARN: System " + id + ": Output port " + outputPort + " available but no wire found! Pkt " + packet.getId() + " queued.");
-                packet.setFinalStatusForPrediction(PredictedPacketStatus.STALLED_AT_NODE); // Or QUEUED, as it can't leave
-                queuePacket(packet, gamePanel, isPredictionRun);
-            }
-        } else { // No immediate output port available
-            packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); // Mark for prediction
-            queuePacket(packet, gamePanel, isPredictionRun);
-        }
-    }
-
-    private void queuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
-        synchronized (packetQueue) {
-            if (packetQueue.size() < QUEUE_CAPACITY) {
-                packetQueue.offer(packet);
-                // Prediction status is typically set to QUEUED before calling this, but confirm.
-                if(packet.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) { // Don't override if already deemed lost
-                    packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
-                }
-            } else { // Queue is full
-                // java.lang.System.out.println("System " + id + ": Queue full! Pkt " + packet.getId() + " LOST.");
-                packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST); // Lost due to full queue
                 gamePanel.packetLostInternal(packet, isPredictionRun);
             }
-        }
-    }
-
-    public void processQueue(GamePanel gamePanel, boolean isPredictionRun) {
-        if (isReferenceSystem) return; // Sources/Sinks don't process queues this way
-
-        Packet packetToProcess;
-        synchronized (packetQueue) {
-            if (packetQueue.isEmpty()) return;
-            packetToProcess = packetQueue.peek(); // Look at the packet without removing
-        }
-
-        if (packetToProcess == null) return; // Should not happen if queue not empty, but defensive
-
-        if (packetToProcess.isMarkedForRemoval()) { // Clean up if somehow a removed packet is still in queue
-            synchronized (packetQueue) {
-                packetQueue.poll(); // Remove it
-            }
             return;
         }
-
-        Port outputPort = findAvailableOutputPort(packetToProcess, gamePanel, isPredictionRun);
-        if (outputPort != null) { // Found an available port
-            Wire outputWire = gamePanel.findWireFromPort(outputPort);
-            if (outputWire != null) { // And it's connected
-                Packet sentPacket = null;
-                synchronized (packetQueue) {
-                    // Re-check: ensure the packet at head is still the one we planned for and remove it
-                    if (!packetQueue.isEmpty() && packetQueue.peek().equals(packetToProcess)) {
-                        sentPacket = packetQueue.poll();
-                    }
-                }
-
-                if (sentPacket != null) { // Successfully dequeued
-                    NetworkEnums.PortShape packetRequiredPortShape = Port.getShapeEnum(sentPacket.getShape());
-                    boolean compatibleExit = (packetRequiredPortShape != null &&
-                            outputPort.getShape() == packetRequiredPortShape);
-                    sentPacket.setWire(outputWire, compatibleExit);
-                    // Clear QUEUED status if it was set for prediction
-                    if (sentPacket.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) {
-                        sentPacket.setFinalStatusForPrediction(null);
-                    }
-                }
-                // If sentPacket is null, another thread/process might have modified the queue. The packet remains.
+        if (!isReferenceSystem && packet.getCurrentSpeedMagnitude() > MAX_SAFE_ENTRY_SPEED) {
+            this.isDisabled = true;
+            this.disabledUntil = gamePanel.getSimulationTimeElapsedMs() + SYSTEM_DISABLE_DURATION_MS;
+            if (!isPredictionRun && !gamePanel.getGame().isMuted()) {
+                gamePanel.getGame().playSoundEffect("system_shutdown");
+            }
+            if (isReversibleMessenger) {
+                packet.reverseDirection(gamePanel);
             } else {
-                // Port was available, but no wire. Packet remains queued. Prediction status is QUEUED.
-                if(packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST){
-                    packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
-                }
+                gamePanel.packetLostInternal(packet, isPredictionRun);
             }
-        } else {
-            // No output port available for the packet at the head of the queue. It remains queued.
-            // Ensure its prediction status reflects this.
-            if(packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST){
-                packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED);
-            }
-        }
-    }
-
-    private Port findAvailableOutputPort(Packet packet, GamePanel gamePanel, boolean isPredictionRun) {
-        if (packet == null || gamePanel == null) return null;
-
-        List<Port> compatibleEmptyPorts = new ArrayList<>();
-        List<Port> nonCompatibleEmptyPorts = new ArrayList<>();
-
-        NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape());
-        if (requiredPacketShape == null) {
-            // java.lang.System.err.println("System " + id + ": Cannot determine required port shape for Packet " + packet.getId() + ". Cannot find output port.");
-            return null;
-        }
-
-        List<Port> currentOutputPortsSnapshot;
-        synchronized(outputPorts) {
-            currentOutputPortsSnapshot = new ArrayList<>(outputPorts); // Create a snapshot for safe iteration
-        }
-
-        // Shuffle the snapshot of ports using the globalRandom for deterministic selection order
-        // This is crucial for determinism if multiple ports are equally viable.
-        Collections.shuffle(currentOutputPortsSnapshot, globalRandom);
-
-        for (Port port : currentOutputPortsSnapshot) {
-            if (port != null && port.isConnected()) {
-                Wire wire = gamePanel.findWireFromPort(port);
-                // Wire must exist and not be occupied
-                if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) {
-                    if (port.getShape() == requiredPacketShape) {
-                        compatibleEmptyPorts.add(port);
-                    } else {
-                        nonCompatibleEmptyPorts.add(port);
-                    }
-                }
-            }
-        }
-
-        // Prefer compatible, empty ports. Since the list was shuffled, taking the first is deterministic.
-        if (!compatibleEmptyPorts.isEmpty()) {
-            return compatibleEmptyPorts.get(0);
-        }
-        // Fallback to non-compatible, empty ports.
-        if (!nonCompatibleEmptyPorts.isEmpty()) {
-            return nonCompatibleEmptyPorts.get(0);
-        }
-        return null; // No suitable port found
-    }
-
-    public void configureGenerator(int totalPackets, int frequencyMs) {
-        if (isReferenceSystem && hasOutputPorts()) { // Only Source systems can generate
-            this.packetsToGenerateConfig = Math.max(0, totalPackets);
-            this.generationFrequencyMillisConfig = Math.max(100, frequencyMs); // Min frequency 100ms
-        } else {
-            this.packetsToGenerateConfig = 0; // Non-sources or sinks cannot generate
-        }
-    }
-
-    public void attemptPacketGeneration(GamePanel gamePanel, long currentSimTimeMs, boolean isPredictionRun) {
-        if (!isReferenceSystem || !hasOutputPorts() || packetsGeneratedThisRun >= packetsToGenerateConfig || packetsToGenerateConfig <= 0) {
             return;
         }
-
-        if (lastGenerationTimeThisRun == -1) { // First packet generation attempt for this run
-            // Set to allow generation if currentSimTimeMs is >= 0 (or effectively, the first eligible tick)
-            lastGenerationTimeThisRun = currentSimTimeMs - generationFrequencyMillisConfig;
+        if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && systemType == NetworkEnums.SystemType.NODE) {
+            packet.setEnteredViaIncompatiblePort(!enteredCompatibly);
         }
-
-        if (currentSimTimeMs - lastGenerationTimeThisRun < generationFrequencyMillisConfig) {
-            return; // Not time to generate yet
+        if(packet.getPacketType() == NetworkEnums.PacketType.BULK){
+            synchronized(packetQueue) {
+                for(Packet p : packetQueue){
+                    gamePanel.packetLostInternal(p, isPredictionRun);
+                }
+                packetQueue.clear();
+            }
+            if(packet.getCurrentWire() != null) {
+                Port entryPort = packet.getCurrentWire().getEndPort();
+                entryPort.randomizeShape();
+            }
         }
-
-        List<Port> availablePorts = new ArrayList<>();
-        List<Port> currentOutputPortsSnapshot;
-        synchronized(outputPorts) {
-            currentOutputPortsSnapshot = new ArrayList<>(outputPorts);
+        if (packet.getPacketType() == NetworkEnums.PacketType.PROTECTED) {
+            if (systemType == NetworkEnums.SystemType.SPY || systemType == NetworkEnums.SystemType.CORRUPTOR) {
+                packet.revertToOriginalType();
+                processOrQueuePacket(packet, gamePanel, isPredictionRun);
+                return;
+            }
         }
-        // Shuffle for deterministic port choice if multiple are available
-        Collections.shuffle(currentOutputPortsSnapshot, globalRandom);
+        packet.setCurrentSystem(this);
+        gamePanel.addRoutingCoinsInternal(packet, isPredictionRun);
 
-        for (Port port : currentOutputPortsSnapshot) {
-            if (port != null && port.isConnected()) {
-                Wire wire = gamePanel.findWireFromPort(port);
-                if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) {
-                    availablePorts.add(port); // Port is connected, wire exists and is free
+        // ========== تغییر اصلی و نهایی اینجاست ==========
+        switch (systemType) {
+            case SINK:
+                if(packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.BIT){
+                    gamePanel.packetLostInternal(packet, isPredictionRun);
+                } else {
+                    gamePanel.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
+                    // پخش صدای موفقیت
+                    if (!isPredictionRun && !gamePanel.getGame().isMuted()) {
+                        gamePanel.getGame().playSoundEffect("delivery_success");
+                    }
+                }
+                break;
+            case SOURCE:
+                // بسته‌هایی که به سورس برمی‌گردند دیگر "از دست رفته" نیستند.
+                // آن‌ها را مانند بسته‌های تحویل داده شده حذف می‌کنیم تا آمار خراب نشود.
+                gamePanel.packetSuccessfullyDeliveredInternal(packet, isPredictionRun);
+                // بدون پخش صدای خطا
+                break;
+            // ============================================
+            case SPY: handleSpyLogic(packet, gamePanel, isPredictionRun); break;
+            case CORRUPTOR: handleCorruptorLogic(packet, gamePanel, isPredictionRun); break;
+            case VPN: handleVpnLogic(packet, gamePanel, isPredictionRun); break;
+            case DISTRIBUTOR: handleDistributorLogic(packet, gamePanel, isPredictionRun); break;
+            case MERGER: handleMergerLogic(packet, gamePanel, isPredictionRun); break;
+            case NODE: case ANTITROJAN: default:
+                processOrQueuePacket(packet, gamePanel, isPredictionRun);
+                break;
+        }
+    }
+    public void updateAntiTrojan(GamePanel gamePanel, boolean isPredictionRun) {
+        long currentTime = gamePanel.getSimulationTimeElapsedMs();
+        if (getSystemType() != NetworkEnums.SystemType.ANTITROJAN || currentTime < antiTrojanCooldownUntil) return;
+        List<Packet> packetsOnWires = gamePanel.getPacketsForRendering(); Packet targetTrojan = null;
+        for (Packet p : packetsOnWires) {
+            if (p != null && p.getPacketType() == NetworkEnums.PacketType.TROJAN) {
+                if (this.getPosition().distanceSq(p.getPosition()) < ANTITROJAN_SCAN_RADIUS * ANTITROJAN_SCAN_RADIUS) {
+                    targetTrojan = p; break;
                 }
             }
         }
-
-        if (!availablePorts.isEmpty()) {
-            // At this point, a packet *will* be generated if a suitable port is chosen.
-            // So, update the last generation time.
-            long previousLastGenTime = lastGenerationTimeThisRun; // Store for potential rollback
-            lastGenerationTimeThisRun = currentSimTimeMs;
-
-            // availablePorts is already shuffled. Take the first one.
-            Port chosenPort = availablePorts.get(0);
-            Wire outputWire = gamePanel.findWireFromPort(chosenPort); // Should still be valid
-            NetworkEnums.PacketShape shapeToGenerate = getPacketShapeFromPortShapeStatic(chosenPort.getShape());
-
-            if (shapeToGenerate != null && outputWire != null) {
-                Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY());
-                NetworkEnums.PortShape packetRequiredPortShape = Port.getShapeEnum(newPacket.getShape());
-                boolean compatibleExit = (packetRequiredPortShape != null &&
-                        chosenPort.getShape() == packetRequiredPortShape);
-
+        if (targetTrojan != null) {
+            targetTrojan.setPacketType(NetworkEnums.PacketType.MESSENGER); this.antiTrojanCooldownUntil = currentTime + ANTITROJAN_COOLDOWN_MS;
+            if (!isPredictionRun && !gamePanel.getGame().isMuted()) gamePanel.getGame().playSoundEffect("ui_confirm");
+        }
+    }
+    public void processQueue(GamePanel gamePanel, boolean isPredictionRun) {
+        if (isReferenceSystem() || isDisabled) return;
+        Packet packetToProcess;
+        synchronized (packetQueue) { if (packetQueue.isEmpty()) return; packetToProcess = packetQueue.peek(); }
+        if (packetToProcess == null || packetToProcess.isMarkedForRemoval()) { if(packetToProcess != null) synchronized (packetQueue) { packetQueue.poll(); } return; }
+        Port outputPort = findAvailableOutputPort(packetToProcess, gamePanel, isPredictionRun);
+        if (outputPort != null) {
+            Wire outputWire = gamePanel.findWireFromPort(outputPort);
+            if (outputWire != null) {
+                Packet sentPacket;
+                synchronized (packetQueue) { sentPacket = packetQueue.poll(); }
+                if (sentPacket != null) {
+                    boolean compatibleExit = (sentPacket.getPacketType() == NetworkEnums.PacketType.SECRET) ||
+                            (sentPacket.getPacketType() == NetworkEnums.PacketType.BULK) ||
+                            (sentPacket.getPacketType() == NetworkEnums.PacketType.MESSENGER) ||
+                            (Port.getShapeEnum(sentPacket.getShape()) == outputPort.getShape());
+                    sentPacket.setWire(outputWire, compatibleExit);
+                    if (sentPacket.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) sentPacket.setFinalStatusForPrediction(null);
+                }
+            } else { if(packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); }
+        } else { if(packetToProcess.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packetToProcess.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); }
+    }
+    public void attemptPacketGeneration(GamePanel gamePanel, long currentSimTimeMs, boolean isPredictionRun) {
+        if (systemType != NetworkEnums.SystemType.SOURCE || !hasOutputPorts() || packetsGeneratedThisRun >= packetsToGenerateConfig || packetsToGenerateConfig <= 0) return;
+        if (lastGenerationTimeThisRun == -1) lastGenerationTimeThisRun = currentSimTimeMs - generationFrequencyMillisConfig;
+        if (currentSimTimeMs - lastGenerationTimeThisRun < generationFrequencyMillisConfig) return;
+        NetworkEnums.PacketShape shapeToGenerate;
+        if (this.packetShapeToGenerate != null) {
+            shapeToGenerate = this.packetShapeToGenerate;
+        } else if (packetTypeToGenerate == NetworkEnums.PacketType.BULK || packetTypeToGenerate == NetworkEnums.PacketType.WOBBLE || packetTypeToGenerate == NetworkEnums.PacketType.SECRET) {
+            shapeToGenerate = NetworkEnums.PacketShape.CIRCLE;
+        } else {
+            shapeToGenerate = getPacketShapeFromPortShapeStatic(outputPorts.get(0).getShape());
+        }
+        Packet ghostPacket = new Packet(shapeToGenerate, 0, 0, packetTypeToGenerate);
+        Port chosenPort = findAvailableOutputPort(ghostPacket, gamePanel, isPredictionRun);
+        if (chosenPort != null) {
+            Wire outputWire = gamePanel.findWireFromPort(chosenPort);
+            if (outputWire != null) {
+                lastGenerationTimeThisRun = currentSimTimeMs;
+                Packet newPacket = new Packet(shapeToGenerate, chosenPort.getX(), chosenPort.getY(), packetTypeToGenerate);
+                boolean compatibleExit = (packetTypeToGenerate == NetworkEnums.PacketType.SECRET) ||
+                        (packetTypeToGenerate == NetworkEnums.PacketType.BULK) ||
+                        (packetTypeToGenerate == NetworkEnums.PacketType.MESSENGER) ||
+                        (Port.getShapeEnum(newPacket.getShape()) == chosenPort.getShape());
                 newPacket.setWire(outputWire, compatibleExit);
                 gamePanel.addPacketInternal(newPacket, isPredictionRun);
                 packetsGeneratedThisRun++;
-            } else {
-                // Should not happen if chosenPort and shapeToGenerate logic is correct.
-                // Rollback lastGenerationTime to allow re-attempt sooner if generation failed unexpectedly.
-                lastGenerationTimeThisRun = previousLastGenTime;
-                // java.lang.System.err.println("System " + id + ": Failed to generate packet despite available port. Port: " + chosenPort + ", Shape: " + shapeToGenerate);
             }
         }
-        // If no available ports, do nothing, wait for next opportunity. lastGenerationTimeThisRun is not updated.
     }
-
-    private boolean areAllMyPortsConnected() {
-        // Use snapshots for thread safety during iteration
-        List<Port> currentInputPorts, currentOutputPorts;
-        synchronized(inputPorts) { currentInputPorts = new ArrayList<>(inputPorts); }
-        synchronized(outputPorts) { currentOutputPorts = new ArrayList<>(outputPorts); }
-
-        for (Port p : currentInputPorts) {
-            if (p != null && !p.isConnected()) {
-                return false;
-            }
-        }
-        for (Port p : currentOutputPorts) {
-            if (p != null && !p.isConnected()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void draw(Graphics2D g2d) {
         this.indicatorOn = areAllMyPortsConnected();
-        Color bodyColor = isReferenceSystem ? new Color(90, 90, 90) : new Color(60, 80, 130);
+        Color bodyColor;
+        switch(systemType) {
+            case SOURCE: case SINK: bodyColor = new Color(90, 90, 90); break;
+            case SPY: bodyColor = new Color(130, 60, 130); break;
+            case CORRUPTOR: bodyColor = new Color(150, 40, 40); break;
+            case VPN: bodyColor = new Color(60, 130, 60); break;
+            case ANTITROJAN: bodyColor = new Color(60, 130, 130); break;
+            case DISTRIBUTOR: bodyColor = new Color(160, 100, 40); break;
+            case MERGER: bodyColor = new Color(40, 100, 160); break;
+            case NODE: default: bodyColor = new Color(60, 80, 130); break;
+        }
         g2d.setColor(bodyColor);
         g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.setStroke(new BasicStroke(1));
         g2d.drawRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
-
+        String systemName = systemType.name();
+        int fontSize = (systemName.length() > 8) ? 9 : 11;
+        g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
+        g2d.setColor(Color.WHITE);
+        FontMetrics fm = g2d.getFontMetrics();
+        int textWidth = fm.stringWidth(systemName);
+        int textX = x + (SYSTEM_WIDTH - textWidth) / 2;
+        int textY = y + (SYSTEM_HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
+        g2d.drawString(systemName, textX, textY);
         int indicatorSize = 8;
         int indicatorX = x + SYSTEM_WIDTH / 2 - indicatorSize / 2;
         int indicatorY = y - indicatorSize - 3;
@@ -395,104 +323,62 @@ public class System {
         g2d.fillOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
         g2d.setColor(Color.DARK_GRAY);
         g2d.drawOval(indicatorX, indicatorY, indicatorSize, indicatorSize);
-
-        // Draw ports using snapshots for safety, though modifications during draw are unlikely
-        List<Port> currentInputPorts, currentOutputPorts;
-        synchronized(inputPorts) { currentInputPorts = new ArrayList<>(inputPorts); }
-        synchronized(outputPorts) { currentOutputPorts = new ArrayList<>(outputPorts); }
-        for (Port p : currentInputPorts) if(p!=null) p.draw(g2d);
-        for (Port p : currentOutputPorts) if(p!=null) p.draw(g2d);
-
-        int currentQueueSize;
-        synchronized (packetQueue) { currentQueueSize = packetQueue.size(); }
-        if (!isReferenceSystem && currentQueueSize > 0) {
-            g2d.setColor(Color.ORANGE);
-            g2d.setFont(new Font("Arial", Font.BOLD, 11));
-            String queueText = "Q:" + currentQueueSize;
-            FontMetrics fm = g2d.getFontMetrics();
-            int textWidth = fm.stringWidth(queueText);
-            int textX = x + SYSTEM_WIDTH - textWidth - 5;
-            int textY = y + SYSTEM_HEIGHT - 5;
-            g2d.drawString(queueText, textX, textY);
+        synchronized(inputPorts) { for (Port p : inputPorts) if(p!=null) p.draw(g2d); }
+        synchronized(outputPorts) { for (Port p : outputPorts) if(p!=null) p.draw(g2d); }
+        if (!isReferenceSystem() && getQueueSize() > 0) {
+            String queueText = String.format("%d/%d", getQueueSize(), QUEUE_CAPACITY);
+            g2d.setFont(new Font("Consolas", Font.BOLD, 11));
+            fm = g2d.getFontMetrics();
+            textWidth = fm.stringWidth(queueText);
+            int bgWidth = textWidth + 4;
+            int bgHeight = fm.getHeight() - 2;
+            int qx = x + SYSTEM_WIDTH - bgWidth - 3;
+            int qy = y + SYSTEM_HEIGHT - bgHeight - 3;
+            g2d.setColor(new Color(0, 0, 0, 180));
+            g2d.fillRoundRect(qx, qy, bgWidth, bgHeight, 5, 5);
+            Color queueColor;
+            if (getQueueSize() == QUEUE_CAPACITY) queueColor = Color.RED;
+            else if (getQueueSize() > QUEUE_CAPACITY / 2) queueColor = Color.ORANGE;
+            else queueColor = Color.YELLOW;
+            g2d.setColor(queueColor);
+            g2d.drawString(queueText, qx + 2, qy + fm.getAscent() -1);
+        }
+        if(getSystemType() == NetworkEnums.SystemType.ANTITROJAN) {
+            long currentTime = -1;
+            Object timeObj = UIManager.get("game.time.ms");
+            if (timeObj instanceof Long) currentTime = (Long) timeObj;
+            if(currentTime != -1 && currentTime < antiTrojanCooldownUntil){
+                g2d.setColor(new Color(0, 0, 0, 150));
+                g2d.fillOval(this.x + 10, this.y + 10, SYSTEM_WIDTH - 20, SYSTEM_HEIGHT - 20);
+                g2d.setColor(Color.CYAN);
+                g2d.setStroke(new BasicStroke(2));
+                double cooldownProgress = (double)(antiTrojanCooldownUntil - currentTime) / ANTITROJAN_COOLDOWN_MS;
+                g2d.drawArc(this.x + 15, this.y + 15, SYSTEM_WIDTH - 30, SYSTEM_HEIGHT - 30, 90, (int)(360 * cooldownProgress));
+            }
+        }
+        if (isDisabled) {
+            g2d.setColor(new Color(255, 0, 0, 100));
+            g2d.fillRect(x, y, SYSTEM_WIDTH, SYSTEM_HEIGHT);
+            g2d.setColor(Color.RED);
+            g2d.setStroke(new BasicStroke(3));
+            g2d.drawLine(x, y, x + SYSTEM_WIDTH, y + SYSTEM_HEIGHT);
+            g2d.drawLine(x + SYSTEM_WIDTH, y, x, y + SYSTEM_HEIGHT);
         }
     }
-
-
-    public static NetworkEnums.PacketShape getPacketShapeFromPortShapeStatic(NetworkEnums.PortShape portShape) {
-        if (portShape == null) return null;
-        switch (portShape) {
-            case SQUARE:   return NetworkEnums.PacketShape.SQUARE;
-            case TRIANGLE: return NetworkEnums.PacketShape.TRIANGLE;
-            case ANY:      // ANY shape ports cannot determine a specific packet shape to generate.
-                // This is now prevented by an exception in addPort for ANY.
-            default:
-                // java.lang.System.err.println("Warning: Unknown or ANY PortShape encountered in getPacketShapeFromPortShapeStatic: " + portShape);
-                return null;
-        }
-    }
-
-    // --- Getters ---
-    public int getId() { return id; }
-    public int getX() { return x; }
-    public int getY() { return y; }
-
-    // Return unmodifiable copies for safe external access
-    public List<Port> getInputPorts() {
-        synchronized(inputPorts) {
-            return Collections.unmodifiableList(new ArrayList<>(inputPorts));
-        }
-    }
-    public List<Port> getOutputPorts() {
-        synchronized(outputPorts) {
-            return Collections.unmodifiableList(new ArrayList<>(outputPorts));
-        }
-    }
-
-    public boolean isReferenceSystem() { return isReferenceSystem; }
-    public boolean hasOutputPorts() {
-        synchronized(outputPorts) { // Ensure visibility of updates to outputPorts
-            return !outputPorts.isEmpty();
-        }
-    }
-    public boolean hasInputPorts() {
-        synchronized(inputPorts) {
-            return !inputPorts.isEmpty();
-        }
-    }
-    public Point getPosition() { return new Point(x + SYSTEM_WIDTH / 2, y + SYSTEM_HEIGHT / 2); }
-    public int getPacketsGeneratedCount() { return packetsGeneratedThisRun; }
-    public int getTotalPacketsToGenerate() { return packetsToGenerateConfig; }
-    public int getQueueSize() {
-        synchronized(packetQueue) {
-            return packetQueue.size();
-        }
-    }
-
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-        updateAllPortPositions();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        System system = (System) o;
-        return id == system.id; // Systems are equal if their IDs are equal
-    }
-
-    @Override
-    public int hashCode() { return Objects.hash(id); } // Hash based on ID for consistency
-
-    @Override
-    public String toString() {
-        String typeStr = isReferenceSystem ? (hasOutputPorts() ? "Source" : "Sink") : "Node";
-        int qSize;
-        synchronized(packetQueue){ qSize = packetQueue.size(); }
-        return "System{id=" + id + ", type=" + typeStr + ", pos=(" + x + "," + y + ")" +
-                ", Q=" + qSize + "/" + QUEUE_CAPACITY +
-                ", GenConf=" + packetsToGenerateConfig + ", GenRun=" + packetsGeneratedThisRun +
-                '}';
-    }
+    public void addPort(NetworkEnums.PortType type, NetworkEnums.PortShape shape) { if (shape == NetworkEnums.PortShape.ANY) throw new IllegalArgumentException("PortShape.ANY is not allowed."); int index; if (type == NetworkEnums.PortType.INPUT) { synchronized(inputPorts) { index = inputPorts.size(); inputPorts.add(new Port(this, type, shape, index)); } } else { synchronized(outputPorts) { index = outputPorts.size(); outputPorts.add(new Port(this, type, shape, index)); } } updateAllPortPositions(); }
+    public void updateAllPortPositions() { int totalInput, totalOutput; synchronized (inputPorts) { totalInput = inputPorts.size(); } synchronized (outputPorts) { totalOutput = outputPorts.size(); } synchronized (inputPorts) { for (int i = 0; i < inputPorts.size(); i++) { Port p = inputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } synchronized (outputPorts) { for (int i = 0; i < outputPorts.size(); i++) { Port p = outputPorts.get(i); if (p != null) p.updatePosition(this.x, this.y, totalInput, totalOutput); } } }
+    public Port getPortAt(Point p) { synchronized (outputPorts) { for (Port port : outputPorts) if (port != null && port.contains(p)) return port; } synchronized (inputPorts) { for (Port port : inputPorts) if (port != null && port.contains(p)) return port; } return null; }
+    private void handleDistributorLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet.getPacketType() != NetworkEnums.PacketType.BULK) { processOrQueuePacket(packet, gamePanel, isPredictionRun); return; } int numBits = packet.getSize(); if (numBits <= 0) { gamePanel.packetLostInternal(packet, isPredictionRun); return; } List<Packet> bitPackets = new ArrayList<>(); for(int i = 0; i < numBits; i++){ Packet bit = new Packet(NetworkEnums.PacketShape.CIRCLE, this.x, this.y, NetworkEnums.PacketType.BIT); bit.configureAsBit(packet.getId(), numBits); bitPackets.add(bit); } gamePanel.packetLostInternal(packet, isPredictionRun); for(Packet bit : bitPackets){ processOrQueuePacket(bit, gamePanel, isPredictionRun); } }
+    private void handleMergerLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if(packet.getPacketType() != NetworkEnums.PacketType.BIT){ processOrQueuePacket(packet, gamePanel, isPredictionRun); return; } int parentId = packet.getBulkParentId(); if(parentId == -1){ gamePanel.packetLostInternal(packet, isPredictionRun); return; } mergingPackets.computeIfAbsent(parentId, k -> new ArrayList<>()).add(packet); gamePanel.packetLostInternal(packet, isPredictionRun); List<Packet> collectedBits = mergingPackets.get(parentId); if(collectedBits.size() >= packet.getTotalBitsInGroup()){ Packet newBulkPacket = new Packet(NetworkEnums.PacketShape.CIRCLE, this.x, this.y, NetworkEnums.PacketType.BULK); queuePacket(newBulkPacket, gamePanel, isPredictionRun); mergingPackets.remove(parentId); } }
+    private void handleVpnLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (vpnIsActive) { if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) packet.transformToProtected(); else if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) packet.upgradeSecretPacket(); } processOrQueuePacket(packet, gamePanel, isPredictionRun); }
+    private void handleSpyLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet.getPacketType() == NetworkEnums.PacketType.SECRET) { gamePanel.packetLostInternal(packet, isPredictionRun); return; } List<System> otherSpySystems = gamePanel.getSystems().stream().filter(s -> s != null && s.getSystemType() == NetworkEnums.SystemType.SPY && s.getId() != this.id).collect(Collectors.toList()); if (otherSpySystems.isEmpty()) { gamePanel.packetLostInternal(packet, isPredictionRun); return; } Collections.shuffle(otherSpySystems, globalRandom); Port targetPort = otherSpySystems.get(0).findAvailableOutputPort(packet, gamePanel, isPredictionRun); if (targetPort != null) { Wire targetWire = gamePanel.findWireFromPort(targetPort); if(targetWire != null) { packet.setCurrentSystem(otherSpySystems.get(0)); packet.setWire(targetWire, Port.getShapeEnum(packet.getShape()) == targetPort.getShape()); } else { gamePanel.packetLostInternal(packet, isPredictionRun); } } else { gamePanel.packetLostInternal(packet, isPredictionRun); } }
+    private void handleCorruptorLogic(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet.getNoise() < 0.01) packet.addNoise(CORRUPTOR_NOISE_ADDITION); if (globalRandom.nextDouble() < TROJAN_CONVERSION_CHANCE) packet.setPacketType(NetworkEnums.PacketType.TROJAN); Port outputPort = findIncompatibleOutputPort(packet, gamePanel, isPredictionRun); if (outputPort == null) outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun); if (outputPort != null) { Wire outputWire = gamePanel.findWireFromPort(outputPort); if (outputWire != null) packet.setWire(outputWire, Port.getShapeEnum(packet.getShape()) == outputPort.getShape()); else queuePacket(packet, gamePanel, isPredictionRun); } else queuePacket(packet, gamePanel, isPredictionRun); }
+    private void processOrQueuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { Port outputPort = findAvailableOutputPort(packet, gamePanel, isPredictionRun); if (outputPort != null) { Wire outputWire = gamePanel.findWireFromPort(outputPort); if (outputWire != null) { boolean compatibleExit = packet.getPacketType() != NetworkEnums.PacketType.SECRET && (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER || (Port.getShapeEnum(packet.getShape()) == outputPort.getShape())); packet.setWire(outputWire, compatibleExit); if (packet.getFinalStatusForPrediction() == PredictedPacketStatus.QUEUED) packet.setFinalStatusForPrediction(null); } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.STALLED_AT_NODE); queuePacket(packet, gamePanel, isPredictionRun); } } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); queuePacket(packet, gamePanel, isPredictionRun); } }
+    private void queuePacket(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { synchronized (packetQueue) { if (packetQueue.size() < QUEUE_CAPACITY) { packetQueue.offer(packet); if(packet.getFinalStatusForPrediction() != PredictedPacketStatus.LOST) packet.setFinalStatusForPrediction(PredictedPacketStatus.QUEUED); } else { packet.setFinalStatusForPrediction(PredictedPacketStatus.LOST); gamePanel.packetLostInternal(packet, isPredictionRun); } } }
+    private Port findAvailableOutputPort(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { if (packet == null || gamePanel == null) return null; List<Port> candidatePorts = new ArrayList<>(); synchronized(outputPorts) { for (Port port : outputPorts) { if (port != null && port.isConnected()) { Wire wire = gamePanel.findWireFromPort(port); if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun)) { System destinationSystem = wire.getEndPort().getParentSystem(); if (destinationSystem != null && !destinationSystem.isDisabled()) { candidatePorts.add(port); } } } } } if (candidatePorts.isEmpty()) return null; Collections.shuffle(candidatePorts, globalRandom); if (packet.getPacketType() == NetworkEnums.PacketType.BULK || packet.getPacketType() == NetworkEnums.PacketType.SECRET || packet.getPacketType() == NetworkEnums.PacketType.MESSENGER) { return candidatePorts.get(0); } List<Port> compatiblePorts = new ArrayList<>(); List<Port> nonCompatiblePorts = new ArrayList<>(); NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape()); if (requiredPacketShape == null) return null; for(Port port : candidatePorts) { if (port.getShape() == requiredPacketShape) { compatiblePorts.add(port); } else { nonCompatiblePorts.add(port); } } if (!compatiblePorts.isEmpty()) return compatiblePorts.get(0); if (!nonCompatiblePorts.isEmpty()) return nonCompatiblePorts.get(0); return null; }
+    private Port findIncompatibleOutputPort(Packet packet, GamePanel gamePanel, boolean isPredictionRun) { List<Port> incompatibleEmptyPorts = new ArrayList<>(); NetworkEnums.PortShape requiredPacketShape = Port.getShapeEnum(packet.getShape()); synchronized(outputPorts) { List<Port> shuffledPorts = new ArrayList<>(outputPorts); Collections.shuffle(shuffledPorts, globalRandom); for (Port port : shuffledPorts) { if (port != null && port.isConnected()) { Wire wire = gamePanel.findWireFromPort(port); if (wire != null && !gamePanel.isWireOccupied(wire, isPredictionRun) && port.getShape() != requiredPacketShape) { System destinationSystem = wire.getEndPort().getParentSystem(); if (destinationSystem != null && !destinationSystem.isDisabled()) { incompatibleEmptyPorts.add(port); } } } } } return incompatibleEmptyPorts.isEmpty() ? null : incompatibleEmptyPorts.get(0); }
+    private List<Packet> getAllPacketsInQueues(List<System> systems) { List<Packet> queuedPackets = new ArrayList<>(); for (System s : systems) if (s != null) synchronized(s.packetQueue) { queuedPackets.addAll(s.packetQueue); } return queuedPackets; }
+    @Override public boolean equals(Object o) { if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; System system = (System) o; return id == system.id; }
+    @Override public int hashCode() { return Objects.hash(id); }
+    @Override public String toString() { return "System{id=" + id + ", type=" + systemType.name() + ", pos=(" + x + "," + y + ")" + ", Q=" + getQueueSize() + "/" + QUEUE_CAPACITY + (isDisabled ? ", DISABLED" : "") + '}'; }
 }

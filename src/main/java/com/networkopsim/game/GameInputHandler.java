@@ -73,6 +73,9 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         if (gamePanel.isWireDrawingMode()) {
             gamePanel.cancelWiring();
             gamePanel.requestFocusInWindow();
+        } else if (gamePanel.isRelayPointDragMode()) {
+            gamePanel.cancelRelayPointDrag();
+            gamePanel.requestFocusInWindow();
         } else if (gamePanel.isSimulationStarted() && !gamePanel.isGameOver() && !gamePanel.isLevelComplete()) {
             boolean wasPaused = gamePanel.isGamePaused();
             gamePanel.pauseGame(true);
@@ -103,6 +106,9 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         if (gamePanel.isWireDrawingMode()) {
             gamePanel.cancelWiring();
         }
+        if (gamePanel.isRelayPointDragMode()) {
+            gamePanel.cancelRelayPointDrag();
+        }
     }
     @Override
     public void mousePressed(MouseEvent e) {
@@ -113,23 +119,55 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         gamePanel.requestFocusInWindow();
 
         if (SwingUtilities.isLeftMouseButton(e)) {
-            if (!gamePanel.isSimulationStarted() && !gamePanel.isWireDrawingMode()) {
-                Port clickedPort = gamePanel.findPortAt(pressPoint);
-                if (clickedPort != null &&
-                        clickedPort.getType() == NetworkEnums.PortType.OUTPUT &&
-                        !clickedPort.isConnected())
-                {
-                    gamePanel.startWiringMode(clickedPort, pressPoint);
-                    gamePanel.updateWiringPreview(pressPoint);
-                }
+            if (gamePanel.isSimulationStarted()) return;
+
+            if (gamePanel.isWireDrawingMode()) return; // Already wiring, ignore other presses
+
+            // Priority 1: Press on a relay point to start dragging it
+            Wire.RelayPoint relayToDrag = gamePanel.findRelayPointAt(pressPoint);
+            if (relayToDrag != null) {
+                gamePanel.startRelayPointDrag(relayToDrag);
+                return;
             }
+
+            // Priority 2: Press on a port to start wiring
+            Port clickedPort = gamePanel.findPortAt(pressPoint);
+            if (clickedPort != null &&
+                    clickedPort.getType() == NetworkEnums.PortType.OUTPUT &&
+                    !clickedPort.isConnected())
+            {
+                gamePanel.startWiringMode(clickedPort, pressPoint);
+                gamePanel.updateWiringPreview(pressPoint);
+                return;
+            }
+
+            // Priority 3: Press on a wire to add a relay point
+            Wire wireToAddRelay = gamePanel.findWireAt(pressPoint, 5.0); // Smaller threshold for adding point
+            if (wireToAddRelay != null) {
+                gamePanel.addRelayPointRequest(wireToAddRelay, pressPoint);
+            }
+
         }
         else if (SwingUtilities.isRightMouseButton(e)) {
             if (gamePanel.isWireDrawingMode()) {
                 gamePanel.cancelWiring();
+                return;
             }
-            else if (!gamePanel.isSimulationStarted()) {
-                Wire wireToDelete = gamePanel.findWireAt(pressPoint);
+            if (gamePanel.isRelayPointDragMode()) {
+                gamePanel.cancelRelayPointDrag();
+                return;
+            }
+
+            if (!gamePanel.isSimulationStarted()) {
+                // Priority 1: Right-click on a relay point to delete it
+                Wire.RelayPoint relayToDelete = gamePanel.findRelayPointAt(pressPoint);
+                if (relayToDelete != null) {
+                    gamePanel.deleteRelayPointRequest(relayToDelete);
+                    return;
+                }
+
+                // Priority 2: Right-click on a wire to delete the whole wire
+                Wire wireToDelete = gamePanel.findWireAt(pressPoint, 10.0);
                 if (wireToDelete != null) {
                     gamePanel.deleteWireRequest(wireToDelete);
                 }
@@ -144,69 +182,89 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) {
             return;
         }
-        if (gamePanel.isWireDrawingMode() && SwingUtilities.isLeftMouseButton(e)) {
-            if (!gamePanel.isSimulationStarted()) {
-                Point releasePoint = e.getPoint();
-                Port releasePort = gamePanel.findPortAt(releasePoint);
-                boolean connectionMade = false;
-                Port startPort = gamePanel.getSelectedOutputPort();
-                Color finalWireColor = gamePanel.getCurrentWiringColor();
 
-                if (startPort != null && releasePort != null &&
-                        !Objects.equals(releasePort.getParentSystem(), startPort.getParentSystem()) &&
-                        releasePort.getType() == NetworkEnums.PortType.INPUT &&
-                        !releasePort.isConnected() &&
-                        finalWireColor.equals(GamePanel.VALID_WIRING_COLOR_TARGET) ) {
-                    connectionMade = gamePanel.attemptWireCreation(startPort, releasePort);
-                }
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (gamePanel.isWireDrawingMode()) {
+                if (!gamePanel.isSimulationStarted()) {
+                    Point releasePoint = e.getPoint();
+                    Port releasePort = gamePanel.findPortAt(releasePoint);
+                    boolean connectionMade = false;
+                    Port startPort = gamePanel.getSelectedOutputPort();
+                    Color finalWireColor = gamePanel.getCurrentWiringColor();
 
-                if (!connectionMade && releasePort != null) {
-                    if (finalWireColor.equals(GamePanel.INVALID_WIRING_COLOR) ||
-                            (finalWireColor.equals(GamePanel.DEFAULT_WIRING_COLOR) &&
-                                    (Objects.equals(releasePort.getParentSystem(), startPort.getParentSystem()) ||
-                                            releasePort.getType() != NetworkEnums.PortType.INPUT ||
-                                            releasePort.isConnected())) ) {
-                        if (!game.isMuted()) game.playSoundEffect("error"); // Use "error" for failed wire attempts
+                    if (startPort != null && releasePort != null &&
+                            !Objects.equals(releasePort.getParentSystem(), startPort.getParentSystem()) &&
+                            releasePort.getType() == NetworkEnums.PortType.INPUT &&
+                            !releasePort.isConnected() &&
+                            finalWireColor.equals(GamePanel.VALID_WIRING_COLOR_TARGET) ) {
+                        connectionMade = gamePanel.attemptWireCreation(startPort, releasePort);
                     }
-                } else if (!connectionMade && releasePort == null) {
-                    // No sound for releasing in empty space, or use error if desired.
+
+                    if (!connectionMade && releasePort != null) {
+                        if (finalWireColor.equals(GamePanel.INVALID_WIRING_COLOR) ||
+                                (finalWireColor.equals(GamePanel.DEFAULT_WIRING_COLOR) &&
+                                        (Objects.equals(releasePort.getParentSystem(), startPort.getParentSystem()) ||
+                                                releasePort.getType() != NetworkEnums.PortType.INPUT ||
+                                                releasePort.isConnected())) ) {
+                            if (!game.isMuted()) game.playSoundEffect("error");
+                        }
+                    } else if (!connectionMade && releasePort == null) {
+                        // No sound for releasing in empty space
+                    }
                 }
+                gamePanel.cancelWiring();
+            } else if (gamePanel.isRelayPointDragMode()) {
+                gamePanel.stopRelayPointDrag();
             }
-            gamePanel.cancelWiring();
         }
     }
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (gamePanel.isGameOver() || gamePanel.isLevelComplete()) {
+        if (gamePanel.isGameOver() || gamePanel.isLevelComplete() || gamePanel.isSimulationStarted()) {
             return;
         }
-        if (gamePanel.isWireDrawingMode() && !gamePanel.isSimulationStarted() && SwingUtilities.isLeftMouseButton(e)) {
+
+        if (SwingUtilities.isLeftMouseButton(e)) {
             Point currentDragPos = e.getPoint();
-            gamePanel.updateDragPos(currentDragPos);
-            gamePanel.updateWiringPreview(currentDragPos);
+            if (gamePanel.isWireDrawingMode()) {
+                gamePanel.updateDragPos(currentDragPos);
+                gamePanel.updateWiringPreview(currentDragPos);
+            } else if (gamePanel.isRelayPointDragMode()) {
+                gamePanel.updateDraggedRelayPointPosition(currentDragPos);
+            }
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         if (gamePanel.isWireDrawingMode()
+                || gamePanel.isRelayPointDragMode()
                 || gamePanel.isGameOver()
                 || gamePanel.isLevelComplete()
                 || (gamePanel.isSimulationStarted() && gamePanel.isGamePaused()))
         {
-            if (!gamePanel.isWireDrawingMode()) gamePanel.setCursor(Cursor.getDefaultCursor());
+            if (!gamePanel.isWireDrawingMode() && !gamePanel.isRelayPointDragMode()) gamePanel.setCursor(Cursor.getDefaultCursor());
+            gamePanel.clearAllHoverStates();
             gamePanel.setToolTipText(null);
             return;
         }
 
         Point currentPoint = e.getPoint();
+        gamePanel.clearAllHoverStates(); // Clear previous hover states before checking new ones
+
         Port portUnderMouse = gamePanel.findPortAt(currentPoint);
-        Wire wireUnderMouse = gamePanel.findWireAt(currentPoint);
+        Wire.RelayPoint relayUnderMouse = gamePanel.findRelayPointAt(currentPoint);
+        Wire wireUnderMouse = (relayUnderMouse == null) ? gamePanel.findWireAt(currentPoint, 5.0) : null;
 
         Cursor currentCursor = Cursor.getDefaultCursor();
         String tooltipText = null;
 
-        if (portUnderMouse != null) {
+        if (relayUnderMouse != null) {
+            relayUnderMouse.setHovered(true);
+            currentCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+            tooltipText = "Relay Point (Left-Click to Drag, Right-Click to Delete)";
+        }
+        else if (portUnderMouse != null) {
             tooltipText = generatePortTooltip(portUnderMouse);
             if (!gamePanel.isSimulationStarted()) {
                 if (!portUnderMouse.isConnected()) {
@@ -219,11 +277,12 @@ public class GameInputHandler implements KeyListener, MouseListener, MouseMotion
         else if (wireUnderMouse != null) {
             if (!gamePanel.isSimulationStarted()) {
                 currentCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-                tooltipText = "Wire " + wireUnderMouse.getId() + " (Right-Click to Delete)";
+                tooltipText = "Wire " + wireUnderMouse.getId() + " (Left-Click to Add Relay, Right-Click to Delete)";
             }
         }
         gamePanel.setCursor(currentCursor);
         gamePanel.setToolTipText(tooltipText);
+        gamePanel.repaint(); // Repaint to show hover effect
     }
 
     private String generatePortTooltip(Port port) {

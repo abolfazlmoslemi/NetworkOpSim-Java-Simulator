@@ -1,9 +1,11 @@
+// ==== GameState.java ====
+
 // ======= GameState.java =======
 package com.networkopsim.game;
 // FILE: GameState.java
 public class GameState {
-    public static final int MAX_LEVELS = 2;
-    private int coins = 0;
+    public static final int MAX_LEVELS = 5;
+    private int coins = 30;
     private boolean[] unlockedLevels = new boolean[MAX_LEVELS];
 
     // Existing Packet Unit Stats
@@ -76,13 +78,18 @@ public class GameState {
 
     // --- Wire Methods ---
     public int getRemainingWireLength() { return remainingWireLength; }
-    public boolean useWire(int length) {
-        if (length > 0 && remainingWireLength >= length) {
+
+    /**
+     * MODIFIED: This method now returns void and will ALWAYS subtract the length,
+     * allowing remainingWireLength to go negative. Callers are responsible for
+     * pre-checking the budget if they want to prevent exceeding it.
+     */
+    public void useWire(int length) {
+        if (length > 0) {
             remainingWireLength -= length;
-            return true;
         }
-        return false;
     }
+
     public void returnWire(int length) {
         if (length > 0) {
             remainingWireLength += length;

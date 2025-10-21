@@ -4,7 +4,6 @@ com\networkopsim\game\NetworkEnums$PacketShape.class
 com\networkopsim\game\KeyBindingPanel$4.class
 com\networkopsim\game\System$1.class
 com\networkopsim\game\MenuPanel.class
-com\networkopsim\game\PacketShape.class
 com\networkopsim\game\LevelSelectionPanel.class
 com\networkopsim\game\Packet.class
 com\networkopsim\game\Port$1.class
