@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e1fffb54-bb46-455c-b24e-32370ccb5d3d" name="Changes" comment="final">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/client.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/ClientMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/GameClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/client/utils/KeyBindings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/core/NetworkGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/controller/input/GameInputHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/dialogs/KeyBindingPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/dialogs/StorePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/panels/GamePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/panels/LevelSelectionPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/panels/MenuPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/panels/SettingsPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/GameRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/PacketDrawer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/com/networkopsim/game/view/rendering/SystemDrawer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/module-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/ClientMain.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/GameClient.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/utils/KeyBindings$GameAction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/client/utils/KeyBindings.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame$TemporaryMessage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/core/NetworkGame.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/controller/input/GameInputHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/KeyBindingPanel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/StorePanel$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/StorePanel$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/StorePanel$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/dialogs/StorePanel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/GamePanel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/LevelSelectionPanel$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/LevelSelectionPanel$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/LevelSelectionPanel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/MenuPanel$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/MenuPanel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/SettingsPanel$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/SettingsPanel$MuteCheckboxListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/SettingsPanel$VolumeSliderListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/panels/SettingsPanel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/GameRenderer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/PacketDrawer$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/PacketDrawer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/SystemDrawer$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/com/networkopsim/game/view/rendering/SystemDrawer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/target/classes/module-info.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/common.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Packet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Port.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/System.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/core/Wire.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/enums/NetworkEnums.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/GameState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/PacketSnapshot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/model/state/PredictedPacketStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/ClientAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/networkopsim/game/net/GameStateUpdate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/module-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Packet.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Port$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Port.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/System.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$PathInfo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire$RelayPoint.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/core/Wire.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PacketShape.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PacketType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PortShape.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/enums/NetworkEnums$PortType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/enums/NetworkEnums$SystemType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/enums/NetworkEnums.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$ActiveWireEffect.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$BulkPacketInfo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState$InteractiveMode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/GameState.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/PacketSnapshot$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/PacketSnapshot.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/model/state/PredictedPacketStatus.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction$ActionType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/ClientAction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/com/networkopsim/game/net/GameStateUpdate.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/target/classes/module-info.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/faz3.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/server.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/GameEngine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/SystemBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/AbstractSystemBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/CorruptorBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/DistributorBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/MergerBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/NodeBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/SinkBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/SourceBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/SpyBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/game/controller/logic/behaviors/VpnBehavior.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/ClientHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/GameServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/ServerMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/utils/GameStateManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/utils/GraphUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/networkopsim/server/utils/LevelLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/module-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine$Pair.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/GameEngine.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/SystemBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/AbstractSystemBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/CorruptorBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/DistributorBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/MergerBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/NodeBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/SinkBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/SourceBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/SpyBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/game/controller/logic/behaviors/VpnBehavior.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ClientHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/GameServer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/ServerMain.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/utils/GameStateManager$SaveData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/utils/GameStateManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/utils/GraphUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/utils/LevelLoader$LevelLayout.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/com/networkopsim/server/utils/LevelLoader.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keybindings.properties" beforeDir="false" afterPath="$PROJECT_DIR$/keybindings.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+          <entry type="REMOTE">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="origin/master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="faz2Development" />
+                <branch-info repo="$PROJECT_DIR$" source="faz3Development" />
+              </list>
+            </value>
+          </entry>
+          <entry type="REMOTE">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="origin/faz3Development" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="faz1nahaei" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2w0WNbN0AdjAVyxok2b07xPIDl8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="PLAIN_TEXT" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Abolfazl\Ap 1403_4\faz3\server\src\main\java" />
+      <recent name="C:\Users\Abolfazl\Ap 1403_4\faz3\common\src\main\java" />
+      <recent name="C:\Users\Abolfazl\Ap 1403_4\faz3\client\src\main\java" />
+      <recent name="C:\Users\Abolfazl\Ap 1403_4\faz3\client\src\main\java\com\networkopsim\game\view\dialogs" />
+      <recent name="C:\Users\Abolfazl\Ap 1403_4\faz3\client\src\main\java\com\networkopsim\game\utils" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Abolfazl\Ap 1403_4\P1\src\resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ClientMain">
+    <configuration name="ClientMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.networkopsim.client.ClientMain" />
+      <module name="client" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.networkopsim.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NetworkGame (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.java.com.networkopsim.game.NetworkGame" />
+      <module name="P1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.java.com.networkopsim.game.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NetworkGame (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.networkopsim.game.NetworkGame" />
+      <module name="P1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.networkopsim.game.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NetworkGame (3)" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.networkopsim.game.controller.core.NetworkGame" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.networkopsim.game.controller.core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NetworkGame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="NetworkGame" />
+      <module name="P1" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.networkopsim.server.ServerMain" />
+      <module name="server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.networkopsim.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ClientMain" />
+        <item itemvalue="Application.ServerMain" />
+        <item itemvalue="Application.NetworkGame (2)" />
+        <item itemvalue="Application.NetworkGame (1)" />
+        <item itemvalue="Application.NetworkGame" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c14aa41a-4a91-4068-aaf9-18c3c73ce251" name="Changes" comment="" />
+      <created>1745178933473</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745178933473</updated>
+      <workItem from="1745178935727" duration="10946000" />
+      <workItem from="1745256016739" duration="1241000" />
+      <workItem from="1745334747795" duration="4353000" />
+      <workItem from="1746049931325" duration="1686000" />
+      <workItem from="1746331512957" duration="8739000" />
+      <workItem from="1746380837995" duration="4097000" />
+      <workItem from="1746416376518" duration="9405000" />
+      <workItem from="1746775373394" duration="10566000" />
+      <workItem from="1746789285582" duration="3058000" />
+      <workItem from="1746801470742" duration="2497000" />
+      <workItem from="1747488391556" duration="10842000" />
+      <workItem from="1747653288509" duration="2203000" />
+      <workItem from="1747897462895" duration="14576000" />
+      <workItem from="1748108594427" duration="1287000" />
+      <workItem from="1750949508015" duration="1254000" />
+      <workItem from="1751149785421" duration="8300000" />
+      <workItem from="1751588258968" duration="11792000" />
+      <workItem from="1751837286885" duration="10897000" />
+      <workItem from="1752249139611" duration="4905000" />
+      <workItem from="1752985688537" duration="9381000" />
+      <workItem from="1754388685412" duration="605000" />
+      <workItem from="1756723213557" duration="1418000" />
+      <workItem from="1757190206139" duration="39000" />
+      <workItem from="1757319609465" duration="5888000" />
+      <workItem from="1757345630768" duration="2415000" />
+      <workItem from="1757398497894" duration="15892000" />
+      <workItem from="1757499897663" duration="17418000" />
+      <workItem from="1758155021977" duration="9253000" />
+      <workItem from="1758214205674" duration="3483000" />
+      <workItem from="1758341862528" duration="5300000" />
+      <workItem from="1758351831581" duration="5566000" />
+    </task>
+    <task id="LOCAL-00001" summary="Eighteenth: Adding JLink and Maven">
+      <created>1747995308796</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747995308796</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Nineteenth= Remove the `PacketShape` class">
+      <created>1748002099116</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748002099116</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Twentieth= Fixing errors and bugs in the Settings and Store panels.">
+      <created>1748023092250</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1748023092250</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Twenty-first = Adding the repository link.">
+      <created>1748023792595</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1748023792595</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Twenty-first = Adding the repository link.">
+      <created>1748025508075</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1748025508075</updated>
+    </task>
+    <task id="LOCAL-00006" summary="faz1nahaei">
+      <created>1748026397235</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1748026397235</updated>
+    </task>
+    <task id="LOCAL-00007" summary="faz1nahaei">
+      <created>1748034138690</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1748034138690</updated>
+    </task>
+    <task id="LOCAL-00008" summary="faz1nahaei">
+      <created>1748035974336</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1748035974336</updated>
+    </task>
+    <task id="LOCAL-00009" summary="23rd = Add initial implementations for various systems and different types of packets.">
+      <created>1751627770859</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1751627770859</updated>
+    </task>
+    <task id="LOCAL-00010" summary="24th = Add more components of the new packet and system models.">
+      <created>1751723889287</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1751723889287</updated>
+    </task>
+    <task id="LOCAL-00011" summary="26th = Major modifications made specifically for packet movement in this phase.">
+      <created>1751838660092</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1751838660092</updated>
+    </task>
+    <task id="LOCAL-00012" summary="27th = Bug fixes and visual improvements">
+      <created>1751935284458</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1751935284458</updated>
+    </task>
+    <task id="LOCAL-00013" summary="28th = Bug fixes">
+      <created>1752008545369</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1752008545369</updated>
+    </task>
+    <task id="LOCAL-00014" summary="30th=Editing game development bugs and reviewing the rules documented in the project.">
+      <created>1753003142300</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1753003142300</updated>
+    </task>
+    <task id="LOCAL-00015" summary="30th=Editing game development bugs and reviewing the rules documented in the project.">
+      <created>1753003269139</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1753003269148</updated>
+    </task>
+    <task id="LOCAL-00016" summary="31st = completion of stages and some bug fixe">
+      <created>1757399063029</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1757399063029</updated>
+    </task>
+    <task id="LOCAL-00017" summary="32nd = complete store">
+      <created>1757442112692</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1757442112692</updated>
+    </task>
+    <task id="LOCAL-00018" summary="33rd = storage method as described in the Phase 2 document">
+      <created>1757492384185</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1757492384185</updated>
+    </task>
+    <task id="LOCAL-00019" summary="34th = PCA bonus section">
+      <created>1757493869368</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1757493869368</updated>
+    </task>
+    <task id="LOCAL-00020" summary="35th = adding the bonus section for logs">
+      <created>1757500086753</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1757500086753</updated>
+    </task>
+    <task id="LOCAL-00021" summary="36th = Fixing some stages and making them more logical">
+      <created>1757635572082</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1757635572082</updated>
+    </task>
+    <task id="LOCAL-00022" summary="37th = MVC">
+      <created>1757668936000</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1757668936000</updated>
+    </task>
+    <task id="LOCAL-00023" summary="38th = Review the documentation and apply enhanced clean coding practices">
+      <created>1757970147626</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1757970147626</updated>
+    </task>
+    <task id="LOCAL-00024" summary="39th = level 1 review">
+      <created>1757985217085</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1757985217085</updated>
+    </task>
+    <task id="LOCAL-00025" summary="40th = Improvement, enhancement, and rationalization until the end of level 3">
+      <created>1757992734821</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1757992734821</updated>
+    </task>
+    <task id="LOCAL-00026" summary="41th = DistributorBehavior improvement">
+      <created>1758050262571</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1758050262571</updated>
+    </task>
+    <task id="LOCAL-00027" summary="42nd = Complete DistributorBehavior">
+      <created>1758066996600</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1758066996600</updated>
+    </task>
+    <task id="LOCAL-00028" summary="42nd = Complete Mergerbehavior">
+      <created>1758072915125</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1758072915125</updated>
+    </task>
+    <task id="LOCAL-00029" summary="43rd = Complete wobble">
+      <created>1758075262986</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1758075262986</updated>
+    </task>
+    <task id="LOCAL-00030" summary="44th = GameState change">
+      <created>1758161940426</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1758161940426</updated>
+    </task>
+    <task id="LOCAL-00031" summary="45th = CorruptorBehavior.class edit">
+      <created>1758164549068</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1758164549068</updated>
+    </task>
+    <task id="LOCAL-00032" summary="46th = final edit">
+      <created>1758170044021</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1758170044021</updated>
+    </task>
+    <task id="LOCAL-00033" summary="46th = faz3 start">
+      <created>1758342029438</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1758342029438</updated>
+    </task>
+    <task id="LOCAL-00034" summary="47th = faz mvc">
+      <created>1758425179835</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1758425179835</updated>
+    </task>
+    <task id="LOCAL-00035" summary="47th = faz mvc">
+      <created>1758425198295</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1758425198295</updated>
+    </task>
+    <task id="LOCAL-00036" summary="47th = faz3 mvc">
+      <created>1758429358667</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1758429358667</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/faz3Development" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/faz2Development" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="faz2Development" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="26th = Major modifications made specifically for packet movement in this phase." />
+    <MESSAGE value="27th = Bug fixes and visual improvements" />
+    <MESSAGE value="28th = Bug fixes" />
+    <MESSAGE value="30th=Editing game development bugs and reviewing the rules documented in the project." />
+    <MESSAGE value="31st = completion of stages and some bug fixe" />
+    <MESSAGE value="32nd = complete store" />
+    <MESSAGE value="33rd = storage method as described in the Phase 2 document" />
+    <MESSAGE value="34th = PCA bonus section" />
+    <MESSAGE value="35th = adding the bonus section for logs" />
+    <MESSAGE value="36th = Fixing some stages and making them more logical" />
+    <MESSAGE value="37th = MVC" />
+    <MESSAGE value="38th = Review the documentation and apply enhanced clean coding practices" />
+    <MESSAGE value="39th = level 1 review" />
+    <MESSAGE value="40th = Improvement, enhancement, and rationalization until the end of level 3" />
+    <MESSAGE value="41th = DistributorBehavior improvement" />
+    <MESSAGE value="42nd = Complete DistributorBehavior" />
+    <MESSAGE value="42nd = Complete Mergerbehavior" />
+    <MESSAGE value="43rd = Complete wobble" />
+    <MESSAGE value="44th = GameState change" />
+    <MESSAGE value="45th = CorruptorBehavior.class edit" />
+    <MESSAGE value="46th = final edit" />
+    <MESSAGE value="46th = faz3 start" />
+    <MESSAGE value="47th = faz mvc" />
+    <MESSAGE value="47th = faz3 mvc" />
+    <MESSAGE value="48th = faz3 mvc and server client" />
+    <option name="LAST_COMMIT_MESSAGE" value="48th = faz3 mvc and server client" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FAZ3NEW$Server.ic" NAME="Server Coverage Results" MODIFIED="1760349351697" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.server.core.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/pgit___Copy$NetworkGame__2_.ic" NAME="NetworkGame (2) Coverage Results" MODIFIED="1757668524087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.game.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/pgit$NetworkGame.ic" NAME="NetworkGame Coverage Results" MODIFIED="1747653328302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/pgit___Copy$NetworkGame__3_.ic" NAME="NetworkGame (3) Coverage Results" MODIFIED="1758169979457" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.game.controller.core.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/pgit$NetworkGame__1_.ic" NAME="NetworkGame (1) Coverage Results" MODIFIED="1747995039848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>main.java.com.networkopsim.game.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/faz3$NetworkGame__3_.ic" NAME="NetworkGame (3) Coverage Results" MODIFIED="1758351998102" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.game.controller.core.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/P1$NetworkGame__1_.ic" NAME="NetworkGame (1) Coverage Results" MODIFIED="1747953593099" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>main.java.com.networkopsim.game.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/pgit$NetworkGame__2_.ic" NAME="NetworkGame (2) Coverage Results" MODIFIED="1748034653738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.game.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/faz3$ClientMain.ic" NAME="ClientMain Coverage Results" MODIFIED="1758429253967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.networkopsim.client.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/P1$NetworkGame.ic" NAME="NetworkGame Coverage Results" MODIFIED="1747951549632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

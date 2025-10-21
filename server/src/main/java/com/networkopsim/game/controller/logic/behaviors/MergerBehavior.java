@@ -1,0 +1,79 @@
+// ===== File: MergerBehavior.java (FINAL - Reassembles both BULK and WOBBLE) =====
+
+package com.networkopsim.game.controller.logic.behaviors;
+
+import com.networkopsim.game.controller.logic.GameEngine;
+import com.networkopsim.game.model.core.Packet;
+import com.networkopsim.game.model.core.System;
+import com.networkopsim.game.model.enums.NetworkEnums;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MergerBehavior extends AbstractSystemBehavior {
+
+    @Override
+    public void receivePacket(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun, boolean enteredCompatibly) {
+        // [MODIFIED] Check if the packet is volumetric (BULK or WOBBLE).
+        if (packet.isVolumetric()) {
+            handleBulkPassthrough(system, packet, gameEngine, isPredictionRun);
+            return;
+        }
+
+        if (packet.getPacketType() == NetworkEnums.PacketType.MESSENGER && packet.getBulkParentId() != -1) {
+            int parentId = packet.getBulkParentId();
+
+            system.getMergingPackets().computeIfAbsent(parentId, k -> new ArrayList<>()).add(packet);
+            gameEngine.resolveBulkPart(parentId, packet.getId());
+            gameEngine.packetLostInternal(packet, isPredictionRun);
+
+            if (gameEngine.areAllPartsResolved(parentId)) {
+                List<Packet> collectedParts = system.getMergingPackets().get(parentId);
+                if (collectedParts != null && !collectedParts.isEmpty()) {
+                    resolveMerge(system, gameEngine, isPredictionRun, parentId, collectedParts);
+                } else {
+                    if (!isPredictionRun) {
+                        gameEngine.getGameState().resolveBulkPacket(parentId, 0);
+                    }
+                }
+            }
+        } else {
+            processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+        }
+    }
+
+    private void resolveMerge(System system, GameEngine gameEngine, boolean isPredictionRun, int parentId, List<Packet> collectedParts) {
+        if (!isPredictionRun) {
+            gameEngine.getGameState().resolveBulkPacket(parentId, collectedParts.size());
+        }
+
+        // [MODIFIED] Get the original packet type (BULK or WOBBLE) from the GameState.
+        NetworkEnums.PacketType originalType = gameEngine.getGameState().getOriginalBulkPacketType(parentId);
+        Packet newVolumetricPacket = new Packet(NetworkEnums.PacketShape.CIRCLE, system.getX(), system.getY(), originalType);
+        newVolumetricPacket.setSize(collectedParts.size());
+
+        queuePacket(system, newVolumetricPacket, gameEngine, isPredictionRun);
+
+        system.getMergingPackets().remove(parentId);
+    }
+
+    @Override
+    public void processQueue(System system, GameEngine gameEngine, boolean isPredictionRun) {
+        super.processQueue(system, gameEngine, isPredictionRun);
+    }
+
+    protected void handleBulkPassthrough(System system, Packet packet, GameEngine gameEngine, boolean isPredictionRun) {
+        synchronized(system.packetQueue) {
+            for(Packet p : system.packetQueue) {
+                gameEngine.getGameState().increasePacketLoss(p);
+                gameEngine.packetLostInternal(p, isPredictionRun);
+            }
+            system.packetQueue.clear();
+        }
+        processOrQueuePacket(system, packet, gameEngine, isPredictionRun);
+    }
+
+    @Override
+    public NetworkEnums.SystemType getSystemType() {
+        return NetworkEnums.SystemType.MERGER;
+    }
+}
