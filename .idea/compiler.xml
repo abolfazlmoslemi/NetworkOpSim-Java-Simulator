@@ -6,11 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="P1" />
+        <module name="NetworkOpSim-Server" />
+        <module name="NetworkOpSim-Client" />
+        <module name="NetworkOpSim-Core" />
+        <module name="NetworkOpSim-Shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="P1" target="11" />
+      <module name="placeholder" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
